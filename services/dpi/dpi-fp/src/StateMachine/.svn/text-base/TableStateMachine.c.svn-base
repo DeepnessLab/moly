@@ -1,0 +1,314 @@
+/*
+ * TableStateMachine.c
+ *
+ *  Created on: Jan 23, 2011
+ *      Author: yotamhc
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include "../Common/Flags.h"
+#include "../Common/BitArray/BitArray.h"
+#include "TableStateMachine.h"
+#include "../Multicore/MulticoreManager.h"
+
+#ifdef COUNT_BY_DEPTH
+#define DEPTHMAP
+#endif
+#ifdef PRINT_STATE_VISIT_HIST
+#define DEPTHMAP
+#endif
+
+#define MAX_PATTERN_LENGTH 1024
+
+#define GET_TABLE_IDX(state, c) \
+	(((state) * 256) + (unsigned char)(c))
+
+#define GET_NEXT_STATE(table, state, c) \
+	((table)[GET_TABLE_IDX(state, c)])
+
+TableStateMachine *createTableStateMachine(unsigned int numStates, int num_common, double uncommon_rate_limit) {
+	TableStateMachine *machine;
+	STATE_PTR_TYPE_WIDE *table;
+	unsigned char *matches;
+	char **patterns;
+#ifdef DEPTHMAP
+	int *depthMap;
+#endif
+
+	machine = (TableStateMachine*)malloc(sizeof(TableStateMachine));
+	table = (STATE_PTR_TYPE_WIDE*)malloc(sizeof(STATE_PTR_TYPE_WIDE) * numStates * 256);
+	matches = (unsigned char*)malloc(sizeof(unsigned char) * (int)(ceil(numStates / 8.0)));
+	patterns = (char**)malloc(sizeof(char*) * numStates);
+#ifdef DEPTHMAP
+	depthMap = (int*)malloc(sizeof(int) * numStates);
+#endif
+#ifdef HEAVY_PACKET_RECOGNITION
+//	machine->commons = (unsigned char*)malloc(sizeof(unsigned char) * (int)ceil(numStates / 8.0));
+//	memset(machine->commons, 0, sizeof(unsigned char) * (int)ceil(numStates / 8.0));
+	//machine->commons = (int*)malloc(sizeof(int) * numStates);
+	//memset(machine->commons, 0, sizeof(int) * numStates);
+	//printf("Size of common bitmap: %ld bytes\n", sizeof(unsigned char) * (int)ceil(numStates / 8.0));
+	machine->num_common = num_common;
+	machine->uncommon_rate_limit = uncommon_rate_limit;
+#endif
+
+	memset(table, 0, sizeof(STATE_PTR_TYPE_WIDE) * numStates * 256);
+	memset(matches, 0, sizeof(unsigned char) * (int)(ceil(numStates / 8.0)));
+	memset(patterns, 0, sizeof(char*) * numStates);
+
+	machine->table = table;
+	machine->numStates = numStates;
+	machine->matches = matches;
+	machine->patterns = patterns;
+#ifdef DEPTHMAP
+	machine->depthMap = depthMap;
+#endif
+
+
+	return machine;
+}
+
+void destroyTableStateMachine(TableStateMachine *machine) {
+	unsigned int i;
+	for (i = 0; i < machine->numStates; i++) {
+		if (machine->patterns[i]) {
+			free(machine->patterns[i]);
+		}
+	}
+	free(machine->patterns);
+	free(machine->matches);
+	free(machine->table);
+//#ifdef HEAVY_PACKET_RECOGNITION
+	//free(machine->commons);
+//#endif
+#ifdef DEPTHMAP
+	free(machine->depthMap);
+#endif
+	free(machine);
+}
+
+void setGoto(TableStateMachine *machine, STATE_PTR_TYPE_WIDE currentState, char c, STATE_PTR_TYPE_WIDE nextState) {
+	machine->table[GET_TABLE_IDX(currentState, c)] = nextState;
+}
+
+#define TO_HEX(val) \
+	(((val) >= 10) ? ('A' + ((val) - 10)) : (char)('0' + (val)))
+
+char *createPattern_TM(char *pattern, int len) {
+	char buff[MAX_PATTERN_LENGTH];
+	char *res;
+	int i, j;
+
+	for (i = 0, j = 0; i < len; i++) {
+		if (pattern[i] >= 32 && pattern[i] < 127) {
+			buff[j++] = pattern[i];
+		} else {
+			buff[j++] = '|';
+			buff[j++] = TO_HEX((pattern[i] & 0x0F0) >> 4);
+			buff[j++] = TO_HEX(pattern[i] & 0x00F);
+			buff[j++] = '|';
+		}
+	}
+	buff[j++] = '\0';
+	res = (char*)malloc(sizeof(char) * j);
+	strcpy(res, buff);
+	return res;
+}
+
+void setMatch(TableStateMachine *machine, STATE_PTR_TYPE_WIDE state, char *pattern, int length) {
+	char *cpy;
+	SET_1BIT_ELEMENT(machine->matches, state, 1);
+	cpy = createPattern_TM(pattern, length);
+	/*
+	cpy = (char*)malloc(sizeof(char) * (length + 1));
+	strncpy(cpy, pattern, length);
+	cpy[length] = '\0';
+	*/
+	machine->patterns[state] = cpy;
+}
+
+STATE_PTR_TYPE_WIDE getNextStateFromTable(TableStateMachine *machine, STATE_PTR_TYPE_WIDE currentState, char c) {
+	return GET_NEXT_STATE(machine->table, currentState, c);
+}
+
+#ifdef DEPTHMAP_INFOCOM
+static long _idx = 0;
+#endif
+
+int matchTableMachine(TableStateMachine *machine, MulticoreManager *manager, int transfer_heavy, char *input, int length, int verbose,
+		long *numAccesses, long *accessesByDepth, long *accessesByState, int *visits,
+		int *is_heavy, int *last_idx_in_root, double *uncommonRate) {
+//	int matchTableMachine(TableStateMachine *machine, char *input, int length, int verbose) {
+	STATE_PTR_TYPE_WIDE current, next;
+	STATE_PTR_TYPE_WIDE *table;
+	unsigned char *matches;
+	char **patterns;
+	int idx;
+	int res;
+
+	*uncommonRate = 0;
+
+#ifdef HEAVY_PACKET_RECOGNITION
+	int uncommon;
+	double rate;
+#endif
+
+#ifdef COUNT_BY_DEPTH
+	int currentDepth;
+#endif
+
+#ifdef TRACE_STATE_MACHINE
+	int val;
+#endif
+
+	res = 0;
+	table = machine->table;
+	matches = machine->matches;
+	patterns = machine->patterns;
+	idx = 0;
+	current = 0;
+#ifdef HEAVY_PACKET_RECOGNITION
+	uncommon = 0;
+	*is_heavy = 0;
+	rate = 0;
+#endif
+
+	while (idx < length) {
+#ifdef COUNT_BY_DEPTH
+		(*numAccesses)++;
+		currentDepth = machine->depthMap[current];
+		accessesByDepth[currentDepth]++;
+		accessesByState[current]++;
+#endif
+
+#ifdef PRINT_STATE_VISIT_HIST
+		visits[current]++;
+#endif
+
+#ifdef DEPTHMAP_INFOCOM
+		//if (_idx <= 1000000) {
+			printf("%ld\t%d\n", _idx++, currentDepth);
+		//}
+#endif
+
+#ifdef HEAVY_PACKET_RECOGNITION
+/*
+		if (transfer_heavy && last_idx_in_root && current == 0) {
+			*last_idx_in_root = idx;
+		}
+*/
+#ifdef SCANNER_STATISTICS
+		if ((current >= machine->num_common)) {
+#else
+		//if ((!(*is_heavy)) && (!IS_COMMON_STATE(machine, current))) {
+		if (/*(!(*is_heavy)) && */(current >= machine->num_common)) {
+#endif
+			uncommon++;
+			if (idx > HEAVY_PACKET_RECOGNITION_BYTES_TO_READ_BEFORE_CHECKING) {
+				rate = ((double)uncommon)/idx;
+				if (rate > machine->uncommon_rate_limit) {
+					*is_heavy = 1;
+					if (transfer_heavy) {
+//						printf("Transferring packet: state=%d, idx=%d, depth=%d, rate=%1.4f\n", current, idx, machine->depthMap[current], rate);
+						// Means that we are in alert mode and current packet is heavy
+						// Move packet to another thread
+						*uncommonRate = rate;
+#ifdef DEPTHMAP
+						*last_idx_in_root = idx - machine->depthMap[current];
+//						if (*last_idx_in_root < 0 || *last_idx_in_root > 10000) {
+//							fprintf(stderr, "Warning: weird value for last_index_in_root: %d\n", *last_idx_in_root);
+//						}
+#endif
+						return -1;
+					}
+				}
+			}
+		}
+
+#endif
+
+		next = GET_NEXT_STATE(table, current, input[idx]);
+
+#ifdef TRACE_STATE_MACHINE
+		printf("Current state: %d, next char: ", current);
+		val = (int)((input[idx]) & 0x0FF);
+		if (val >= 32 && val < 127) {
+			printf("%c", input[idx]);
+		} else {
+			printf("|%0X|", val);
+		}
+		printf(", %s, next state: %d\n", (GET_1BIT_ELEMENT(matches, next) ? "matched" : "not matched"), next);
+#endif
+		if (GET_1BIT_ELEMENT(matches, next)) {
+			// It's a match!
+			res = 1;
+#ifdef PRINT_MATCHES
+			if (verbose) {
+				printf("%s\n", patterns[next]);
+#ifdef TRACE_STATE_MACHINE
+				getc(stdin);
+#endif
+			}
+#endif
+		}
+		current = next;
+		idx++;
+	}
+	*uncommonRate = ((double)uncommon)/idx;
+	return res;
+}
+
+int matchTableMachine_no_trasfer(TableStateMachine *machine, MulticoreManager *manager,
+		char *input, int length, int verbose, int drop) {
+	STATE_PTR_TYPE_WIDE current, next;
+	STATE_PTR_TYPE_WIDE *table;
+	unsigned char *matches;
+	char **patterns;
+	int idx;
+	int res;
+	int lastRootVisit = 0;
+	int rootVisits = 0;
+
+	res = 0;
+	table = machine->table;
+	matches = machine->matches;
+	patterns = machine->patterns;
+	idx = 0;
+	current = 0;
+
+	while (idx < length) {
+		if (current == 0) {
+			lastRootVisit = 0;
+			rootVisits++;
+			if (drop && rootVisits > drop) {
+				// Drop packet
+				return -1;
+			}
+		} else {
+			lastRootVisit++;
+			/*
+			if (drop && lastRootVisit > drop) {
+				// Drop packet
+				return -1;
+			}
+			*/
+		}
+		next = GET_NEXT_STATE(table, current, input[idx]);
+
+		if (GET_1BIT_ELEMENT(matches, next)) {
+			// It's a match!
+			res = 1;
+#ifdef PRINT_MATCHES
+			if (verbose) {
+				printf("%s\n", patterns[next]);
+			}
+#endif
+		}
+		current = next;
+		idx++;
+	}
+	return res;
+}
