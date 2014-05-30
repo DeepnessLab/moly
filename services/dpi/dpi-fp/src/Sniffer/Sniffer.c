@@ -119,23 +119,15 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     {
     case IPPROTO_TCP:
         tcphdr = (struct tcphdr*)packetptr;
+#ifdef __APPLE__
         transport_len = 4 * tcphdr->th_off;
         packet->transport.tp_src = tcphdr->th_sport;
         packet->transport.tp_dst = tcphdr->th_dport;
-        /*
-        printf("TCP  %s:%d -> %s:%d\n", srcip, ntohs(tcphdr->th_sport),
-               dstip, ntohs(tcphdr->th_dport));
-        printf("%s\n", iphdrInfo);
-        printf("%c%c%c%c%c%c Seq: 0x%x Ack: 0x%x Win: 0x%x TcpLen: %d\n",
-               ((tcphdr->th_flags & TH_URG) ? 'U' : '*'),
-               ((tcphdr->th_flags & TH_ACK) ? 'A' : '*'),
-               ((tcphdr->th_flags & TH_PUSH) ? 'P' : '*'),
-               ((tcphdr->th_flags & TH_RST) ? 'R' : '*'),
-               ((tcphdr->th_flags & TH_SYN) ? 'S' : '*'),
-               ((tcphdr->th_flags & TH_FIN) ? 'F' : '*'),
-               ntohl(tcphdr->th_seq), ntohl(tcphdr->th_ack),
-               ntohs(tcphdr->th_win), 4*tcphdr->th_off);
-        */
+#elif __linux__
+        transport_len = 4 * tcphdr->doff;
+        packet->transport.tp_src = tcphdr->source;
+        packet->transport.tp_dst = tcphdr->dest;
+#endif
         packet->payload_len = ntohs(iphdr->ip_len) - (4*iphdr->ip_hl) - transport_len;
         packetptr += transport_len;
         packet->payload = (unsigned char *)packetptr;
@@ -144,8 +136,13 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     case IPPROTO_UDP:
         udphdr = (struct udphdr*)packetptr;
         transport_len = 8;
+#ifdef __APPLE__
         packet->transport.tp_src = udphdr->uh_sport;
         packet->transport.tp_dst = udphdr->uh_dport;
+#elif __linux__
+        packet->transport.tp_src = udphdr->source;
+        packet->transport.tp_dst = udphdr->dest;
+#endif
         /*
         printf("UDP  %s:%d -> %s:%d\n", srcip, ntohs(udphdr->uh_sport),
                dstip, ntohs(udphdr->uh_dport));
@@ -505,4 +502,6 @@ int main(int argc, char *argv[]) {
 	machine = generateTableStateMachine(patterns, 0);
 
 	sniff(in_if, out_if, machine);
+
+	return 0;
 }
