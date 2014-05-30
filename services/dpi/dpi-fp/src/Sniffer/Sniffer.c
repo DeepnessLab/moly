@@ -104,6 +104,9 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     packet->ip_ttl = iphdr->ip_ttl;
     packet->ip_proto = iphdr->ip_p;
 
+    packet->payload = NULL;
+    packet->payload_len = 0;
+
     /*
     strcpy(srcip, inet_ntoa(iphdr->ip_src));
     strcpy(dstip, inet_ntoa(iphdr->ip_dst));
@@ -421,6 +424,7 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
 			exit(1);
 		}
 
+		linkHdrLen = 0;
 		if (i == 0) {
 			switch (linktype[0])
 			{
