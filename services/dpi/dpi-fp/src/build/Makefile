@@ -13,7 +13,7 @@ clean:
 
 # EXECUTABLES
 main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o
-	gcc -Wall $(O_SYM) $(LIBS) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o && rm *.o
+	gcc -Wall $(O_SYM) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o $(LIBS) && rm *.o
 
 # OBJECTS
 
