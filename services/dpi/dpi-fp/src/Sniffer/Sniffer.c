@@ -469,7 +469,7 @@ int main(int argc, char *argv[]) {
 	char *in_if = NULL;
 	char *out_if = NULL;
 	TableStateMachine *machine;
-	char *patterns = "SnortPatternsFull2.json";
+	char *patterns = NULL;
 	int i;
 	char *param, *arg;
 	int auto_mode;
@@ -480,13 +480,13 @@ int main(int argc, char *argv[]) {
 		for (i = 1; i < argc; i++) {
 			param = strsep(&argv[i], ":");
 			arg = argv[i];
-			if (strcmp(param, "in") != 0) {
+			if (strcmp(param, "in") == 0) {
 				in_if = arg;
-			} else if (strcmp(param, "out") != 0) {
+			} else if (strcmp(param, "out") == 0) {
 				out_if = arg;
-			} else if (strcmp(param, "rules") != 0) {
+			} else if (strcmp(param, "rules") == 0) {
 				patterns = arg;
-			} else if (strcmp(param, "auto") != 0) {
+			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
 			}
