@@ -322,8 +322,11 @@ void acBuildTree(ACTree *tree, const char *path) {
 	json_parser parser = match_rule_parser;
 
 	numRules = parse_json_file(path, parser, rules);
-	if (numRules <= 0) {
-		// No rules or error
+	if (numRules < 0) {
+		// Error
+		exit(numRules);
+	} else if (numRules == 0) {
+		// No rules
 		return;
 	}
 
