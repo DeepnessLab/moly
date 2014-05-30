@@ -239,6 +239,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	current = 0;
 
 	parse_packet(processor, packetptr, &packet);
+	//printf("[Sniffer] Packet data: %s\n", (char*)(packet.payload));
 
 	// Scan payload
 	// TODO: Per-flow scan (remember current state for each flow)
@@ -463,13 +464,45 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
 	stop(res);
 }
 
-int main() {
-	char *in_if = "en0";
-	char *out_if = "en0";
-
+int main(int argc, char *argv[]) {
+	char *in_if = NULL;
+	char *out_if = NULL;
 	TableStateMachine *machine;
+	char *patterns = "SnortPatternsFull2.json";
+	int i;
+	char *param, *arg;
+	int auto_mode;
 
-	machine = generateTableStateMachine("SnortPatternsFull2.json", 0);
+	auto_mode = 0;
+
+	if (argc > 1) {
+		for (i = 1; i < argc; i++) {
+			param = strsep(&argv[i], ":");
+			arg = argv[i];
+			if (strcmp(param, "in") != 0) {
+				in_if = arg;
+			} else if (strcmp(param, "out") != 0) {
+				out_if = arg;
+			} else if (strcmp(param, "rules") != 0) {
+				patterns = arg;
+			} else if (strcmp(param, "auto") != 0) {
+				auto_mode = 1;
+				break;
+			}
+		}
+	}
+	if (auto_mode == 0 && (in_if == NULL || out_if == NULL || patterns == NULL)) {
+		// Show usage
+		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> rules:<rules file>\nThis tool may require root privileges.\n", argv[0]);
+		exit(1);
+	} else if (auto_mode == 1) {
+		// Set defaults
+		in_if = "en0";
+		out_if = "en0";
+		patterns = "SnortPatternsFull2.json";
+	}
+
+	machine = generateTableStateMachine(patterns, 0);
 
 	sniff(in_if, out_if, machine);
 }
