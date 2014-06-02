@@ -351,6 +351,11 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
 			exit(1);
 		}
 
+		if (i == 0) {
+			// Set promiscuous mode
+			pcap_set_promisc(hpcap[0], 1);
+		}
+
 		// Activate PCAP
 		res = pcap_activate(hpcap[i]);
 		switch (res) {
