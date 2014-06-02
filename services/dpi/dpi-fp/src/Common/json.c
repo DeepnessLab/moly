@@ -10,7 +10,7 @@
 #include <string.h>
 #include "json.h"
 
-#define MAX_JSON_OBJECT_LEN 2048
+#define MAX_JSON_OBJECT_LEN 4096
 #define MAX_FIELDS_IN_OBJECT 20
 #define MAX_FIELD_NAME_LENGTH 128
 #define MAX_FIELD_VALUE_LENGTH 1024
@@ -127,6 +127,7 @@ int parse_single_object(char *data, int len, void *result, json_parser parser, v
 int parse_json_file(const char *path, json_parser parser, void *results) {
 	FILE *f;
 	char data[MAX_JSON_OBJECT_LEN];
+	char temp[MAX_JSON_OBJECT_LEN];
 	void *res_ptr;
 	int len, last;
 	int next, count;
@@ -155,9 +156,9 @@ int parse_json_file(const char *path, json_parser parser, void *results) {
 		}
 		count++;
 
-		memcpy(data, &(data[next]), len - next);
-
 		last = len - next;
+		memcpy(temp, &(data[next]), last);
+		memcpy(data, temp, last);
 	}
 
 	fclose(f);
