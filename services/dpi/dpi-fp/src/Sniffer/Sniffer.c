@@ -239,9 +239,9 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	current = 0;
 
 	parse_packet(processor, packetptr, &packet);
-	printf("[Sniffer] Packet src_ip=%d,dst_ip=%d,ip_tos=%d,ip_proto=%d,src_port=%d,dst_port=%d,data=\"%s\"\n",
-			packet.ip_src, packet.ip_dst, packet.ip_tos, packet.ip_proto, packet.transport.tp_src, packet.transport.tp_dst,
-			(char*)(packet.payload));
+	//printf("[Sniffer] Packet src_ip=%d,dst_ip=%d,ip_tos=%d,ip_proto=%d,src_port=%d,dst_port=%d,data=\"%s\"\n",
+	//		packet.ip_src, packet.ip_dst, packet.ip_tos, packet.ip_proto, packet.transport.tp_src, packet.transport.tp_dst,
+	//		(char*)(packet.payload));
 
 	// Scan payload
 	// TODO: Per-flow scan (remember current state for each flow)
