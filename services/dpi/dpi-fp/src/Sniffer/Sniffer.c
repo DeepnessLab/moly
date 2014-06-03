@@ -239,6 +239,9 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	current = 0;
 
 	parse_packet(processor, packetptr, &packet);
+	//packet.payload = packetptr;
+	//packet.payload_len = 5;
+
 	//printf("[Sniffer] Packet src_ip=%d,dst_ip=%d,ip_tos=%d,ip_proto=%d,src_port=%d,dst_port=%d,data=\"%s\"\n",
 	//		packet.ip_src, packet.ip_dst, packet.ip_tos, packet.ip_proto, packet.transport.tp_src, packet.transport.tp_dst,
 	//		(char*)(packet.payload));
@@ -251,7 +254,8 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	// Build outgoing packet
 	size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
-printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
+	printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
+
 	// TODO: Send outgoing packet
 	pcap_sendpacket(processor->pcap_out, data, size);
 }
@@ -479,6 +483,14 @@ int main(int argc, char *argv[]) {
 	char *param, *arg;
 	int auto_mode;
 
+
+	// ************* BEGIN DEBUG
+	//struct pcap_pkthdr pkthdr;
+	//char pkt[2048];
+	//ProcessorData *processor;
+	// ************* END
+
+
 	auto_mode = 0;
 
 	if (argc > 1) {
@@ -509,6 +521,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	machine = generateTableStateMachine(patterns, 0);
+
+	// ************* BEGIN DEBUG
+	//void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr)
+	//processor = init_processor(machine, NULL, NULL, 0);
+	//strcpy(pkt,"008g");
+	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
+	// ************* END
+
+
 
 	sniff(in_if, out_if, machine);
 

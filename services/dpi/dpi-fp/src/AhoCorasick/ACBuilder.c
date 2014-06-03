@@ -267,10 +267,11 @@ int pattern_to_bin(char *pattern, int len, char *bin) {
 			hex[0] = pattern[i+1];
 			hex[1] = pattern[i+2];
 			bin[j] = (char)strtol(hex, NULL, 16);
-			i += 2;
+			i += 3;
 			j++;
 		} else {
 			bin[j] = pattern[i];
+			j++;
 		}
 	}
 	return j;
@@ -293,20 +294,20 @@ void *match_rule_parser(char ***pairs, int numPairs, void *result) {
 			if (strcmp(pairs[i][1], "\"MatchRule\"") != 0 && strcmp(pairs[i][1], "'MatchRule'") != 0) {
 				fprintf(stderr, "[ACBuilder] Invalid JSON object class: %s.\n", pairs[i][1]);
 				exit(1);
-			} else if (strcmp(pairs[i][0], "pattern") == 0) {
-				pat_len = strlen(pairs[i][1]);
-				rule->len = pattern_to_bin(&(pairs[i][1][1]), pat_len - 2, pattern);
-				rule->pattern = (char*)malloc(sizeof(char) * rule->len);
-				memcpy(rule->pattern, pattern, sizeof(char) * rule->len);
-			} else if (strcmp(pairs[i][0], "is_regex") == 0) {
-				if (strcmp(pairs[i][1], "true") == 0) {
-					rule->is_regex = 1;
-				}
-			} else if (strcmp(pairs[i][0], "rid") == 0) {
-				rule->rid = (unsigned int)atoi(pairs[i][1]);
-			} else {
-				// Ignore other fields
 			}
+		} else if (strcmp(pairs[i][0], "pattern") == 0) {
+			pat_len = strlen(pairs[i][1]);
+			rule->len = pattern_to_bin(&(pairs[i][1][1]), pat_len - 2, pattern);
+			rule->pattern = (char*)malloc(sizeof(char) * rule->len);
+			memcpy(rule->pattern, pattern, sizeof(char) * rule->len);
+		} else if (strcmp(pairs[i][0], "is_regex") == 0) {
+			if (strcmp(pairs[i][1], "true") == 0) {
+				rule->is_regex = 1;
+			}
+		} else if (strcmp(pairs[i][0], "rid") == 0) {
+			rule->rid = (unsigned int)atoi(pairs[i][1]);
+		} else {
+			// Ignore other fields
 		}
 	}
 
