@@ -251,7 +251,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	// Build outgoing packet
 	size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
-
+printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
 	// TODO: Send outgoing packet
 	pcap_sendpacket(processor->pcap_out, data, size);
 }
