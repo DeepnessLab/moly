@@ -430,29 +430,27 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
 			fprintf(stderr, "[Sniffer] Incompatible link types (input=%d, output=%d)\n", linktype[0], linktype[1]);
 			exit(1);
 		}
+	}
 
-		linkHdrLen = 0;
-		if (i == 0) {
-			switch (linktype[0])
-			{
-			case DLT_NULL:
-				linkHdrLen = 4;
-				break;
+	linkHdrLen = 0;
+	switch (linktype[0])
+	{
+	case DLT_NULL:
+		linkHdrLen = 4;
+		break;
 
-			case DLT_EN10MB:
-				linkHdrLen = 14;
-				break;
+	case DLT_EN10MB:
+		linkHdrLen = 14;
+		break;
 
-			case DLT_SLIP:
-			case DLT_PPP:
-				linkHdrLen = 24;
-				break;
+	case DLT_SLIP:
+	case DLT_PPP:
+		linkHdrLen = 24;
+		break;
 
-			default:
-				fprintf(stderr, "[Sniffer] Unsupported data link type: %d\n", linktype[0]);
-				exit(1);
-			}
-		}
+	default:
+		fprintf(stderr, "[Sniffer] Unsupported data link type: %d\n", linktype[0]);
+		exit(1);
 	}
 
 	// Prepare processor
