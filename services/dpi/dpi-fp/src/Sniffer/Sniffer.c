@@ -45,6 +45,7 @@ typedef struct {
 	unsigned char ip_tos;
 	unsigned char ip_ttl;
 	unsigned char ip_proto;
+	unsigned short ip_len;
 
 	union {
 		struct _icmp {
@@ -103,6 +104,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     packet->ip_tos = iphdr->ip_tos;
     packet->ip_ttl = iphdr->ip_ttl;
     packet->ip_proto = iphdr->ip_p;
+    packet->ip_len = ntohs(iphdr->ip_len);
 
     packet->payload = NULL;
     packet->payload_len = 0;
@@ -192,6 +194,8 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	// Copy headers
 	hdrs_len = pkthdr->len - in_packet->payload_len;
 	memcpy(result, packetptr, hdrs_len);
+	// Change IP total length
+	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len) + 4 + (num_reports * 12);
 
 	// Find results
 	r = 0;
