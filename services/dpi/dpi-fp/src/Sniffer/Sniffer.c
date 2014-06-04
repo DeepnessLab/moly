@@ -197,6 +197,8 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	// Change IP total length
 	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len + 4 + (num_reports * 12));
 
+	// TODO: Recompute checksum
+
 	// Find results
 	r = 0;
 	for (i = 0; i < num_reports; i++) {
