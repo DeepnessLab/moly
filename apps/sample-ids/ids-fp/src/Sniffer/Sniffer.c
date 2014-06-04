@@ -215,7 +215,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	Packet packet;
 	unsigned char data[MAX_PACKET_SIZE];
 	int size;
-	int num_reports, i;
+	int num_reports, i, total_reports;
 
 	processor = (ProcessorData*)arg;
 
@@ -226,19 +226,21 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	//		(char*)(packet.payload));
 
 	num_reports = 0;
+	total_reports = 0;
 	// Process Results
 	if (ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
 		// Reports exist
-		num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[2]))))) + processor->num_reports;
-		if (num_reports > processor->num_reports && num_reports < MAX_REPORTED_RULES) {
-			for (i = processor->num_reports; i < num_reports; i++) {
+		num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[2])))));
+		total_reports = num_reports + processor->num_reports;
+		if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
+			for (i = processor->num_reports; i < total_reports; i++) {
 				processor->reports[i].rid = ntohl(*(unsigned short*)(&(packet.payload[4 + (i * 12)])));
 				processor->reports[i].startIdxInPacket = ntohl(*(unsigned short*)(&(packet.payload[8 + (i * 12)])));
 				processor->reports[i].startIdxInFlow = ntohl(*(unsigned short*)(&(packet.payload[12 + (i * 12)])));
 			}
 		}
 	}
-	processor->num_reports = num_reports;
+	processor->num_reports = total_reports;
 	processor->bytes += packet.payload_len - 4 - (num_reports * 12);
 
 	// Build outgoing packet
