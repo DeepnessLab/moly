@@ -227,7 +227,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	// Put L7 payload
 	memcpy(ptr, in_packet->payload, in_packet->payload_len);
 
-	return (int)(ptr - result);
+	return (int)(ptr - result + in_packet->payload_len);
 }
 
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
