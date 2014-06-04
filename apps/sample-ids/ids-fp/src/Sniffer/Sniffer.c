@@ -206,14 +206,12 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
 	ProcessorData *processor;
-	int current;
 	Packet packet;
 	unsigned char data[MAX_PACKET_SIZE];
 	int size;
 	int num_reports, i;
 
 	processor = (ProcessorData*)arg;
-	current = 0;
 
 	parse_packet(processor, packetptr, &packet);
 
@@ -225,7 +223,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	// Process Results
 	if (ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
 		// Reports exist
-		num_reports = 0x0FFFF & ntohs(*(unsigned short*)(&(packet.payload[2]))) + processor->num_reports;
+		num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[2]))))) + processor->num_reports;
 		if (num_reports > processor->num_reports && num_reports < MAX_REPORTED_RULES) {
 			for (i = processor->num_reports; i < num_reports; i++) {
 				processor->reports[i].rid = ntohl(*(unsigned short*)(&(packet.payload[4 + (i * 12)])));
