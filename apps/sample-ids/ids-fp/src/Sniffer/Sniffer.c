@@ -232,6 +232,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 			}
 		}
 	}
+	processor->num_reports = num_reports;
 	processor->bytes += packet.payload_len - 4 - (num_reports * 12);
 
 	// Build outgoing packet
