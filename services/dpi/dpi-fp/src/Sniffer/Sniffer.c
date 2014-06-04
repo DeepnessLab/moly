@@ -195,7 +195,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	hdrs_len = pkthdr->len - in_packet->payload_len;
 	memcpy(result, packetptr, hdrs_len);
 	// Change IP total length
-	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len) + 4 + (num_reports * 12);
+	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len + 4 + (num_reports * 12));
 
 	// Find results
 	r = 0;
