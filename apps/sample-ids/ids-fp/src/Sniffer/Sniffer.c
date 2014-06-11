@@ -195,6 +195,9 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 
     // Advance to the transport layer header then parse and display
     // the fields based on the type of header: tcp, udp or icmp.
+    packet->seqnum = 0;
+    packet->transport.tp_src = 0;
+    packet->transport.tp_dst = 0;
     packetptr += 4*iphdr->ip_hl;
     switch (iphdr->ip_p)
     {
@@ -261,7 +264,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	ProcessorData *processor;
 	Packet packet;
 	int num_reports, i, total_reports;
-	unsigned int seqnum_id, flow_offset;
+	unsigned int seqnum_id;//, flow_offset;
 	InPacket *bpkt;
 
 	processor = (ProcessorData*)arg;
@@ -278,7 +281,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 			// Found corresponding data packet
 			num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
 			total_reports = num_reports + processor->num_reports;
-			flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
+			//flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
 			if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
 				for (i = processor->num_reports; i < total_reports; i++) {
 					processor->reports[i].rid = ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_REPORTS_START + (i * REPORT_PACKET_REPORT_SIZE)])));
