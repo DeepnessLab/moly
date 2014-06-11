@@ -27,13 +27,17 @@
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
 
+#define GET_MBPS(bytes, usecs) \
+	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
+
 typedef struct {
 	int counter;
 	TableStateMachine *machine;
 	int linkHdrLen;
 	pcap_t *pcap_in;
 	pcap_t *pcap_out;
-	struct timeval start, end;
+	struct timeval start, end, first_packet, last_packet;
+	int started;
 	long bytes;
 } ProcessorData;
 
@@ -91,6 +95,7 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->pcap_out = pcap_out;
 	processor->linkHdrLen = linkHdrLen;
 	processor->bytes = 0;
+	processor->started = 0;
 
 	return processor;
 }
@@ -317,6 +322,11 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	processor = (ProcessorData*)arg;
 	current = 0;
 
+	if (!processor->started) {
+		processor->started = 1;
+		gettimeofday(&(processor->first_packet), NULL);
+	}
+
 	parse_packet(processor, packetptr, &packet);
 	//packet.payload = packetptr;
 	//packet.payload_len = 5;
@@ -350,12 +360,12 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 			pcap_sendpacket(processor->pcap_out, data, size);
 		}
 	}
-
+	gettimeofday(&(processor->last_packet), NULL);
 }
 
 void stop(int res) {
 	// Finish
-	long usecs;
+	long usecs_total, usecs_packets;
 
 	gettimeofday(&(_global_processor->end), NULL);
 
@@ -383,10 +393,16 @@ void stop(int res) {
 
 	destroyTableStateMachine(_global_processor->machine);
 
-	usecs = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
+	usecs_total = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
+	usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
 	printf("Total bytes: %ld\n", _global_processor->bytes);
-	printf("Total time: %ld usec.\n", usecs);
-	printf("Total throughput: %4.3f Mbps\n", (_global_processor->bytes * 8.0 * 1000000) / (usecs * 1024 * 1024));
+	printf("+---------------- Timing Results ---------------+\n");
+	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
+	printf("+-------+-------------------+-------------------+\n");
+	printf("| Gross | %17ld | %14.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+	printf("+-------+-------------------+-------------------+\n");
+	printf("| Neto  | %17ld | %14.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+	printf("+-------+-------------------+-------------------+\n");
 
 	destroy_processor(_global_processor);
 

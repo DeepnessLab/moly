@@ -41,13 +41,17 @@
 #define REPORT_PACKET_REPORT_SIZE 4
 #define REPORT_PACKET_OFFSET_START_IDX 2
 
+#define GET_MBPS(bytes, usecs) \
+	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
+
 typedef struct {
 	int counter;
 	int linkHdrLen;
 	int last;
 	pcap_t *pcap_in;
 	pcap_t *pcap_out;
-	struct timeval start, end;
+	struct timeval start, end, first_packet, last_packet;
+	int started; // Used to determine if a packet is the first one we see
 	long bytes;
 	MatchReport reports[MAX_REPORTED_RULES];
 	int num_reports;
@@ -77,6 +81,7 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen,
 	memset(processor->reports, 0, sizeof(MatchReport) * MAX_REPORTED_RULES);
 	processor->num_reports = 0;
 	processor->terminated = 0;
+	processor->started = 0;
 
 	packet_buffer_init(&(processor->dataPacketQueue));
 	packet_buffer_init(&(processor->matchPacketQueue));
@@ -291,6 +296,11 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	processor = (ProcessorData*)arg;
 
+	if (processor->started) {
+		processor->started = 1;
+		gettimeofday(&(processor->first_packet), NULL);
+	}
+
 	parse_packet(processor, packetptr, &packet);
 
 	if (packet.ip_proto == IPPROTO_UDP && ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
@@ -331,11 +341,12 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
         printf("Received a data packet with no matches, forwarding it\n");
 		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
+	gettimeofday(&(processor->last_packet), NULL);
 }
 
 void stop(int res) {
 	// Finish
-	long usecs;
+	long usecs_total, usecs_packets;
 
 	gettimeofday(&(_global_processor->end), NULL);
 
@@ -365,11 +376,17 @@ void stop(int res) {
 		break;
 	}
 
-	usecs = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
+	usecs_total = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
+	usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
 	printf("Total bytes: %ld\n", _global_processor->bytes);
-	printf("Total time: %ld usec.\n", usecs);
-	printf("Total throughput: %4.3f Mbps\n", (_global_processor->bytes * 8.0 * 1000000) / (usecs * 1024 * 1024));
-
+	printf("+---------------- Timing Results ---------------+\n");
+	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
+	printf("+-------+-------------------+-------------------+\n");
+	printf("| Gross | %17ld | %14.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+	printf("+-------+-------------------+-------------------+\n");
+	printf("| Neto  | %17ld | %14.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+	printf("+-------+-------------------+-------------------+\n");
+	printf("\n");
 	printf("Total reported matches: %d\n", _global_processor->num_reports);
 
 	destroy_processor(_global_processor);
