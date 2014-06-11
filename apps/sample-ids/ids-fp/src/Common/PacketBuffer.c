@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include "PacketBuffer.h"
 
@@ -47,6 +48,10 @@ void packet_buffer_enqueue(PacketBuffer *q, InPacket *packet) {
 	lock(q);
 
 	i = (PacketBufferItem*)malloc(sizeof(PacketBufferItem));
+	if (!i) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
 	i->packet = packet;
 	i->next = NULL;
 	i->prev = q->tail;

@@ -63,6 +63,10 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen,
 	ProcessorData *processor;
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
+	if (!processor) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
 
 	processor->counter = 0;
 	processor->pcap_in = pcap_in;
@@ -90,8 +94,16 @@ static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *
 	InPacket *res;
 
 	res = (InPacket*)malloc(sizeof(InPacket));
+	if (!res) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
 	res->pkthdr = *pkthdr;
 	res->pktdata = (unsigned char*)malloc(sizeof(unsigned char) * pkthdr->len);
+	if (!(res->pktdata)) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
 	memcpy(res->pktdata, pktptr, sizeof(unsigned char) * pkthdr->len);
 	res->seqnum = seqnum_key;
 	res->timestamp = time(0);
