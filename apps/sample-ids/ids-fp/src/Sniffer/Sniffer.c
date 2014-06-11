@@ -119,6 +119,10 @@ static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *
 	res->seqnum = packet->seqnum;
 	res->timestamp = time(0);
 	res->payload_len = packet->payload_len;
+    res->src_ip = packet->ip_src;
+    res->dst_ip = packet->ip_dst;
+    res->src_port = packet->transport.tp_src;
+    res->dst_port = packet->transport.tp_dst;
 	return res;
 }
 
@@ -274,12 +278,14 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	if (packet.ip_proto == IPPROTO_UDP && ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
 		// Packet contains matching results
 		seqnum_id = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_SEQNUM])))));
+        printf("Received matching results packet (seqnum=%u)\n", seqnum_id);
 		// Find corresponding data packet
 		bpkt = packet_buffer_pop(&(processor->queue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, seqnum_id);
 		// Handle matches
 		if (bpkt) {
 			// Found corresponding data packet
 			num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
+            printf("Found corresponding data packet (num_reports=%d)\n", num_reports);
 			total_reports = num_reports + processor->num_reports;
 			//flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
 			if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
@@ -297,14 +303,17 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 			free_buffered_packet(bpkt);
 		} else {
 			// Forward matches packet only
+            printf("Corresponding packet was not found\n");
 			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 		}
 	} else if ((packet.ip_tos & IP_TOS_HAS_MATCHES_MASK) == IP_TOS_HAS_MATCHES_MASK) {
 		// Packet has matches - buffer it
+        printf("Received a data packet that has matches (seqnum=%u)\n", packet.seqnum);
 		bpkt = buffer_packet(&packet, pkthdr, packetptr);
 		packet_buffer_enqueue(&(processor->queue), bpkt);
 	} else {
 		// Regular packet with no matches, forward it
+        printf("Received a data packet with no matches\n");
 		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
 }
@@ -520,7 +529,7 @@ void sniff(char *in_if, char *out_if) {
 	signal(SIGQUIT, stop);
 
 	// Run buffer cleaning worker
-	pthread_create(&(processor->bufferWorker), NULL, process_buffer_timeout, (void*)processor);
+//	pthread_create(&(processor->bufferWorker), NULL, process_buffer_timeout, (void*)processor);
 
 	// Run sniffer
 	gettimeofday(&(processor->start), NULL);

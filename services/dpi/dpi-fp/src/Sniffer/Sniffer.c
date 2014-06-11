@@ -264,7 +264,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	reshdr->magicnum = htons(MAGIC_NUM);
 	reshdr->numReports = htons(r);
 	reshdr->flowOffset = 0;
-	reshdr->seqNum = in_packet->seqnum;
+	reshdr->seqNum = htonl(in_packet->seqnum);
 
 	// Write reports to packet
 	memcpy(&(result[hdrs_len + 40]), rules, sizeof(ResultPacketReport) * r);
@@ -343,7 +343,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 		// Build results packet
 		size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
-		printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
+		printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkthdr->len, size, packet.seqnum);
 
 		// Send results packet
 		if (size) {
