@@ -315,6 +315,7 @@ void *match_rule_parser(char ***pairs, int numPairs, void *result) {
 	return result + sizeof(MatchRule);
 }
 
+#define MAX_RULES_FOR_DFA 16384
 #define MAX_RULES 65536
 
 void acBuildTree(ACTree *tree, const char *path) {
@@ -337,7 +338,7 @@ void acBuildTree(ACTree *tree, const char *path) {
 	i = 0;
 	tree->root = createNewNode(tree, NULL);
 
-	while (i < numRules && (MAX_RULES <= 0 || count < MAX_RULES)) {
+	while (i < numRules && (MAX_RULES_FOR_DFA <= 0 || count < MAX_RULES_FOR_DFA)) {
 		if (rules[i].len < MIN_PATTERN_LENGTH) {
 			i++;
 			continue;
@@ -358,7 +359,7 @@ void acBuildTree(ACTree *tree, const char *path) {
 	}
 
 	printf("+---------- AC DFA Info ----------+\n");
-	printf("| Total rules: %18d |\n", numRules);
+	printf("| Total rules: %18d |\n", count);
 	printf("| Total states: %17d |\n", tree->size);
 	printf("| Total bytes: %18d |\n", tree->size * 4);
 	printf("+---------------------------------+\n");
