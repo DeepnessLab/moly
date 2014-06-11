@@ -361,7 +361,7 @@ void acBuildTree(ACTree *tree, const char *path) {
 	printf("+---------- AC DFA Info ----------+\n");
 	printf("| Total rules: %18d |\n", count);
 	printf("| Total states: %17d |\n", tree->size);
-	printf("| Total bytes: %18d |\n", tree->size * 4);
+	printf("| Total bytes: %18d |\n", tree->size * 4 * 256);
 	printf("+---------------------------------+\n");
 }
 
