@@ -102,10 +102,10 @@ InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int d
 	i = q->head;
 	while (i) {
 		if (i->packet->seqnum == seqnum &&
-				i->packet->src_ip == src_ip &&
-				i->packet->dst_ip == dst_ip &&
-				i->packet->src_port == src_port &&
-				i->packet->dst_port == dst_port) {
+				i->packet->packet.ip_src == src_ip &&
+				i->packet->packet.ip_dst == dst_ip &&
+				i->packet->packet.transport.tp_src == src_port &&
+				i->packet->packet.transport.tp_dst == dst_port) {
 			res = i->packet;
 
 			// Remove element

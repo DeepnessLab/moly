@@ -9,18 +9,14 @@
 #define PACKETBUFFER_H_
 
 #include <pcap.h>
+#include "Types.h"
 
 typedef struct {
 	struct pcap_pkthdr pkthdr;
 	unsigned char *pktdata;
-	unsigned int payload_len;
 	unsigned long timestamp;
 	unsigned int seqnum;
-	unsigned int src_ip;
-	unsigned int dst_ip;
-	unsigned short src_port;
-	unsigned short dst_port;
-	unsigned short proto;
+	Packet packet;
 } InPacket;
 
 typedef struct sq_item {

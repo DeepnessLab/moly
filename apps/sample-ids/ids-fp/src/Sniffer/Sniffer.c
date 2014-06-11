@@ -49,39 +49,11 @@ typedef struct {
 	long bytes;
 	MatchReport reports[MAX_REPORTED_RULES];
 	int num_reports;
-	PacketBuffer queue;
+	PacketBuffer dataPacketQueue;
+	PacketBuffer matchPacketQueue;
 	pthread_t bufferWorker;
 	int terminated;
 } ProcessorData;
-
-typedef struct {
-	// IPv4
-	in_addr_t ip_src;
-	in_addr_t ip_dst;
-	unsigned short ip_id;
-	unsigned char ip_tos;
-	unsigned char ip_ttl;
-	unsigned char ip_proto;
-	unsigned short ip_len;
-
-	union {
-		struct _icmp {
-			// ICMP
-			unsigned short icmp_type;
-			unsigned short icmp_code;
-		} icmp;
-		struct _transport {
-			// Transport
-			unsigned short tp_src;
-			unsigned short tp_dst;
-		} transport;
-	};
-	unsigned int seqnum;
-
-	// Data
-	unsigned int payload_len;
-	unsigned char *payload;
-} Packet;
 
 static ProcessorData *_global_processor;
 
@@ -99,30 +71,28 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen)
 	processor->num_reports = 0;
 	processor->terminated = 0;
 
-	packet_buffer_init(&(processor->queue));
+	packet_buffer_init(&(processor->dataPacketQueue));
+	packet_buffer_init(&(processor->matchPacketQueue));
 
 	return processor;
 }
 
 void destroy_processor(ProcessorData *processor) {
-	packet_buffer_destroy(&(processor->queue), 1);
+	packet_buffer_destroy(&(processor->dataPacketQueue), 1);
+	packet_buffer_destroy(&(processor->matchPacketQueue), 1);
 	free(processor);
 }
 
-static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *pkthdr, const unsigned char *pktptr) {
+static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *pkthdr, const unsigned char *pktptr, unsigned int seqnum_key) {
 	InPacket *res;
 
 	res = (InPacket*)malloc(sizeof(InPacket));
 	res->pkthdr = *pkthdr;
 	res->pktdata = (unsigned char*)malloc(sizeof(unsigned char) * pkthdr->len);
 	memcpy(res->pktdata, pktptr, sizeof(unsigned char) * pkthdr->len);
-	res->seqnum = packet->seqnum;
+	res->seqnum = seqnum_key;
 	res->timestamp = time(0);
-	res->payload_len = packet->payload_len;
-    res->src_ip = packet->ip_src;
-    res->dst_ip = packet->ip_dst;
-    res->src_port = packet->transport.tp_src;
-    res->dst_port = packet->transport.tp_dst;
+	res->packet = *packet;
 	return res;
 }
 
@@ -137,6 +107,8 @@ void *process_buffer_timeout(void *param) {
 
 	processor = (ProcessorData*)param;
 
+	// TODO: Also clean matchPacketQueue
+
 	while (!processor->terminated) {
 		// Wait
 		sleep(BUFFER_CLEANNING_INTERVAL);
@@ -145,23 +117,23 @@ void *process_buffer_timeout(void *param) {
 			break;
 
 		// Clean buffer
-		pkt = packet_buffer_peek(&(processor->queue));
+		pkt = packet_buffer_peek(&(processor->dataPacketQueue));
 
 		while (pkt && pkt->timestamp + BUFFER_TIMEOUT < time(0)) {
-			pkt = packet_buffer_dequeue(&(processor->queue));
+			pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
 			// Drop packet!
 			free_buffered_packet(pkt);
 
-			pkt = packet_buffer_peek(&(processor->queue));
+			pkt = packet_buffer_peek(&(processor->dataPacketQueue));
 		}
 	}
 
 	// Clear buffer
-	pkt = packet_buffer_dequeue(&(processor->queue));
+	pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
 
 	while (pkt) {
 		free_buffered_packet(pkt);
-		pkt = packet_buffer_dequeue(&(processor->queue));
+		pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
 	}
 	return NULL;
 }
@@ -264,11 +236,31 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     }
 }
 
+static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, const struct pcap_pkthdr *dataPkthdr, const unsigned char *dataPacketPtr,
+		Packet *matchPkt, const struct pcap_pkthdr *matchPkthdr, const unsigned char *matchPacketPtr) {
+	int num_reports, i, total_reports;
+	//unsigned int flow_offset;
+	num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(matchPkt->payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
+	total_reports = num_reports + processor->num_reports;
+	//flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
+	if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
+		for (i = processor->num_reports; i < total_reports; i++) {
+			processor->reports[i].rid = ntohs(*(unsigned short*)(&(matchPkt->payload[REPORT_PACKET_OFFSET_REPORTS_START + (i * REPORT_PACKET_REPORT_SIZE)])));
+			processor->reports[i].startIdxInPacket = (int)ntohs(*(short*)(&(matchPkt->payload[REPORT_PACKET_OFFSET_REPORTS_START + REPORT_PACKET_OFFSET_START_IDX + (i * REPORT_PACKET_REPORT_SIZE)])));
+		}
+	}
+	processor->num_reports = total_reports;
+	processor->bytes += dataPkt->payload_len;
+
+	// Forward both packets
+	pcap_sendpacket(processor->pcap_out, dataPacketPtr, dataPkthdr->len);
+	pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
+}
+
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
 	ProcessorData *processor;
 	Packet packet;
-	int num_reports, i, total_reports;
-	unsigned int seqnum_id;//, flow_offset;
+	unsigned int seqnum_id;
 	InPacket *bpkt;
 
 	processor = (ProcessorData*)arg;
@@ -280,40 +272,37 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 		seqnum_id = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_SEQNUM])))));
         printf("Received matching results packet (seqnum=%u)\n", seqnum_id);
 		// Find corresponding data packet
-		bpkt = packet_buffer_pop(&(processor->queue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, seqnum_id);
+		bpkt = packet_buffer_pop(&(processor->dataPacketQueue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, seqnum_id);
 		// Handle matches
 		if (bpkt) {
 			// Found corresponding data packet
-			num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
-            printf("Found corresponding data packet (num_reports=%d)\n", num_reports);
-			total_reports = num_reports + processor->num_reports;
-			//flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
-			if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
-				for (i = processor->num_reports; i < total_reports; i++) {
-					processor->reports[i].rid = ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_REPORTS_START + (i * REPORT_PACKET_REPORT_SIZE)])));
-					processor->reports[i].startIdxInPacket = (int)ntohs(*(short*)(&(packet.payload[REPORT_PACKET_OFFSET_REPORTS_START + REPORT_PACKET_OFFSET_START_IDX + (i * REPORT_PACKET_REPORT_SIZE)])));
-				}
-			}
-			processor->num_reports = total_reports;
-			processor->bytes += bpkt->payload_len;
-
-			// Forward both packets
-			pcap_sendpacket(processor->pcap_out, bpkt->pktdata, bpkt->pkthdr.len);
-			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+		    printf("Found corresponding data packet\n");
+		    handle_matches(processor, &(bpkt->packet), &(bpkt->pkthdr), bpkt->pktdata, &packet, pkthdr, packetptr);
 			free_buffered_packet(bpkt);
 		} else {
-			// Forward matches packet only
-            printf("Corresponding packet was not found\n");
-			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+			// Buffer match packet
+            printf("Corresponding packet was not found, buffering match packet\n");
+            bpkt = buffer_packet(&packet, pkthdr, packetptr, seqnum_id);
+            packet_buffer_enqueue(&(processor->matchPacketQueue), bpkt);
 		}
 	} else if ((packet.ip_tos & IP_TOS_HAS_MATCHES_MASK) == IP_TOS_HAS_MATCHES_MASK) {
-		// Packet has matches - buffer it
+		// Packet has matches
         printf("Received a data packet that has matches (seqnum=%u)\n", packet.seqnum);
-		bpkt = buffer_packet(&packet, pkthdr, packetptr);
-		packet_buffer_enqueue(&(processor->queue), bpkt);
+		// Find corresponding match packet
+		bpkt = packet_buffer_pop(&(processor->matchPacketQueue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, packet.seqnum);
+		// Handle matches
+		if (bpkt) {
+		    printf("Found corresponding match packet\n");
+		    handle_matches(processor, &packet, pkthdr, packetptr, &(bpkt->packet), &(bpkt->pkthdr), bpkt->pktdata);
+			free_buffered_packet(bpkt);
+		} else {
+		    printf("No corresponding match packet, buffering data packet\n");
+			bpkt = buffer_packet(&packet, pkthdr, packetptr, packet.seqnum);
+			packet_buffer_enqueue(&(processor->dataPacketQueue), bpkt);
+		}
 	} else {
 		// Regular packet with no matches, forward it
-        printf("Received a data packet with no matches\n");
+        printf("Received a data packet with no matches, forwarding it\n");
 		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
 }
@@ -326,7 +315,7 @@ void stop(int res) {
 
 	_global_processor->terminated = 1;
 
-	pthread_join(_global_processor->bufferWorker, NULL);
+	//pthread_join(_global_processor->bufferWorker, NULL);
 
 	switch (res) {
 	case 0:
