@@ -8,6 +8,8 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#include <netinet/in.h>
+
 typedef struct {
 	// IPv4
 	in_addr_t ip_src;
