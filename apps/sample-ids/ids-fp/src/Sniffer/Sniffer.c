@@ -257,7 +257,7 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 	// Forward both packets
 	printf("Forwarding data packet...\n");
 	pcap_sendpacket(processor->pcap_out, dataPacketPtr, dataPkthdr->len);
-	if (processor->last) {
+	if (!processor->last) {
 		printf("Forwarding match packet..\n");
 		pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
 	}
