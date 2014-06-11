@@ -395,7 +395,10 @@ void stop(int res) {
 	}
 
 	usecs_total = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
-	usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
+	if (_global_processor->started)
+		usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
+	else
+		usecs_packets = 0;
 	printf("Total bytes: %ld\n", _global_processor->bytes);
 	printf("+---------------- Timing Results ---------------+\n");
 	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
