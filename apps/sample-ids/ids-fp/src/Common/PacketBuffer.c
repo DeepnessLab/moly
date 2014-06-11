@@ -163,7 +163,6 @@ int _main() {
 		packets[i].packet.transport.tp_dst = 81;
 		packets[i].pktdata = (unsigned char*)"hello";
 		packets[i].pkthdr.caplen = 0;
-		packets[i].pkthdr.comment[0] = '\0';
 		packets[i].pkthdr.len = 5;
 		packets[i].pkthdr.ts.tv_sec = 0;
 		packets[i].pkthdr.ts.tv_usec = 0;
