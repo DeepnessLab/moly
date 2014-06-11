@@ -355,6 +355,12 @@ void acBuildTree(ACTree *tree, const char *path) {
 			free(rules[i].pattern);
 		}
 	}
+
+	printf("+---------- AC DFA Info ----------+\n");
+	printf("| Total rules: %20d |\n", numRules);
+	printf("| Total states: %19d |\n", tree->size);
+	printf("| Total bytes: %20d |\n", tree->size * 4);
+	printf("+---------------------------------+\n");
 }
 
 void acDestroyNodesRecursive(Node *node) {
