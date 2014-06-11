@@ -114,6 +114,7 @@ InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int d
 				temp->next = i->next;
 			if (i->next)
 				i->next->prev = temp;
+			free(i);
 
 			unlock(q);
 			return res;

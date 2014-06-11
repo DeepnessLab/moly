@@ -258,13 +258,13 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 	processor->bytes += dataPkt->payload_len;
 
 	// Forward both packets
-	printf("Forwarding data packet... (length: %d, content: %s)\n", dataPkthdr->len, dataPacketPtr);
+	ptr = (unsigned char *)dataPacketPtr;
 	if (processor->last) {
 		// Set ECN bits to 0
-		ptr = (unsigned char *)dataPacketPtr;
 		ptr[processor->linkHdrLen + 1] = dataPacketPtr[processor->linkHdrLen + 1] & IP_TOS_UNSET_MATCHES_MASK;
 	}
-	pcap_sendpacket(processor->pcap_out, dataPacketPtr, dataPkthdr->len);
+	printf("Forwarding data packet... (length: %d, content: %s)\n", dataPkthdr->len, dataPacketPtr);
+	pcap_sendpacket(processor->pcap_out, ptr, dataPkthdr->len);
 	if (!processor->last) {
 		printf("Forwarding match packet..\n");
 		pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
