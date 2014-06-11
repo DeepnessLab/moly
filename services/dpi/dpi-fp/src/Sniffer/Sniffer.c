@@ -305,7 +305,10 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	processor->bytes += packet.payload_len;
 
 	if (processor->no_report) {
+		// Count reports
 		processor->total_reports += res;
+		// Forward packet
+		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	} else {
 		// Send original packet
 		if (!res) {
