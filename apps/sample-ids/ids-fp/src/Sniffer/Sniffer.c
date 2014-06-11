@@ -209,7 +209,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
         transport_len = 4 * tcphdr->doff;
         packet->transport.tp_src = tcphdr->source;
         packet->transport.tp_dst = tcphdr->dest;
-        packet->seqnum = tcphdr->th_seq;
+        packet->seqnum = tcphdr->seq;
 #endif
         packet->payload_len = ntohs(iphdr->ip_len) - (4*iphdr->ip_hl) - transport_len;
         packetptr += transport_len;
@@ -226,7 +226,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 #elif __linux__
         packet->transport.tp_src = udphdr->source;
         packet->transport.tp_dst = udphdr->dest;
-        packet->seqnum = udphdr->uh_sum;
+        packet->seqnum = udphdr->check;
 #endif
         /*
         printf("UDP  %s:%d -> %s:%d\n", srcip, ntohs(udphdr->uh_sport),
