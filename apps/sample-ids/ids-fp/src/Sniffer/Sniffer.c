@@ -31,6 +31,7 @@
 #define BUFFER_TIMEOUT 10 // seconds
 #define BUFFER_CLEANNING_INTERVAL 3 // seconds
 #define IP_TOS_HAS_MATCHES_MASK 0xC0
+#define IP_TOS_UNSET_MATCHES_MASK 0x3F
 
 #define REPORT_PACKET_OFFSET_MAGIC_NUM 0
 #define REPORT_PACKET_OFFSET_NUM_REPORTS 2
@@ -242,6 +243,8 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 		Packet *matchPkt, const struct pcap_pkthdr *matchPkthdr, const unsigned char *matchPacketPtr) {
 	int num_reports, i, total_reports;
 	//unsigned int flow_offset;
+	unsigned char *ptr;
+
 	num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(matchPkt->payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
 	total_reports = num_reports + processor->num_reports;
 	//flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
@@ -255,7 +258,12 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 	processor->bytes += dataPkt->payload_len;
 
 	// Forward both packets
-	printf("Forwarding data packet...\n");
+	printf("Forwarding data packet... (length: %d, content: %s)\n", dataPkthdr->len, dataPacketPtr);
+	if (processor->last) {
+		// Set ECN bits to 0
+		ptr = (unsigned char *)dataPacketPtr;
+		ptr[processor->linkHdrLen + 1] = dataPacketPtr[processor->linkHdrLen + 1] & IP_TOS_UNSET_MATCHES_MASK;
+	}
 	pcap_sendpacket(processor->pcap_out, dataPacketPtr, dataPkthdr->len);
 	if (!processor->last) {
 		printf("Forwarding match packet..\n");
