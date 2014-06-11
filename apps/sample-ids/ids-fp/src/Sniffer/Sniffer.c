@@ -296,7 +296,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	processor = (ProcessorData*)arg;
 
-	if (processor->started) {
+	if (!processor->started) {
 		processor->started = 1;
 		gettimeofday(&(processor->first_packet), NULL);
 	}
