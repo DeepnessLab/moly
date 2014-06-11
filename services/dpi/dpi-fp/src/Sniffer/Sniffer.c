@@ -353,8 +353,9 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 		// Build results packet
 		size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
+#ifdef VERBOSE
 		printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkthdr->len, size, packet.seqnum);
-
+#endif
 		// Send results packet
 		if (size) {
 			pcap_sendpacket(processor->pcap_out, data, size);

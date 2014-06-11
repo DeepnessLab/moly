@@ -4,6 +4,10 @@ else
 	O_SYM := -g
 endif
 
+ifdef VERBOSE
+	V_SYM := -DVERBOSE
+endif
+
 LIBS := -lm -lpthread -lpcap
 
 all: main
@@ -18,31 +22,31 @@ main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o T
 # OBJECTS
 
 ACBuilder.o: ../AhoCorasick/ACBuilder.c ../AhoCorasick/ACBuilder.h
-	gcc -Wall $(O_SYM) -c ../AhoCorasick/ACBuilder.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../AhoCorasick/ACBuilder.c -I../
 
 NodeQueue.o: ../AhoCorasick/NodeQueue.c ../AhoCorasick/NodeQueue.h
-	gcc -Wall $(O_SYM) -c ../AhoCorasick/NodeQueue.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../AhoCorasick/NodeQueue.c -I../
 
 BitArray.o: ../Common/BitArray/BitArray.c ../Common/BitArray/BitArray.h
-	gcc -Wall $(O_SYM) -c ../Common/BitArray/BitArray.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/BitArray/BitArray.c -I../
 
 HashMap.o: ../Common/HashMap/HashMap.c ../Common/HashMap/HashMap.h
-	gcc -Wall $(O_SYM) -c ../Common/HashMap/HashMap.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/HashMap/HashMap.c -I../
 
 json.o: ../Common/json.c ../Common/json.h
-	gcc -Wall $(O_SYM) -c ../Common/json.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/json.c -I../
 
 PatternTable.o: ../Common/PatternTable.c ../Common/PatternTable.h
-	gcc -Wall $(O_SYM) -c ../Common/PatternTable.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/PatternTable.c -I../
 
 StateTable.o: ../Common/StateTable.c ../Common/StateTable.h
-	gcc -Wall $(O_SYM) -c ../Common/StateTable.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/StateTable.c -I../
 
 TableStateMachine.o: ../StateMachine/TableStateMachine.c ../StateMachine/TableStateMachine.h
-	gcc -Wall $(O_SYM) -c ../StateMachine/TableStateMachine.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../StateMachine/TableStateMachine.c -I../
 
 TableStateMachineGenerator.o: ../StateMachine/TableStateMachineGenerator.c ../StateMachine/TableStateMachineGenerator.h
-	gcc -Wall $(O_SYM) -c ../StateMachine/TableStateMachineGenerator.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../StateMachine/TableStateMachineGenerator.c -I../
 
 Sniffer.o: ../Sniffer/Sniffer.c ../Sniffer/Sniffer.h
-	gcc -Wall $(O_SYM) -c ../Sniffer/Sniffer.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Sniffer/Sniffer.c -I../

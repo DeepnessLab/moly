@@ -280,10 +280,14 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 		// Set ECN bits to 0
 		ptr[processor->linkHdrLen + 1] = dataPacketPtr[processor->linkHdrLen + 1] & IP_TOS_UNSET_MATCHES_MASK;
 	}
+#ifdef VERBOSE
 	printf("Forwarding data packet... (length: %d, content: %s)\n", dataPkthdr->len, dataPacketPtr);
+#endif
 	pcap_sendpacket(processor->pcap_out, ptr, dataPkthdr->len);
 	if (!processor->last) {
+#ifdef VERBOSE
 		printf("Forwarding match packet..\n");
+#endif
 		pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
 	}
 }
@@ -306,40 +310,54 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	if (packet.ip_proto == IPPROTO_UDP && ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
 		// Packet contains matching results
 		seqnum_id = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_SEQNUM])))));
+#ifdef VERBOSE
         printf("Received matching results packet (seqnum=%u)\n", seqnum_id);
-		// Find corresponding data packet
+#endif
+        // Find corresponding data packet
 		bpkt = packet_buffer_pop(&(processor->dataPacketQueue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, seqnum_id);
 		// Handle matches
 		if (bpkt) {
 			// Found corresponding data packet
+#ifdef VERBOSE
 		    printf("Found corresponding data packet\n");
+#endif
 		    handle_matches(processor, &(bpkt->packet), &(bpkt->pkthdr), bpkt->pktdata, &packet, pkthdr, packetptr);
 			free_buffered_packet(bpkt);
 		} else {
 			// Buffer match packet
+#ifdef VERBOSE
             printf("Corresponding packet was not found, buffering match packet\n");
+#endif
             bpkt = buffer_packet(&packet, pkthdr, packetptr, seqnum_id);
             packet_buffer_enqueue(&(processor->matchPacketQueue), bpkt);
 		}
 	} else if ((packet.ip_tos & IP_TOS_HAS_MATCHES_MASK) == IP_TOS_HAS_MATCHES_MASK) {
 		// Packet has matches
+#ifdef VERBOSE
         printf("Received a data packet that has matches (seqnum=%u)\n", packet.seqnum);
-		// Find corresponding match packet
+#endif
+        // Find corresponding match packet
 		bpkt = packet_buffer_pop(&(processor->matchPacketQueue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, packet.seqnum);
 		// Handle matches
 		if (bpkt) {
+#ifdef VERBOSE
 		    printf("Found corresponding match packet\n");
+#endif
 		    handle_matches(processor, &packet, pkthdr, packetptr, &(bpkt->packet), &(bpkt->pkthdr), bpkt->pktdata);
 			free_buffered_packet(bpkt);
 		} else {
+#ifdef VERBOSE
 		    printf("No corresponding match packet, buffering data packet\n");
-			bpkt = buffer_packet(&packet, pkthdr, packetptr, packet.seqnum);
+#endif
+		    bpkt = buffer_packet(&packet, pkthdr, packetptr, packet.seqnum);
 			packet_buffer_enqueue(&(processor->dataPacketQueue), bpkt);
 		}
 	} else {
 		// Regular packet with no matches, forward it
+#ifdef VERBOSE
         printf("Received a data packet with no matches, forwarding it\n");
-		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+#endif
+        pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
 	gettimeofday(&(processor->last_packet), NULL);
 }

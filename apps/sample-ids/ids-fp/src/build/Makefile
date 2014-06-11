@@ -4,6 +4,10 @@ else
 	O_SYM := -g
 endif
 
+ifdef VERBOSE
+	V_SYM := -DVERBOSE
+endif
+
 LIBS := -lm -lpthread -lpcap
 
 all: main
@@ -17,7 +21,7 @@ main: Sniffer.o PacketBuffer.o
 
 # OBJECTS
 PacketBuffer.o: ../Common/PacketBuffer.c ../Common/PacketBuffer.h
-	gcc -Wall $(O_SYM) -c ../Common/PacketBuffer.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/PacketBuffer.c -I../
 
 Sniffer.o: ../Sniffer/Sniffer.c ../Sniffer/Sniffer.h
-	gcc -Wall $(O_SYM) -c ../Sniffer/Sniffer.c -I../
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Sniffer/Sniffer.c -I../
