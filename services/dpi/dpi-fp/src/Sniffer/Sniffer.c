@@ -21,8 +21,8 @@
 #include "../StateMachine/TableStateMachineGenerator.h"
 
 #define MAX_PACKET_SIZE 65535
-#define MAX_REPORTED_RULES 65535
-#define MAX_REPORTS 65535
+#define MAX_REPORTED_RULES 256
+#define MAX_REPORTS 256
 #define STR_ANY "any"
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
@@ -59,11 +59,24 @@ typedef struct {
 			unsigned short tp_dst;
 		} transport;
 	};
+	unsigned int seqnum;
 
 	// Data
 	unsigned int payload_len;
 	unsigned char *payload;
 } Packet;
+
+typedef struct {
+	unsigned short magicnum;
+	unsigned short numReports;
+	unsigned int seqNum;
+	unsigned int flowOffset;
+} ResultsPacketHeader;
+
+typedef struct {
+	unsigned short rid;
+	short idx;
+} ResultPacketReport;
 
 static ProcessorData *_global_processor;
 
@@ -128,10 +141,12 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
         transport_len = 4 * tcphdr->th_off;
         packet->transport.tp_src = tcphdr->th_sport;
         packet->transport.tp_dst = tcphdr->th_dport;
+        packet->seqnum = tcphdr->th_seq;
 #elif __linux__
         transport_len = 4 * tcphdr->doff;
         packet->transport.tp_src = tcphdr->source;
         packet->transport.tp_dst = tcphdr->dest;
+        packet->seqnum = tcphdr->th_seq;
 #endif
         packet->payload_len = ntohs(iphdr->ip_len) - (4*iphdr->ip_hl) - transport_len;
         packetptr += transport_len;
@@ -144,9 +159,11 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 #ifdef __APPLE__
         packet->transport.tp_src = udphdr->uh_sport;
         packet->transport.tp_dst = udphdr->uh_dport;
+        packet->seqnum = udphdr->uh_sum;
 #elif __linux__
         packet->transport.tp_src = udphdr->source;
         packet->transport.tp_dst = udphdr->dest;
+        packet->seqnum = udphdr->uh_sum;
 #endif
         /*
         printf("UDP  %s:%d -> %s:%d\n", srcip, ntohs(udphdr->uh_sport),
@@ -162,6 +179,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
         icmphdr = (struct icmp*)packetptr;
         packet->icmp.icmp_type = icmphdr->icmp_type;
         packet->icmp.icmp_code = icmphdr->icmp_code;
+        packet->seqnum = 0;
         /*
         printf("ICMP %s -> %s\n", srcip, dstip);
         printf("%s\n", iphdrInfo);
@@ -178,37 +196,84 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 
 static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
 		Packet *in_packet, MatchReport *reports, int num_reports, unsigned char *result) {
-	int hdrs_len;
-	unsigned char *ptr;
-	MatchRule rules[MAX_REPORTED_RULES];
-	int start_idx_in_pkt[MAX_REPORTED_RULES];
+	int hdrs_len, data_len;
+	ResultPacketReport rules[MAX_REPORTED_RULES];
 	MatchRule *state_rules;
-	int i, r;
+	int num_rules;
+	int i, j, r;
+	ResultsPacketHeader *reshdr;
 
+    struct ip *iphdr = (struct ip*)result;
+    struct udphdr *udphdr;
 
 	if (num_reports == 0) {
-		memcpy(result, packetptr, pkthdr->len);
-		return pkthdr->len;
+		//LEGACY:
+		//memcpy(result, packetptr, pkthdr->len);
+		//return pkthdr->len;
+		return 0;
 	}
-
-	// Copy headers
-	hdrs_len = pkthdr->len - in_packet->payload_len;
-	memcpy(result, packetptr, hdrs_len);
-	// Change IP total length
-	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len + 4 + (num_reports * 12));
-
-	// TODO: Recompute checksum
 
 	// Find results
 	r = 0;
 	for (i = 0; i < num_reports; i++) {
 		state_rules = processor->machine->matchRules[reports[i].state];
-		if (state_rules) {
-			memcpy(&(rules[r]), state_rules, sizeof(MatchRule) * processor->machine->numRules[reports[i].state]);
-			start_idx_in_pkt[r] = reports[i].position - state_rules[0].len;
+		num_rules = processor->machine->numRules[reports[i].state];
+		for (j = 0; j < num_rules; j++) {
+			rules[r].rid = state_rules[j].rid;
+			rules[r].idx = reports[i].position - state_rules[j].len;
 			r++;
 		}
 	}
+
+	// Compute data length
+	data_len = 12 + (r * 4);
+
+	// Copy L2 headers
+	hdrs_len = pkthdr->len - in_packet->ip_len;
+	memcpy(result, packetptr, hdrs_len);
+
+	// Build IP header
+	iphdr = (struct ip*)&(result[hdrs_len]);
+	iphdr->ip_v = 4;
+	iphdr->ip_hl = 5;
+	iphdr->ip_tos = in_packet->ip_tos;
+	iphdr->ip_len = htons(28 + data_len);
+	iphdr->ip_id = 0;
+	iphdr->ip_off = 0;
+	iphdr->ip_ttl = 64;
+	iphdr->ip_p = IPPROTO_UDP;
+	iphdr->ip_sum = 0;
+	iphdr->ip_src.s_addr = in_packet->ip_src;
+	iphdr->ip_dst.s_addr = in_packet->ip_dst;
+
+	// Build UDP header
+	udphdr = (struct udphdr*)&(result[hdrs_len + 20]);
+	udphdr->uh_dport = in_packet->transport.tp_dst;
+	udphdr->uh_sport = in_packet->transport.tp_src;
+	udphdr->uh_sum = 0;
+	udphdr->uh_ulen = 8 + data_len;
+
+	// Build results header
+	reshdr = (ResultsPacketHeader*)&(result[hdrs_len + 28]);
+	reshdr->magicnum = htons(MAGIC_NUM);
+	reshdr->numReports = htons(r);
+	reshdr->flowOffset = 0;
+	reshdr->seqNum = in_packet->seqnum;
+
+	// Write reports to packet
+	memcpy(&(result[hdrs_len + 40]), rules, sizeof(ResultPacketReport) * r);
+
+	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
+
+	// LEGACY: Copy headers
+	//hdrs_len = pkthdr->len - in_packet->payload_len;
+	//memcpy(result, packetptr, hdrs_len);
+	// Change IP total length
+	//*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len + 4 + (num_reports * 12));
+
+	/*
+	 //LEGACY
+	// TODO: Recompute checksum
 
 	// Put results before L7 payload
 	ptr = &(result[hdrs_len]);
@@ -230,6 +295,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	memcpy(ptr, in_packet->payload, in_packet->payload_len);
 
 	return (int)(ptr - result + in_packet->payload_len);
+	*/
 }
 
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
@@ -237,6 +303,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	int current;
 	int res;
 	Packet packet;
+	unsigned char *ptr;
 	MatchReport reports[MAX_REPORTS];
 	unsigned char data[MAX_PACKET_SIZE];
 	int size;
@@ -258,12 +325,26 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	processor->bytes += packet.payload_len;
 
-	// Build outgoing packet
-	size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
-	printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
+	// Send original packet
+	if (!res) {
+		// No matches - send as is
+		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+	} else {
+		// Matches exist - change ECN to 11b and send
+		ptr = (unsigned char *)packetptr;
+		ptr[processor->linkHdrLen + 1] = packetptr[processor->linkHdrLen + 1] | 0xC0;
+		pcap_sendpacket(processor->pcap_out, ptr, pkthdr->len);
 
-	// TODO: Send outgoing packet
-	pcap_sendpacket(processor->pcap_out, data, size);
+		// Build results packet
+		size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
+		printf("Matches: %d, Input packet length: %u, Result packet length: %d\n", res, pkthdr->len, size);
+
+		// Send results packet
+		if (size) {
+			pcap_sendpacket(processor->pcap_out, data, size);
+		}
+	}
+
 }
 
 void stop(int res) {
@@ -521,9 +602,9 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
-		in_if = "en0";
-		out_if = "en0";
-		patterns = "SnortPatternsFull2.json";
+		in_if = "dpi-eth0";
+		out_if = "dpi-eth0";
+		patterns = "../../SnortPatternsFull2.json";
 	}
 
 	machine = generateTableStateMachine(patterns, 0);
@@ -534,8 +615,6 @@ int main(int argc, char *argv[]) {
 	//strcpy(pkt,"008g");
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
-
-
 
 	sniff(in_if, out_if, machine);
 

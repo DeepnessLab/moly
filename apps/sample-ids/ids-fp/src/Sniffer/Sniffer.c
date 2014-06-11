@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <pthread.h>
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -16,8 +17,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "Sniffer.h"
 #include "MatchReport.h"
+#include "../Common/PacketBuffer.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 65535
@@ -25,6 +28,17 @@
 #define STR_ANY "any"
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
+#define BUFFER_TIMEOUT 10 // seconds
+#define BUFFER_CLEANNING_INTERVAL 3 // seconds
+#define IP_TOS_HAS_MATCHES_MASK 0xC0
+
+#define REPORT_PACKET_OFFSET_MAGIC_NUM 0
+#define REPORT_PACKET_OFFSET_NUM_REPORTS 2
+#define REPORT_PACKET_OFFSET_SEQNUM 4
+#define REPORT_PACKET_OFFSET_FLOW_OFF 8
+#define REPORT_PACKET_OFFSET_REPORTS_START 12
+#define REPORT_PACKET_REPORT_SIZE 4
+#define REPORT_PACKET_OFFSET_START_IDX 2
 
 typedef struct {
 	int counter;
@@ -33,9 +47,11 @@ typedef struct {
 	pcap_t *pcap_out;
 	struct timeval start, end;
 	long bytes;
-	int remove_reports;
 	MatchReport reports[MAX_REPORTED_RULES];
 	int num_reports;
+	PacketBuffer queue;
+	pthread_t bufferWorker;
+	int terminated;
 } ProcessorData;
 
 typedef struct {
@@ -60,6 +76,7 @@ typedef struct {
 			unsigned short tp_dst;
 		} transport;
 	};
+	unsigned int seqnum;
 
 	// Data
 	unsigned int payload_len;
@@ -68,7 +85,7 @@ typedef struct {
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int remove_reports) {
+ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen) {
 	ProcessorData *processor;
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
@@ -78,15 +95,71 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen,
 	processor->pcap_out = pcap_out;
 	processor->linkHdrLen = linkHdrLen;
 	processor->bytes = 0;
-	processor->remove_reports = remove_reports;
 	memset(processor->reports, 0, sizeof(MatchReport) * MAX_REPORTED_RULES);
 	processor->num_reports = 0;
+	processor->terminated = 0;
+
+	packet_buffer_init(&(processor->queue));
 
 	return processor;
 }
 
 void destroy_processor(ProcessorData *processor) {
+	packet_buffer_destroy(&(processor->queue), 1);
 	free(processor);
+}
+
+static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *pkthdr, const unsigned char *pktptr) {
+	InPacket *res;
+
+	res = (InPacket*)malloc(sizeof(InPacket));
+	res->pkthdr = *pkthdr;
+	res->pktdata = (unsigned char*)malloc(sizeof(unsigned char) * pkthdr->len);
+	memcpy(res->pktdata, pktptr, sizeof(unsigned char) * pkthdr->len);
+	res->seqnum = packet->seqnum;
+	res->timestamp = time(0);
+	res->payload_len = packet->payload_len;
+	return res;
+}
+
+static inline void free_buffered_packet(InPacket *pkt) {
+	free(pkt->pktdata);
+	free(pkt);
+}
+
+void *process_buffer_timeout(void *param) {
+	InPacket *pkt;
+	ProcessorData *processor;
+
+	processor = (ProcessorData*)param;
+
+	while (!processor->terminated) {
+		// Wait
+		sleep(BUFFER_CLEANNING_INTERVAL);
+
+		if (processor->terminated)
+			break;
+
+		// Clean buffer
+		pkt = packet_buffer_peek(&(processor->queue));
+
+		while (pkt && pkt->timestamp + BUFFER_TIMEOUT < time(0)) {
+			pkt = packet_buffer_dequeue(&(processor->queue));
+			// Drop packet!
+			free_buffered_packet(pkt);
+
+			pkt = packet_buffer_peek(&(processor->queue));
+		}
+	}
+
+	// Clear buffer
+	pkt = packet_buffer_dequeue(&(processor->queue));
+
+	while (pkt) {
+		free_buffered_packet(pkt);
+		pkt = packet_buffer_dequeue(&(processor->queue));
+	}
+	return NULL;
 }
 
 static inline void parse_packet(ProcessorData *processor, const unsigned char *packetptr, Packet *packet) {
@@ -131,10 +204,12 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
         transport_len = 4 * tcphdr->th_off;
         packet->transport.tp_src = tcphdr->th_sport;
         packet->transport.tp_dst = tcphdr->th_dport;
+        packet->seqnum = tcphdr->th_seq;
 #elif __linux__
         transport_len = 4 * tcphdr->doff;
         packet->transport.tp_src = tcphdr->source;
         packet->transport.tp_dst = tcphdr->dest;
+        packet->seqnum = tcphdr->th_seq;
 #endif
         packet->payload_len = ntohs(iphdr->ip_len) - (4*iphdr->ip_hl) - transport_len;
         packetptr += transport_len;
@@ -147,9 +222,11 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 #ifdef __APPLE__
         packet->transport.tp_src = udphdr->uh_sport;
         packet->transport.tp_dst = udphdr->uh_dport;
+        packet->seqnum = udphdr->uh_sum;
 #elif __linux__
         packet->transport.tp_src = udphdr->source;
         packet->transport.tp_dst = udphdr->dest;
+        packet->seqnum = udphdr->uh_sum;
 #endif
         /*
         printf("UDP  %s:%d -> %s:%d\n", srcip, ntohs(udphdr->uh_sport),
@@ -165,6 +242,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
         icmphdr = (struct icmp*)packetptr;
         packet->icmp.icmp_type = icmphdr->icmp_type;
         packet->icmp.icmp_code = icmphdr->icmp_code;
+        packet->seqnum = 0;
         /*
         printf("ICMP %s -> %s\n", srcip, dstip);
         printf("%s\n", iphdrInfo);
@@ -179,75 +257,53 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     }
 }
 
-static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
-		Packet *in_packet, int num_reports, unsigned char *result) {
-	int hdrs_len;
-	unsigned char *ptr;
-	int r;
-
-
-	if (num_reports == 0 || !processor->remove_reports) {
-		memcpy(result, packetptr, pkthdr->len);
-		return pkthdr->len;
-	}
-
-	// Find results length
-	r = 4 + (num_reports * 12);
-
-	// Copy headers
-	hdrs_len = pkthdr->len - in_packet->payload_len;
-	memcpy(result, packetptr, hdrs_len);
-	// Change IP total length
-	*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len - r);
-
-	// TODO: Recompute checksum
-
-	ptr = result + hdrs_len;
-
-	// Put L7 payload
-	memcpy(ptr, &(in_packet->payload[r]), in_packet->payload_len - r);
-
-	return (int)(ptr - result + in_packet->payload_len - r);
-}
-
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
 	ProcessorData *processor;
 	Packet packet;
-	unsigned char data[MAX_PACKET_SIZE];
-	int size;
 	int num_reports, i, total_reports;
+	unsigned int seqnum_id, flow_offset;
+	InPacket *bpkt;
 
 	processor = (ProcessorData*)arg;
 
 	parse_packet(processor, packetptr, &packet);
 
-	//printf("[Sniffer] Packet src_ip=%d,dst_ip=%d,ip_tos=%d,ip_proto=%d,src_port=%d,dst_port=%d,data=\"%s\"\n",
-	//		packet.ip_src, packet.ip_dst, packet.ip_tos, packet.ip_proto, packet.transport.tp_src, packet.transport.tp_dst,
-	//		(char*)(packet.payload));
-
-	num_reports = 0;
-	total_reports = 0;
-	// Process Results
-	if (ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
-		// Reports exist
-		num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[2])))));
-		total_reports = num_reports + processor->num_reports;
-		if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
-			for (i = processor->num_reports; i < total_reports; i++) {
-				processor->reports[i].rid = ntohl(*(unsigned short*)(&(packet.payload[4 + (i * 12)])));
-				processor->reports[i].startIdxInPacket = ntohl(*(unsigned short*)(&(packet.payload[8 + (i * 12)])));
-				processor->reports[i].startIdxInFlow = ntohl(*(unsigned short*)(&(packet.payload[12 + (i * 12)])));
+	if (packet.ip_proto == IPPROTO_UDP && ntohs(*(unsigned short*)(packet.payload)) == MAGIC_NUM) {
+		// Packet contains matching results
+		seqnum_id = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_SEQNUM])))));
+		// Find corresponding data packet
+		bpkt = packet_buffer_pop(&(processor->queue), packet.ip_src, packet.ip_dst, packet.transport.tp_src, packet.transport.tp_dst, seqnum_id);
+		// Handle matches
+		if (bpkt) {
+			// Found corresponding data packet
+			num_reports = ((0x0FFFF) & (ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_NUM_REPORTS])))));
+			total_reports = num_reports + processor->num_reports;
+			flow_offset = ((0x0FFFFFFFF) & (ntohl(*(unsigned int*)(&(packet.payload[REPORT_PACKET_OFFSET_FLOW_OFF])))));
+			if (num_reports > 0 && total_reports < MAX_REPORTED_RULES) {
+				for (i = processor->num_reports; i < total_reports; i++) {
+					processor->reports[i].rid = ntohs(*(unsigned short*)(&(packet.payload[REPORT_PACKET_OFFSET_REPORTS_START + (i * REPORT_PACKET_REPORT_SIZE)])));
+					processor->reports[i].startIdxInPacket = (int)ntohs(*(short*)(&(packet.payload[REPORT_PACKET_OFFSET_REPORTS_START + REPORT_PACKET_OFFSET_START_IDX + (i * REPORT_PACKET_REPORT_SIZE)])));
+				}
 			}
+			processor->num_reports = total_reports;
+			processor->bytes += bpkt->payload_len;
+
+			// Forward both packets
+			pcap_sendpacket(processor->pcap_out, bpkt->pktdata, bpkt->pkthdr.len);
+			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+			free_buffered_packet(bpkt);
+		} else {
+			// Forward matches packet only
+			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 		}
+	} else if ((packet.ip_tos & IP_TOS_HAS_MATCHES_MASK) == IP_TOS_HAS_MATCHES_MASK) {
+		// Packet has matches - buffer it
+		bpkt = buffer_packet(&packet, pkthdr, packetptr);
+		packet_buffer_enqueue(&(processor->queue), bpkt);
+	} else {
+		// Regular packet with no matches, forward it
+		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
-	processor->num_reports = total_reports;
-	processor->bytes += packet.payload_len - 4 - (num_reports * 12);
-
-	// Build outgoing packet
-	size = build_result_packet(processor, pkthdr, packetptr, &packet, num_reports, data);
-
-	// Send outgoing packet
-	pcap_sendpacket(processor->pcap_out, data, size);
 }
 
 void stop(int res) {
@@ -255,6 +311,10 @@ void stop(int res) {
 	long usecs;
 
 	gettimeofday(&(_global_processor->end), NULL);
+
+	_global_processor->terminated = 1;
+
+	pthread_join(_global_processor->bufferWorker, NULL);
 
 	switch (res) {
 	case 0:
@@ -290,7 +350,7 @@ void stop(int res) {
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, int remove_reports) {
+void sniff(char *in_if, char *out_if) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -448,13 +508,16 @@ void sniff(char *in_if, char *out_if, int remove_reports) {
 	}
 
 	// Prepare processor
-	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen, remove_reports);
+	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen);
 	_global_processor = processor;
 
 	// Set signal handler
 	signal(SIGINT, stop);
 	signal(SIGTERM, stop);
 	signal(SIGQUIT, stop);
+
+	// Run buffer cleaning worker
+	pthread_create(&(processor->bufferWorker), NULL, process_buffer_timeout, (void*)processor);
 
 	// Run sniffer
 	gettimeofday(&(processor->start), NULL);
@@ -467,7 +530,6 @@ void sniff(char *in_if, char *out_if, int remove_reports) {
 int main(int argc, char *argv[]) {
 	char *in_if = NULL;
 	char *out_if = NULL;
-	int remove;
 	int i;
 	char *param, *arg;
 	int auto_mode;
@@ -482,8 +544,6 @@ int main(int argc, char *argv[]) {
 				in_if = arg;
 			} else if (strcmp(param, "out") == 0) {
 				out_if = arg;
-			} else if (strcmp(param, "remove") == 0) {
-				remove = 1;
 			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
@@ -492,17 +552,16 @@ int main(int argc, char *argv[]) {
 	}
 	if (auto_mode == 0 && (in_if == NULL || out_if == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> [remove]\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface>\nThis tool may require root privileges.\n", argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
-		in_if = "en0";
-		out_if = "en0";
-		remove = 1;
+		in_if = "mbox1-eth0";
+		out_if = "mbox1-eth0";
 	}
 
 
-	sniff(in_if, out_if, remove);
+	sniff(in_if, out_if);
 
 	return 0;
 }

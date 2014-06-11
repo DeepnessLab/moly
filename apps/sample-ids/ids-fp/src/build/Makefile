@@ -12,9 +12,12 @@ clean:
 	rm *.o main
 
 # EXECUTABLES
-main: Sniffer.o
-	gcc -Wall $(O_SYM) -o main Sniffer.o $(LIBS) && rm *.o
+main: Sniffer.o SimpleQueue.o
+	gcc -Wall $(O_SYM) -o main Sniffer.o SimpleQueue.o $(LIBS) && rm *.o
 
 # OBJECTS
+SimpleQueue.o: ../Common/SimpleQueue.c ../Common/SimpleQueue.h
+	gcc -Wall $(O_SYM) -c ../Common/SimpleQueue.c -I../
+
 Sniffer.o: ../Sniffer/Sniffer.c ../Sniffer/Sniffer.h
 	gcc -Wall $(O_SYM) -c ../Sniffer/Sniffer.c -I../
