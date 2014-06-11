@@ -39,6 +39,9 @@ typedef struct {
 	struct timeval start, end, first_packet, last_packet;
 	int started;
 	long bytes;
+	// For Standalone middlebox mode that does not report its matches
+	int no_report;
+	long total_reports;
 } ProcessorData;
 
 typedef struct {
@@ -84,7 +87,7 @@ typedef struct {
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen) {
+ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int no_report) {
 	ProcessorData *processor;
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
@@ -96,6 +99,7 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->linkHdrLen = linkHdrLen;
 	processor->bytes = 0;
 	processor->started = 0;
+	processor->no_report = no_report;
 
 	return processor;
 }
@@ -212,9 +216,6 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
     struct udphdr *udphdr;
 
 	if (num_reports == 0) {
-		//LEGACY:
-		//memcpy(result, packetptr, pkthdr->len);
-		//return pkthdr->len;
 		return 0;
 	}
 
@@ -275,38 +276,6 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	memcpy(&(result[hdrs_len + 40]), rules, sizeof(ResultPacketReport) * r);
 
 	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
-
-	// LEGACY: Copy headers
-	//hdrs_len = pkthdr->len - in_packet->payload_len;
-	//memcpy(result, packetptr, hdrs_len);
-	// Change IP total length
-	//*(unsigned short *)(&result[processor->linkHdrLen + 2]) = htons(in_packet->ip_len + 4 + (num_reports * 12));
-
-	/*
-	 //LEGACY
-	// TODO: Recompute checksum
-
-	// Put results before L7 payload
-	ptr = &(result[hdrs_len]);
-	*((unsigned short*)ptr) = htons(MAGIC_NUM);
-	ptr += 2;
-	*((unsigned short*)ptr) = htons(r);
-	ptr += 2;
-
-	for (i = 0; i < r; i++) {
-		*((unsigned int*)ptr) = htonl(rules[i].rid);
-		ptr += 4;
-		*((unsigned int*)ptr) = htonl(start_idx_in_pkt[i]);
-		ptr += 4;
-		*((unsigned int*)ptr) = 0;
-		ptr += 4;
-	}
-
-	// Put L7 payload
-	memcpy(ptr, in_packet->payload, in_packet->payload_len);
-
-	return (int)(ptr - result + in_packet->payload_len);
-	*/
 }
 
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
@@ -328,12 +297,6 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 	}
 
 	parse_packet(processor, packetptr, &packet);
-	//packet.payload = packetptr;
-	//packet.payload_len = 5;
-
-	//printf("[Sniffer] Packet src_ip=%d,dst_ip=%d,ip_tos=%d,ip_proto=%d,src_port=%d,dst_port=%d,data=\"%s\"\n",
-	//		packet.ip_src, packet.ip_dst, packet.ip_tos, packet.ip_proto, packet.transport.tp_src, packet.transport.tp_dst,
-	//		(char*)(packet.payload));
 
 	// Scan payload
 	// TODO: Per-flow scan (remember current state for each flow)
@@ -341,24 +304,28 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	processor->bytes += packet.payload_len;
 
-	// Send original packet
-	if (!res) {
-		// No matches - send as is
-		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+	if (processor->no_report) {
+		processor->total_reports += res;
 	} else {
-		// Matches exist - change ECN to 11b and send
-		ptr = (unsigned char *)packetptr;
-		ptr[processor->linkHdrLen + 1] = packetptr[processor->linkHdrLen + 1] | 0xC0;
-		pcap_sendpacket(processor->pcap_out, ptr, pkthdr->len);
+		// Send original packet
+		if (!res) {
+			// No matches - send as is
+			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
+		} else {
+			// Matches exist - change ECN to 11b and send
+			ptr = (unsigned char *)packetptr;
+			ptr[processor->linkHdrLen + 1] = packetptr[processor->linkHdrLen + 1] | 0xC0;
+			pcap_sendpacket(processor->pcap_out, ptr, pkthdr->len);
 
-		// Build results packet
-		size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
+			// Build results packet
+			size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
 #ifdef VERBOSE
-		printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkthdr->len, size, packet.seqnum);
+			printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkthdr->len, size, packet.seqnum);
 #endif
-		// Send results packet
-		if (size) {
-			pcap_sendpacket(processor->pcap_out, data, size);
+			// Send results packet
+			if (size) {
+				pcap_sendpacket(processor->pcap_out, data, size);
+			}
 		}
 	}
 	gettimeofday(&(processor->last_packet), NULL);
@@ -405,12 +372,16 @@ void stop(int res) {
 	printf("| Neto  | %17ld | %14.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
 	printf("+-------+-------------------+-------------------+\n");
 
+	if (_global_processor->no_report) {
+		printf("Total reports: %ld\n", _global_processor->total_reports);
+	}
+
 	destroy_processor(_global_processor);
 
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
+void sniff(char *in_if, char *out_if, TableStateMachine *machine, int no_report) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -568,7 +539,7 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine) {
 	}
 
 	// Prepare processor
-	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen);
+	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen, no_report);
 	_global_processor = processor;
 
 	// Set signal handler
@@ -591,7 +562,7 @@ int main(int argc, char *argv[]) {
 	char *patterns = NULL;
 	int i;
 	char *param, *arg;
-	int auto_mode;
+	int auto_mode, no_report;
 
 
 	// ************* BEGIN DEBUG
@@ -602,6 +573,7 @@ int main(int argc, char *argv[]) {
 
 
 	auto_mode = 0;
+	no_report = 0;
 
 	if (argc > 1) {
 		for (i = 1; i < argc; i++) {
@@ -613,6 +585,8 @@ int main(int argc, char *argv[]) {
 				out_if = arg;
 			} else if (strcmp(param, "rules") == 0) {
 				patterns = arg;
+			} else if (strcmp(param, "noreport") == 0) {
+				no_report = 1;
 			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
@@ -621,7 +595,7 @@ int main(int argc, char *argv[]) {
 	}
 	if (auto_mode == 0 && (in_if == NULL || out_if == NULL || patterns == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> rules:<rules file>\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> rules:<rules file> [noreport]\nThis tool may require root privileges.\n", argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
@@ -639,7 +613,7 @@ int main(int argc, char *argv[]) {
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
 
-	sniff(in_if, out_if, machine);
+	sniff(in_if, out_if, machine, no_report);
 
 	return 0;
 }
