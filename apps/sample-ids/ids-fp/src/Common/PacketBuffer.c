@@ -135,3 +135,70 @@ InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int d
 	unlock(q);
 	return NULL;
 }
+
+#define TEST_PACKET_COUNT 1024
+
+#define ASSERT(cond, msg) \
+	if (!(cond)) { fprintf(stderr, "ASSERTION FAILED: %s\n", (msg)); exit(1); }
+
+int _main() {
+	// Small test program
+	InPacket packets[TEST_PACKET_COUNT];
+	int i;
+	PacketBuffer buff;
+	InPacket *pkt;
+
+	for (i = 0; i < TEST_PACKET_COUNT; i++) {
+		packets[i].packet.ip_src = i;
+		packets[i].packet.ip_dst = i+1;
+		packets[i].packet.ip_id = 0;
+		packets[i].packet.ip_len = 0;
+		packets[i].packet.ip_proto = 6;
+		packets[i].packet.ip_tos = 0;
+		packets[i].packet.ip_ttl = 64;
+		packets[i].packet.seqnum = i;
+		packets[i].packet.payload_len = 5;
+		packets[i].packet.payload = (unsigned char *)"hello";
+		packets[i].packet.transport.tp_src = 80;
+		packets[i].packet.transport.tp_dst = 81;
+		packets[i].pktdata = (unsigned char*)"hello";
+		packets[i].pkthdr.caplen = 0;
+		packets[i].pkthdr.comment[0] = '\0';
+		packets[i].pkthdr.len = 5;
+		packets[i].pkthdr.ts.tv_sec = 0;
+		packets[i].pkthdr.ts.tv_usec = 0;
+	}
+
+	packet_buffer_init(&buff);
+
+	for (i = 0; i < TEST_PACKET_COUNT; i++) {
+		packet_buffer_enqueue(&buff, &(packets[i]));
+		ASSERT(buff.size == (i+1), "Unexpected size of queue after enqueue");
+	}
+
+	for (i = 0; i < TEST_PACKET_COUNT; i++) {
+		pkt = packet_buffer_dequeue(&buff);
+		ASSERT(pkt == &(packets[i]), "dequeued packet data is different");
+		ASSERT(buff.size == (TEST_PACKET_COUNT - i - 1), "Unexpected size of queue after dequeue");
+	}
+
+	ASSERT(buff.size == 0, "Queue should be empty by now");
+	ASSERT(buff.head == NULL, "Head is not NULL but queue is empty");
+	ASSERT(buff.tail == NULL, "Tail is not NULL but queue is empty");
+
+	for (i = 0; i < TEST_PACKET_COUNT; i++) {
+		packet_buffer_enqueue(&buff, &(packets[i]));
+		ASSERT(buff.size == (i+1), "Unexpected size of queue after enqueue");
+	}
+
+	for (i = 0; i < TEST_PACKET_COUNT; i += 7) {
+		pkt = packet_buffer_pop(&buff, packets[i].packet.ip_src, packets[i].packet.ip_dst, packets[i].packet.transport.tp_src, packets[i].packet.transport.tp_dst, packets[i].seqnum);
+		ASSERT(pkt == &(packets[i]), "poped packet data is different")
+	}
+
+	packet_buffer_destroy(&buff, 0);
+
+	printf("TEST SUCCEEDED\n");
+
+	return 0;
+}
