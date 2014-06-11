@@ -15,6 +15,7 @@
 
 #define READ_BUFFER_SIZE 1024
 #define MAX_STATES 65536
+#define MAX_PATTERN_LENGTH 1024
 
 Node *createNewNode(ACTree *tree, Node *parent) {
 	Node *node = (Node*)malloc(sizeof(Node));
@@ -314,7 +315,7 @@ void *match_rule_parser(char ***pairs, int numPairs, void *result) {
 	return result + sizeof(MatchRule);
 }
 
-#define MAX_RULES 8192
+#define MAX_RULES 65536
 
 void acBuildTree(ACTree *tree, const char *path) {
 	MatchRule rules[MAX_RULES];
@@ -357,9 +358,9 @@ void acBuildTree(ACTree *tree, const char *path) {
 	}
 
 	printf("+---------- AC DFA Info ----------+\n");
-	printf("| Total rules: %20d |\n", numRules);
-	printf("| Total states: %19d |\n", tree->size);
-	printf("| Total bytes: %20d |\n", tree->size * 4);
+	printf("| Total rules: %18d |\n", numRules);
+	printf("| Total states: %17d |\n", tree->size);
+	printf("| Total bytes: %18d |\n", tree->size * 4);
 	printf("+---------------------------------+\n");
 }
 

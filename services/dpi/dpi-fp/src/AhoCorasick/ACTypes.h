@@ -11,7 +11,7 @@
 #include "../Common/HashMap/HashMap.h"
 #include "../Common/MatchRule.h"
 
-#define MAX_RULES_PER_STATE 8
+#define MAX_RULES_PER_STATE 64
 
 struct st_node;
 

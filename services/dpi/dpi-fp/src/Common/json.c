@@ -12,8 +12,6 @@
 
 #define MAX_JSON_OBJECT_LEN 4096
 #define MAX_FIELDS_IN_OBJECT 20
-#define MAX_FIELD_NAME_LENGTH 128
-#define MAX_FIELD_VALUE_LENGTH 1024
 
 int parse_single_object(char *data, int len, void *result, json_parser parser, void **nextresult) {
 	int i, j, level, start, end, inquote, pair_start, pair, eqsign, spsign;
