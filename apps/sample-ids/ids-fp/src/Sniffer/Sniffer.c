@@ -43,6 +43,7 @@
 typedef struct {
 	int counter;
 	int linkHdrLen;
+	int last;
 	pcap_t *pcap_in;
 	pcap_t *pcap_out;
 	struct timeval start, end;
@@ -57,7 +58,7 @@ typedef struct {
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen) {
+ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int last) {
 	ProcessorData *processor;
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
@@ -66,6 +67,7 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen)
 	processor->pcap_in = pcap_in;
 	processor->pcap_out = pcap_out;
 	processor->linkHdrLen = linkHdrLen;
+	processor->last = last;
 	processor->bytes = 0;
 	memset(processor->reports, 0, sizeof(MatchReport) * MAX_REPORTED_RULES);
 	processor->num_reports = 0;
@@ -253,8 +255,12 @@ static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, con
 	processor->bytes += dataPkt->payload_len;
 
 	// Forward both packets
+	printf("Forwarding data packet...\n");
 	pcap_sendpacket(processor->pcap_out, dataPacketPtr, dataPkthdr->len);
-	pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
+	if (processor->last) {
+		printf("Forwarding match packet..\n");
+		pcap_sendpacket(processor->pcap_out, matchPacketPtr, matchPkthdr->len);
+	}
 }
 
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
@@ -351,7 +357,7 @@ void stop(int res) {
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if) {
+void sniff(char *in_if, char *out_if, int last) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -509,7 +515,7 @@ void sniff(char *in_if, char *out_if) {
 	}
 
 	// Prepare processor
-	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen);
+	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen, last);
 	_global_processor = processor;
 
 	// Set signal handler
@@ -533,7 +539,7 @@ int main(int argc, char *argv[]) {
 	char *out_if = NULL;
 	int i;
 	char *param, *arg;
-	int auto_mode;
+	int auto_mode, last;
 
 	auto_mode = 0;
 
@@ -545,6 +551,8 @@ int main(int argc, char *argv[]) {
 				in_if = arg;
 			} else if (strcmp(param, "out") == 0) {
 				out_if = arg;
+			} else if (strcmp(param, "last") == 0) {
+				last = 1;
 			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
@@ -553,16 +561,17 @@ int main(int argc, char *argv[]) {
 	}
 	if (auto_mode == 0 && (in_if == NULL || out_if == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface>\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> [last]\nThis tool may require root privileges.\n", argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
 		in_if = "mbox1-eth0";
 		out_if = "mbox1-eth0";
+		last = 1;
 	}
 
 
-	sniff(in_if, out_if);
+	sniff(in_if, out_if, last);
 
 	return 0;
 }
