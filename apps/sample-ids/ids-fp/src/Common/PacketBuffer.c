@@ -77,7 +77,8 @@ InPacket *packet_buffer_dequeue(PacketBuffer *q) {
 	i = q->head;
 	res = i->packet;
 	q->head = i->next;
-	q->head->prev = NULL;
+	if (q->head)
+		q->head->prev = NULL;
 	if (q->size == 1)
 		q->tail = NULL;
 	q->size--;
@@ -119,6 +120,10 @@ InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int d
 				temp->next = i->next;
 			if (i->next)
 				i->next->prev = temp;
+			if (i == q->head)
+				q->head = i->next;
+			if (i == q->tail)
+				q->tail = temp;
 			free(i);
 
 			unlock(q);
