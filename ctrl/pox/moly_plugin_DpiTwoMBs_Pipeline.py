@@ -27,7 +27,7 @@ class Tutorial (object):
         connection.addListeners(self)
         self.moly_set_entries()
 
-    def send_flow_mod(self, in_port=None, dl_type=None, dl_src=None, dl_dst=None, nw_proto=None, dl_vlan=None, nw_tos=None, actions=[], buffer_id=None, raw_data=None):
+    def send_flow_mod(self, in_port=None, dl_type=None, dl_src=None, dl_dst=None, nw_src=None, nw_dst=None, nw_proto=None, dl_vlan=None, nw_tos=None, actions=[], buffer_id=None, raw_data=None):
         fm = of.ofp_flow_mod()
         if in_port is not None:
             fm.match.in_port = in_port
@@ -37,6 +37,10 @@ class Tutorial (object):
             fm.match.dl_src = dl_src
         if dl_dst is not None:
             fm.match.dl_dst = dl_dst
+        if nw_src is not None:
+            fm.match.nw_src = nw_src
+        if nw_dst is not None:
+            fm.match.nw_dst = nw_dst
         if nw_proto is not None:
             fm.match.nw_proto = nw_proto
         if dl_vlan is not None:
@@ -70,11 +74,30 @@ class Tutorial (object):
             # h1 to DPI
             self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=2)])
             self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=2)])
+
             # h2 to DPI
             self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=2)])
             self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=2)])
-            # DPI to MBOX1
+
+            ####### TWO DPI INSTANCES #######
+            ## h1 to DPI1 (src IP = 10.0.0.1)
+            #self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.1'), nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=2)])
+            #self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.1'), nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=2)])
+            ## h1 to DPI2 (src IP = 10.0.0.2)
+            #self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.2'), nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=6)])
+            #self.send_flow_mod(in_port=1, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.2'), nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_1), of.ofp_action_output(port=6)])
+
+            ## h2 to DPI1 (src IP = 10.0.0.1)
+            #self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.1'), nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=2)])
+            #self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.1'), nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=2)])
+            ## h2 to DPI2 (src IP = 10.0.0.2)
+            #self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.2'), nw_proto=IPPROTO_TCP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=6)])
+            #self.send_flow_mod(in_port=4, dl_type=ETHERTYPE_IPV4, nw_src=IPAddr('10.0.0.2'), nw_proto=IPPROTO_UDP, actions=[of.ofp_action_nw_tos(nw_tos=DSCP_IMM_2), of.ofp_action_output(port=6)])
+
+            # DPI1 to MBOX1
             self.send_flow_mod(in_port=2, dl_type=ETHERTYPE_IPV4, actions=[of.ofp_action_output(port=3)])
+            # DPI2 to MBOX1
+            self.send_flow_mod(in_port=6, dl_type=ETHERTYPE_IPV4, actions=[of.ofp_action_output(port=3)])
             # MBOX1 to MBOX2
             self.send_flow_mod(in_port=3, dl_type=ETHERTYPE_IPV4, actions=[of.ofp_action_output(port=5)])
             # MBOX2 to h2

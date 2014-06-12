@@ -27,7 +27,8 @@ class DpiTwoMBs(Topo):
         # Add hosts and switches
         h1 = self.addHost('h1')
         sw1 = self.addSwitch('s1')
-        dpi = self.addHost('dpi')
+        dpi1 = self.addHost('dpi1')
+        dpi2 = self.addHost('dpi2')
         sw2 = self.addSwitch('s2')
         mbox1 = self.addHost('mbox1')
         mbox2 = self.addHost('mbox2')
@@ -35,11 +36,12 @@ class DpiTwoMBs(Topo):
 
         # Add links
         self.addLink(h1, sw1)
-        self.addLink(sw1, dpi)
+        self.addLink(sw1, dpi1)
         self.addLink(sw1, mbox1)
         self.addLink(sw1, sw2)
         self.addLink(sw1, mbox2)
         self.addLink(sw2, h2)
+        self.addLink(sw1, dpi2)
 
 
 topos = { 'DpiTest': ( lambda: DpiTest() ),
