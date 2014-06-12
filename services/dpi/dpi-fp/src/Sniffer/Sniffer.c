@@ -24,8 +24,8 @@
 #include "../Common/PacketBuffer.h"
 
 #define MAX_PACKET_SIZE 65535
-#define MAX_REPORTED_RULES 256
-#define MAX_REPORTS 256
+#define MAX_REPORTED_RULES 1024
+#define MAX_REPORTS 1024
 #define STR_ANY "any"
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
@@ -433,11 +433,14 @@ void stop(int res) {
 	long total_bytes;
 	int i;
 
+	for (i = 0; i < _global_processor->num_workers; i++) {
+		pthread_join(_global_processor->workers[i], NULL);
+	}
+
 	gettimeofday(&(_global_processor->end), NULL);
 
 	total_bytes = 0;
 	for (i = 0; i < _global_processor->num_workers; i++) {
-		pthread_join(_global_processor->workers[i], NULL);
 		total_bytes += _global_processor->bytes[i];
 	}
 
