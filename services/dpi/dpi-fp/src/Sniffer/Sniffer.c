@@ -100,6 +100,7 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->bytes = 0;
 	processor->started = 0;
 	processor->no_report = no_report;
+	processor->total_reports = 0;
 
 	return processor;
 }
