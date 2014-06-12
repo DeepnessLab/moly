@@ -204,23 +204,10 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     }
 }
 
-static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
-		Packet *in_packet, MatchReport *reports, int num_reports, unsigned char *result) {
-	int hdrs_len, data_len;
-	ResultPacketReport rules[MAX_REPORTED_RULES];
+static inline int find_results(ProcessorData *processor, MatchReport *reports, int num_reports, ResultPacketReport *rules) {
+	int i,j, r, num_rules;
 	MatchRule *state_rules;
-	int num_rules;
-	int i, j, r;
-	ResultsPacketHeader *reshdr;
 
-    struct ip *iphdr = (struct ip*)result;
-    struct udphdr *udphdr;
-
-	if (num_reports == 0) {
-		return 0;
-	}
-
-	// Find results
 	r = 0;
 	for (i = 0; i < num_reports; i++) {
 		state_rules = processor->machine->matchRules[reports[i].state];
@@ -231,6 +218,25 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 			r++;
 		}
 	}
+	return r;
+}
+
+static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
+		Packet *in_packet, MatchReport *reports, int num_reports, unsigned char *result) {
+	int hdrs_len, data_len;
+	ResultPacketReport rules[MAX_REPORTED_RULES];
+	int r;
+	ResultsPacketHeader *reshdr;
+
+    struct ip *iphdr = (struct ip*)result;
+    struct udphdr *udphdr;
+
+	if (num_reports == 0) {
+		return 0;
+	}
+
+	// Find results
+	r = find_results(processor, reports, num_reports, rules);
 
 	// Compute data length
 	data_len = 12 + (r * 4);
@@ -279,10 +285,18 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
 }
 
+static inline int count_results_for_noreport_mode(ProcessorData *processor, MatchReport *reports, int num_reports) {
+	int r;
+	ResultPacketReport rules[MAX_REPORTED_RULES];
+
+	r = find_results(processor, reports, num_reports, rules);
+	return r;
+}
+
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
 	ProcessorData *processor;
 	int current;
-	int res;
+	int res, r;
 	Packet packet;
 	unsigned char *ptr;
 	MatchReport reports[MAX_REPORTS];
@@ -307,7 +321,8 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	if (processor->no_report) {
 		// Count reports
-		processor->total_reports += res;
+		r = count_results_for_noreport_mode(processor, reports, res);
+		processor->total_reports += r;
 		// Forward packet
 		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	} else {
