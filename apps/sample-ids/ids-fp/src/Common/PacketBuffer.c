@@ -151,6 +151,7 @@ InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int d
 				q->head = i->next;
 			if (i == q->tail)
 				q->tail = temp;
+			q->size--;
 			free(i);
 
 			unlock(q);
