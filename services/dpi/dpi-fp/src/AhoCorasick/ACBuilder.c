@@ -315,7 +315,7 @@ void *match_rule_parser(char ***pairs, int numPairs, void *result) {
 	return result + sizeof(MatchRule);
 }
 
-#define MAX_RULES_FOR_DFA 16384
+#define MAX_RULES_FOR_DFA 65536
 #define MAX_RULES 65536
 
 void acBuildTree(ACTree *tree, const char *path) {
