@@ -10,21 +10,36 @@
 #include <time.h>
 #include "PacketBuffer.h"
 
+#ifndef USE_MUTEX
 static struct timespec _100_nanos = {0, 100};
+#endif
 
 static inline void lock(PacketBuffer *q) {
+#ifdef USE_MUTEX
+	pthread_mutex_lock(&(q->mutex));
+#else
 	while (__sync_lock_test_and_set(&(q->lock), 1)) {
 		nanosleep(&_100_nanos, NULL);
 	}
+#endif
 }
 
 static inline void unlock(PacketBuffer *q) {
+#ifdef USE_MUTEX
+	pthread_mutex_unlock(&(q->mutex));
+#else
 	__sync_lock_release(&(q->lock));
+#endif
 }
 
 void packet_buffer_init(PacketBuffer *q) {
 	q->size = 0;
 	q->head = q->tail = NULL;
+#ifdef USE_MUTEX
+	pthread_mutex_init(&(q->mutex), NULL);
+#else
+	q->lock = 0;
+#endif
 }
 
 void packet_buffer_destroy(PacketBuffer *q, int destroyItems) {
@@ -38,6 +53,7 @@ void packet_buffer_destroy(PacketBuffer *q, int destroyItems) {
 		free(item);
 		item = next;
 	}
+	pthread_mutex_destroy(&(q->mutex));
 	q->head = q->tail = NULL;
 	q->size = 0;
 }

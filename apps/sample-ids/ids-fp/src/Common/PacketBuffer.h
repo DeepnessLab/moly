@@ -8,8 +8,11 @@
 #ifndef PACKETBUFFER_H_
 #define PACKETBUFFER_H_
 
+#include <pthread.h>
 #include <pcap.h>
 #include "Types.h"
+
+#define USE_MUTEX
 
 typedef struct {
 	struct pcap_pkthdr pkthdr;
@@ -27,7 +30,11 @@ typedef struct sq_item {
 typedef struct {
 	PacketBufferItem *head, *tail;
 	int size;
+#ifdef USE_MUTEX
+	pthread_mutex_t mutex;
+#else
 	int lock;
+#endif
 } PacketBuffer;
 
 void packet_buffer_init(PacketBuffer *q);
