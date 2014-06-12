@@ -7,6 +7,7 @@
 
 #ifndef TYPES_H_
 #define TYPES_H_
+#include <netinet/in.h>
 #include "Flags.h"
 
 #define TRUE 1
@@ -50,6 +51,35 @@ typedef struct {
 	int size;
 	int nextID;
 } StateTable;
+
+typedef struct {
+	// IPv4
+	in_addr_t ip_src;
+	in_addr_t ip_dst;
+	unsigned short ip_id;
+	unsigned char ip_tos;
+	unsigned char ip_ttl;
+	unsigned char ip_proto;
+	unsigned short ip_len;
+
+	union {
+		struct _icmp {
+			// ICMP
+			unsigned short icmp_type;
+			unsigned short icmp_code;
+		} icmp;
+		struct _transport {
+			// Transport
+			unsigned short tp_src;
+			unsigned short tp_dst;
+		} transport;
+	};
+	unsigned int seqnum;
+
+	// Data
+	unsigned int payload_len;
+	unsigned char *payload;
+} Packet;
 
 #define GET_HEADER_AS_BYTE0(header) (((header).type & 0x03) | (((header).size & 0x03F) << 2))
 
