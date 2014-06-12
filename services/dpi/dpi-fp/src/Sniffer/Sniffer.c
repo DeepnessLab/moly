@@ -1,3 +1,7 @@
+#ifdef __linux__
+#define _GNU_SOURCE
+#endif
+
 #include <pcap.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +14,6 @@
 #include <netinet/udp.h>
 #include <netinet/ip_icmp.h>
 #ifdef __linux__
-#define _GNU_SOURCE
 #include <sched.h>
 #endif
 #include <pthread.h>
@@ -43,7 +46,7 @@ typedef struct {
 	PacketBuffer *queue;
 #ifdef __linux__
 	cpu_set_t cpuset;
-	pthread_attr attr;
+	pthread_attr_t attr;
 #endif
 } WorkerData;
 
@@ -103,9 +106,9 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 		processor->workerData[i].processor = processor;
 		processor->workerData[i].queue = &(processor->queues[i]);
 #ifdef __linux__
-		CPU_ZERO(&(workerData[i].cpuset));
-		CPU_SET(i, &(workerData[i].cpuset));
-		pthread_attr_init(&(workerData[i].attr))
+		CPU_ZERO(&(processor->workerData[i].cpuset));
+		CPU_SET(i, &(processor->workerData[i].cpuset));
+		pthread_attr_init(&(processor->workerData[i].attr));
 		pthread_attr_setaffinity_np(&(processor->workerData[i].attr), sizeof(cpu_set_t), &(processor->workerData[i].cpuset));
 		pthread_attr_setscope(&(processor->workerData[i].attr), PTHREAD_SCOPE_SYSTEM);
 		pthread_create(&(processor->workers[i]), &(processor->workerData[i].attr), worker_start, &(processor->workerData[i]));
