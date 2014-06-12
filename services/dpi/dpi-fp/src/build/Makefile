@@ -16,8 +16,8 @@ clean:
 	rm *.o main
 
 # EXECUTABLES
-main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o
-	gcc -Wall $(O_SYM) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o $(LIBS) && rm *.o
+main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o
+	gcc -Wall $(O_SYM) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o $(LIBS) && rm *.o
 
 # OBJECTS
 
@@ -50,3 +50,6 @@ TableStateMachineGenerator.o: ../StateMachine/TableStateMachineGenerator.c ../St
 
 Sniffer.o: ../Sniffer/Sniffer.c ../Sniffer/Sniffer.h
 	gcc -Wall $(O_SYM) $(V_SYM) -c ../Sniffer/Sniffer.c -I../
+
+PacketBuffer.o: ../Common/PacketBuffer.c ../Common/PacketBuffer.h
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/PacketBuffer.c -I../

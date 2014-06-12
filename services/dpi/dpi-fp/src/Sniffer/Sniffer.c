@@ -19,6 +19,8 @@
 #include "Sniffer.h"
 #include "../StateMachine/TableStateMachine.h"
 #include "../StateMachine/TableStateMachineGenerator.h"
+#include "../Common/Types.h"
+#include "../Common/PacketBuffer.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 256
@@ -26,11 +28,24 @@
 #define STR_ANY "any"
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
+#define MAX_THREADS 8
 
 #define GET_MBPS(bytes, usecs) \
 	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
 
+static struct timespec _100_nanos = {0, 100};
+
+struct st_processor_data;
+
+void *worker_start(void *);
+
 typedef struct {
+	int id;
+	struct st_processor_data *processor;
+	PacketBuffer *queue;
+} WorkerData;
+
+typedef struct st_processor_data {
 	int counter;
 	TableStateMachine *machine;
 	int linkHdrLen;
@@ -38,40 +53,16 @@ typedef struct {
 	pcap_t *pcap_out;
 	struct timeval start, end, first_packet, last_packet;
 	int started;
-	long bytes;
+	long bytes[MAX_THREADS];
 	// For Standalone middlebox mode that does not report its matches
 	int no_report;
 	long total_reports;
+	int terminated;
+	pthread_t workers[MAX_THREADS];
+	PacketBuffer queues[MAX_THREADS];
+	WorkerData workerData[MAX_THREADS];
+	int num_workers;
 } ProcessorData;
-
-typedef struct {
-	// IPv4
-	in_addr_t ip_src;
-	in_addr_t ip_dst;
-	unsigned short ip_id;
-	unsigned char ip_tos;
-	unsigned char ip_ttl;
-	unsigned char ip_proto;
-	unsigned short ip_len;
-
-	union {
-		struct _icmp {
-			// ICMP
-			unsigned short icmp_type;
-			unsigned short icmp_code;
-		} icmp;
-		struct _transport {
-			// Transport
-			unsigned short tp_src;
-			unsigned short tp_dst;
-		} transport;
-	};
-	unsigned int seqnum;
-
-	// Data
-	unsigned int payload_len;
-	unsigned char *payload;
-} Packet;
 
 typedef struct {
 	unsigned short magicnum;
@@ -87,8 +78,12 @@ typedef struct {
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int no_report) {
+ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int num_workers, int no_report) {
+	int i;
 	ProcessorData *processor;
+#ifdef __linux__
+	cpu_set_t cpuset;
+#endif
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
 
@@ -97,10 +92,24 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->pcap_in = pcap_in;
 	processor->pcap_out = pcap_out;
 	processor->linkHdrLen = linkHdrLen;
-	processor->bytes = 0;
 	processor->started = 0;
 	processor->no_report = no_report;
 	processor->total_reports = 0;
+
+	processor->num_workers = num_workers;
+	for (i = 0; i < num_workers; i++) {
+		packet_buffer_init(&(processor->queues[i]));
+		processor->bytes[i] = 0;
+		processor->workerData[i].id = i;
+		processor->workerData[i].processor = processor;
+		processor->workerData[i].queue = &(processor->queues[i]);
+		pthread_create(&(processor->workers[i]), NULL, worker_start, &(processor->workerData[i]));
+#ifdef __linux__
+		CPU_ZERO(&cpuset);
+		CPU_SET(i, &cpuset);
+		pthread_setaffinity_np(&(processor->workers[i]), sizeof(cpu_set_t), &cpuset);
+#endif
+	}
 
 	return processor;
 }
@@ -285,6 +294,32 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
 }
 
+static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *pkthdr, const unsigned char *pktptr, unsigned int seqnum_key) {
+	InPacket *res;
+
+	res = (InPacket*)malloc(sizeof(InPacket));
+	if (!res) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
+	res->pkthdr = *pkthdr;
+	res->pktdata = (unsigned char*)malloc(sizeof(unsigned char) * pkthdr->len);
+	if (!(res->pktdata)) {
+		fprintf(stderr, "FATAL: Out of memory\n");
+		exit(1);
+	}
+	memcpy(res->pktdata, pktptr, sizeof(unsigned char) * pkthdr->len);
+	res->seqnum = seqnum_key;
+	res->timestamp = time(0);
+	res->packet = *packet;
+	return res;
+}
+
+static inline void free_buffered_packet(InPacket *pkt) {
+	free(pkt->pktdata);
+	free(pkt);
+}
+
 static inline int count_results_for_noreport_mode(ProcessorData *processor, MatchReport *reports, int num_reports) {
 	int r;
 	ResultPacketReport rules[MAX_REPORTED_RULES];
@@ -293,18 +328,83 @@ static inline int count_results_for_noreport_mode(ProcessorData *processor, Matc
 	return r;
 }
 
-void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
+void *worker_start(void *param) {
+	WorkerData *workerData;
 	ProcessorData *processor;
+	PacketBuffer *queue;
+	InPacket *pkt;
 	int current;
 	int res, r;
-	Packet packet;
+	Packet *packet;
 	unsigned char *ptr;
 	MatchReport reports[MAX_REPORTS];
 	unsigned char data[MAX_PACKET_SIZE];
-	int size;
+	int size, id;
+
+	workerData = (WorkerData*)param;
+	processor = workerData->processor;
+	queue = workerData->queue;
+	id = workerData->id;
+	current = 0;
+
+	while (!processor->terminated) {
+		pkt = packet_buffer_dequeue(queue);
+		if (!pkt) {
+			nanosleep(&_100_nanos, NULL);
+			continue;
+		}
+
+		packet = &(pkt->packet);
+
+		// Scan payload
+		// TODO: Per-flow scan (remember current state for each flow)
+		MATCH_TABLE_MACHINE(processor->machine, current, packet->payload, packet->payload_len, reports, res);
+
+		processor->bytes[id] += packet->payload_len;
+
+		if (processor->no_report) {
+			// Count reports
+			r = count_results_for_noreport_mode(processor, reports, res);
+			processor->total_reports += r;
+			// Forward packet
+			pcap_sendpacket(processor->pcap_out, pkt->pktdata, pkt->pkthdr.len);
+		} else {
+			// Send original packet
+			if (!res) {
+				// No matches - send as is
+				pcap_sendpacket(processor->pcap_out, pkt->pktdata, pkt->pkthdr.len);
+			} else {
+				// Matches exist - change ECN to 11b and send
+				ptr = (unsigned char *)(pkt->pktdata);
+				ptr[processor->linkHdrLen + 1] = ptr[processor->linkHdrLen + 1] | 0xC0;
+				pcap_sendpacket(processor->pcap_out, ptr, pkt->pkthdr.len);
+
+				// Build results packet
+				size = build_result_packet(processor, &(pkt->pkthdr), pkt->pktdata, packet, reports, res, data);
+#ifdef VERBOSE
+				printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkt->pkthdr.len, size, packet->seqnum);
+#endif
+				// Send results packet
+				if (size) {
+					pcap_sendpacket(processor->pcap_out, data, size);
+				}
+			}
+		}
+
+		free_buffered_packet(pkt);
+	}
+
+	return NULL;
+}
+
+void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
+	ProcessorData *processor;
+	Packet packet;
+	int i;
+	InPacket *bpkt;
 
 	processor = (ProcessorData*)arg;
-	current = 0;
+	i = 0;
 
 	if (!processor->started) {
 		processor->started = 1;
@@ -313,48 +413,27 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 
 	parse_packet(processor, packetptr, &packet);
 
-	// Scan payload
-	// TODO: Per-flow scan (remember current state for each flow)
-	MATCH_TABLE_MACHINE(processor->machine, current, packet.payload, packet.payload_len, reports, res);
+	bpkt = buffer_packet(&packet, pkthdr, packetptr, 0);
+	packet_buffer_enqueue(&(processor->queues[i]), bpkt);
 
-	processor->bytes += packet.payload_len;
+	i = (i + 1) % (processor->num_workers);
 
-	if (processor->no_report) {
-		// Count reports
-		r = count_results_for_noreport_mode(processor, reports, res);
-		processor->total_reports += r;
-		// Forward packet
-		pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
-	} else {
-		// Send original packet
-		if (!res) {
-			// No matches - send as is
-			pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
-		} else {
-			// Matches exist - change ECN to 11b and send
-			ptr = (unsigned char *)packetptr;
-			ptr[processor->linkHdrLen + 1] = packetptr[processor->linkHdrLen + 1] | 0xC0;
-			pcap_sendpacket(processor->pcap_out, ptr, pkthdr->len);
-
-			// Build results packet
-			size = build_result_packet(processor, pkthdr, packetptr, &packet, reports, res, data);
-#ifdef VERBOSE
-			printf("Matches: %d, Input packet length: %u, Result packet length: %d, seqnum/checksum: %u\n", res, pkthdr->len, size, packet.seqnum);
-#endif
-			// Send results packet
-			if (size) {
-				pcap_sendpacket(processor->pcap_out, data, size);
-			}
-		}
-	}
 	gettimeofday(&(processor->last_packet), NULL);
 }
 
 void stop(int res) {
 	// Finish
 	long usecs_total, usecs_packets;
+	long total_bytes;
+	int i;
 
 	gettimeofday(&(_global_processor->end), NULL);
+
+	total_bytes = 0;
+	for (i = 0; i < _global_processor->num_workers; i++) {
+		pthread_join(_global_processor->workers[i], NULL);
+		total_bytes += _global_processor->bytes[i];
+	}
 
 	switch (res) {
 	case 0:
@@ -385,13 +464,14 @@ void stop(int res) {
 		usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
 	else
 		usecs_packets = 0;
-	printf("Total bytes: %ld\n", _global_processor->bytes);
+
+	printf("Total bytes: %ld\n", total_bytes);
 	printf("+---------------- Timing Results ---------------+\n");
 	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(total_bytes, usecs_total));
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(total_bytes, usecs_packets));
 	printf("+-------+-------------------+-------------------+\n");
 
 	if (_global_processor->no_report) {
@@ -403,7 +483,7 @@ void stop(int res) {
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, TableStateMachine *machine, int no_report) {
+void sniff(char *in_if, char *out_if, TableStateMachine *machine, int num_workers, int no_report) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -561,7 +641,7 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine, int no_report)
 	}
 
 	// Prepare processor
-	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen, no_report);
+	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen, num_workers, no_report);
 	_global_processor = processor;
 
 	// Set signal handler
@@ -585,6 +665,7 @@ int main(int argc, char *argv[]) {
 	int i;
 	char *param, *arg;
 	int auto_mode, no_report;
+	int num_workers;
 
 
 	// ************* BEGIN DEBUG
@@ -596,6 +677,7 @@ int main(int argc, char *argv[]) {
 
 	auto_mode = 0;
 	no_report = 0;
+	num_workers = 1;
 
 	if (argc > 1) {
 		for (i = 1; i < argc; i++) {
@@ -607,6 +689,8 @@ int main(int argc, char *argv[]) {
 				out_if = arg;
 			} else if (strcmp(param, "rules") == 0) {
 				patterns = arg;
+			} else if (strcmp(param, "workers") == 0) {
+				num_workers = atoi(arg);
 			} else if (strcmp(param, "noreport") == 0) {
 				no_report = 1;
 			} else if (strcmp(param, "auto") == 0) {
@@ -617,7 +701,7 @@ int main(int argc, char *argv[]) {
 	}
 	if (auto_mode == 0 && (in_if == NULL || out_if == NULL || patterns == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> rules:<rules file> [noreport]\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> rules:<rules file> [workers:<number>] [noreport]\nThis tool may require root privileges.\n", argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
@@ -635,7 +719,7 @@ int main(int argc, char *argv[]) {
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
 
-	sniff(in_if, out_if, machine, no_report);
+	sniff(in_if, out_if, machine, num_workers, no_report);
 
 	return 0;
 }
