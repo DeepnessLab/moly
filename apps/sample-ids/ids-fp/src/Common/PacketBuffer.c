@@ -69,10 +69,12 @@ InPacket *packet_buffer_dequeue(PacketBuffer *q) {
 	void *res;
 	PacketBufferItem *i;
 
-	if (q->size == 0)
-		return NULL;
-
 	lock(q);
+
+	if (q->size == 0) {
+		unlock(q);
+		return NULL;
+	}
 
 	i = q->head;
 	res = i->packet;
@@ -90,20 +92,29 @@ InPacket *packet_buffer_dequeue(PacketBuffer *q) {
 }
 
 InPacket *packet_buffer_peek(PacketBuffer *q) {
-	if (q->size == 0)
-		return NULL;
+	InPacket *res;
 
-	return q->head->packet;
+	lock(q);
+	if (q->size == 0) {
+		unlock(q);
+		return NULL;
+	}
+
+	res = q->head->packet;
+	unlock(q);
+	return res;
 }
 
 InPacket *packet_buffer_pop(PacketBuffer *q, unsigned int src_ip, unsigned int dst_ip, unsigned short src_port, unsigned short dst_port, unsigned int seqnum) {
 	PacketBufferItem *i, *temp;
 	InPacket *res;
 
-	if (q->size == 0)
-		return NULL;
-
 	lock(q);
+
+	if (q->size == 0) {
+		unlock(q);
+		return NULL;
+	}
 
 	i = q->head;
 	while (i) {
