@@ -374,9 +374,9 @@ void stop(int res) {
 	printf("+---------------- Timing Results ---------------+\n");
 	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Gross | %17ld | %14.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Neto  | %17ld | %14.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
 	printf("+-------+-------------------+-------------------+\n");
 
 	if (_global_processor->no_report) {

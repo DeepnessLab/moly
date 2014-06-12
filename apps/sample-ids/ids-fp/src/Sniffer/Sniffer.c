@@ -127,8 +127,6 @@ void *process_buffer_timeout(void *param) {
 
 	processor = (ProcessorData*)param;
 
-	// TODO: Also clean matchPacketQueue
-
 	while (!processor->terminated) {
 		// Wait
 		sleep(BUFFER_CLEANNING_INTERVAL);
@@ -136,24 +134,42 @@ void *process_buffer_timeout(void *param) {
 		if (processor->terminated)
 			break;
 
-		// Clean buffer
+		// Clean buffers
 		pkt = packet_buffer_peek(&(processor->dataPacketQueue));
 
 		while (pkt && pkt->timestamp + BUFFER_TIMEOUT < time(0)) {
 			pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
-			// Drop packet!
+			// Forward data packet
+			pcap_sendpacket(processor->pcap_out, pkt->pktdata, pkt->pkthdr.len);
 			free_buffered_packet(pkt);
 
 			pkt = packet_buffer_peek(&(processor->dataPacketQueue));
 		}
+
+		pkt = packet_buffer_peek(&(processor->matchPacketQueue));
+
+		while (pkt && pkt->timestamp + BUFFER_TIMEOUT < time(0)) {
+			pkt = packet_buffer_dequeue(&(processor->matchPacketQueue));
+			// Drop match packet
+			free_buffered_packet(pkt);
+
+			pkt = packet_buffer_peek(&(processor->matchPacketQueue));
+		}
 	}
 
-	// Clear buffer
+	// Clear buffers
 	pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
 
 	while (pkt) {
 		free_buffered_packet(pkt);
 		pkt = packet_buffer_dequeue(&(processor->dataPacketQueue));
+	}
+
+	pkt = packet_buffer_dequeue(&(processor->matchPacketQueue));
+
+	while (pkt) {
+		free_buffered_packet(pkt);
+		pkt = packet_buffer_dequeue(&(processor->matchPacketQueue));
 	}
 	return NULL;
 }
@@ -370,7 +386,7 @@ void stop(int res) {
 
 	_global_processor->terminated = 1;
 
-	//pthread_join(_global_processor->bufferWorker, NULL);
+	pthread_join(_global_processor->bufferWorker, NULL);
 
 	switch (res) {
 	case 0:
@@ -403,9 +419,9 @@ void stop(int res) {
 	printf("+---------------- Timing Results ---------------+\n");
 	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Gross | %17ld | %14.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
 	printf("+-------+-------------------+-------------------+\n");
-	printf("| Neto  | %17ld | %14.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
 	printf("+-------+-------------------+-------------------+\n");
 	printf("\n");
 	printf("Total reported matches: %d\n", _global_processor->num_reports);
@@ -582,7 +598,7 @@ void sniff(char *in_if, char *out_if, int last) {
 	signal(SIGQUIT, stop);
 
 	// Run buffer cleaning worker
-//	pthread_create(&(processor->bufferWorker), NULL, process_buffer_timeout, (void*)processor);
+	pthread_create(&(processor->bufferWorker), NULL, process_buffer_timeout, (void*)processor);
 
 	// Run sniffer
 	gettimeofday(&(processor->start), NULL);
