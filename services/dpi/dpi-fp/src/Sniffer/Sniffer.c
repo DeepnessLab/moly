@@ -1,21 +1,19 @@
 #include <pcap.h>
-#include <pcap.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/time.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 #include <netinet/udp.h>
 #include <netinet/ip_icmp.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#ifdef __linux__
+#define _GNU_SOURCE
+#include <sched.h>
+#endif
+#include <pthread.h>
 #include "Sniffer.h"
 #include "../StateMachine/TableStateMachine.h"
 #include "../StateMachine/TableStateMachineGenerator.h"
@@ -43,6 +41,10 @@ typedef struct {
 	int id;
 	struct st_processor_data *processor;
 	PacketBuffer *queue;
+#ifdef __linux__
+	cpu_set_t cpuset;
+	pthread_attr attr;
+#endif
 } WorkerData;
 
 typedef struct st_processor_data {
@@ -81,9 +83,6 @@ static ProcessorData *_global_processor;
 ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int num_workers, int no_report) {
 	int i;
 	ProcessorData *processor;
-#ifdef __linux__
-	cpu_set_t cpuset;
-#endif
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
 
@@ -103,11 +102,15 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 		processor->workerData[i].id = i;
 		processor->workerData[i].processor = processor;
 		processor->workerData[i].queue = &(processor->queues[i]);
-		pthread_create(&(processor->workers[i]), NULL, worker_start, &(processor->workerData[i]));
 #ifdef __linux__
-		CPU_ZERO(&cpuset);
-		CPU_SET(i, &cpuset);
-		pthread_setaffinity_np(&(processor->workers[i]), sizeof(cpu_set_t), &cpuset);
+		CPU_ZERO(&(workerData[i].cpuset));
+		CPU_SET(i, &(workerData[i].cpuset));
+		pthread_attr_init(&(workerData[i].attr))
+		pthread_attr_setaffinity_np(&(processor->workerData[i].attr), sizeof(cpu_set_t), &(processor->workerData[i].cpuset));
+		pthread_attr_setscope(&(processor->workerData[i].attr), PTHREAD_SCOPE_SYSTEM);
+		pthread_create(&(processor->workers[i]), &(processor->workerData[i].attr), worker_start, &(processor->workerData[i]));
+#else
+		pthread_create(&(processor->workers[i]), NULL, worker_start, &(processor->workerData[i]));
 #endif
 	}
 
