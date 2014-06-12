@@ -12,7 +12,7 @@
 #include <pcap.h>
 #include "Types.h"
 
-#define USE_MUTEX
+//#define USE_MUTEX
 
 typedef struct {
 	struct pcap_pkthdr pkthdr;

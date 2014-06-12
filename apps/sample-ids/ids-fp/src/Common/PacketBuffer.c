@@ -53,7 +53,9 @@ void packet_buffer_destroy(PacketBuffer *q, int destroyItems) {
 		free(item);
 		item = next;
 	}
+#ifdef USE_MUTEX
 	pthread_mutex_destroy(&(q->mutex));
+#endif
 	q->head = q->tail = NULL;
 	q->size = 0;
 }
