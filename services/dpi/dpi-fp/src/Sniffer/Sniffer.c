@@ -552,6 +552,7 @@ void stop(int res) {
 	exit(0);
 }
 
+
 void sniff(char *in_if, char *out_if, char *in_file, char *out_file, TableStateMachine *machine, int num_workers, int no_report, int batch) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
@@ -804,6 +805,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+
 	if (auto_mode == 0 && ((in_if == NULL && in_file == NULL) || (out_if == NULL && out_file == NULL) || patterns == NULL || max_rules < 0 || num_workers < 1)) {
 		// Show usage
 		fprintf(stderr, USAGE, argv[0]);
@@ -825,6 +827,7 @@ int main(int argc, char *argv[]) {
 	//strcpy(pkt,"008g");
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
+
 
 	sniff(in_if, out_if, in_file, out_file, machine, num_workers, no_report, batch);
 
