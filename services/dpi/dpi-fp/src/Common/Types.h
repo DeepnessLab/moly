@@ -81,6 +81,4 @@ typedef struct {
 	unsigned char *payload;
 } Packet;
 
-#define GET_HEADER_AS_BYTE0(header) (((header).type & 0x03) | (((header).size & 0x03F) << 2))
-
 #endif /* TYPES_H_ */
