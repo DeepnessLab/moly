@@ -41,6 +41,8 @@
 #define REPORT_PACKET_REPORT_SIZE 4
 #define REPORT_PACKET_OFFSET_START_IDX 2
 
+#define USAGE "Usage: %s (in=<iface>|infile=<file>) (out=<iface>|outfile=<file>) [last] [batch]\n\tin=<iface>\tSet input capture interface\n\tout=<iface>\tSet output interface\n\tinfile=<file>\tSet input pcap file (cannot use with 'in')\n\toutfile=<file>\tSet output pcap file (cannot use with 'out', not implemented yet)\n\tlast\t\tThis is the last middlebox in chain, do not forward match data.\n\tbatch\t\tReport results in batch mode\n\nThis tool may require root privileges.\n"
+
 #define GET_MBPS(bytes, usecs) \
 	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
 
@@ -54,16 +56,17 @@ typedef struct {
 	int started; // Used to determine if a packet is the first one we see
 	long bytes;
 	MatchReport reports[MAX_REPORTED_RULES];
-	int num_reports;
+	long num_reports;
 	PacketBuffer dataPacketQueue;
 	PacketBuffer matchPacketQueue;
 	pthread_t bufferWorker;
 	int terminated;
+	int batch_mode;
 } ProcessorData;
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int last) {
+ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int last, int batch_mode) {
 	ProcessorData *processor;
 
 	processor = (ProcessorData*)malloc(sizeof(ProcessorData));
@@ -82,6 +85,8 @@ ProcessorData *init_processor(pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen,
 	processor->num_reports = 0;
 	processor->terminated = 0;
 	processor->started = 0;
+	processor->batch_mode = batch_mode;
+
 
 	packet_buffer_init(&(processor->dataPacketQueue));
 	packet_buffer_init(&(processor->matchPacketQueue));
@@ -274,7 +279,8 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
 
 static inline void handle_matches(ProcessorData *processor, Packet *dataPkt, const struct pcap_pkthdr *dataPkthdr, const unsigned char *dataPacketPtr,
 		Packet *matchPkt, const struct pcap_pkthdr *matchPkthdr, const unsigned char *matchPacketPtr) {
-	int num_reports, i, total_reports;
+	long num_reports, total_reports;
+	int i;
 	//unsigned int flow_offset;
 	unsigned char *ptr;
 
@@ -373,6 +379,7 @@ void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const 
 #ifdef VERBOSE
         printf("Received a data packet with no matches, forwarding it\n");
 #endif
+    	processor->bytes += packet.payload_len;
         pcap_sendpacket(processor->pcap_out, packetptr, pkthdr->len);
 	}
 	gettimeofday(&(processor->last_packet), NULL);
@@ -415,23 +422,30 @@ void stop(int res) {
 		usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
 	else
 		usecs_packets = 0;
-	printf("Total bytes: %ld\n", _global_processor->bytes);
-	printf("+---------------- Timing Results ---------------+\n");
-	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
-	printf("+-------+-------------------+-------------------+\n");
-	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
-	printf("+-------+-------------------+-------------------+\n");
-	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
-	printf("+-------+-------------------+-------------------+\n");
-	printf("\n");
-	printf("Total reported matches: %d\n", _global_processor->num_reports);
-
+	if (!(_global_processor->batch_mode)) {
+		printf("Total bytes: %ld\n", _global_processor->bytes);
+		printf("+---------------- Timing Results ---------------+\n");
+		printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
+		printf("+-------+-------------------+-------------------+\n");
+		printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(_global_processor->bytes, usecs_total));
+		printf("+-------+-------------------+-------------------+\n");
+		printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(_global_processor->bytes, usecs_packets));
+		printf("+-------+-------------------+-------------------+\n");
+		printf("\n");
+		printf("Total reported matches: %ld\n", _global_processor->num_reports);
+	} else {
+		printf("Batch Mode Results Report\n");
+		printf("=========================\n");
+		printf("(use with grep)\n\n");
+		printf("   \tusecs\tTotalBytes\tThpt(Mbps)\tReports\n");
+		printf("RES\t%ld\t%ld\t%f\t%ld\n", usecs_packets, _global_processor->bytes, GET_MBPS(_global_processor->bytes, usecs_packets), _global_processor->num_reports);
+	}
 	destroy_processor(_global_processor);
 
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, int last) {
+void sniff(char *in_if, char *out_if, char *in_file, char *out_file, int last, int batch_mode) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -444,101 +458,125 @@ void sniff(char *in_if, char *out_if, int last) {
 
 	memset(errbuf, 0, PCAP_ERRBUF_SIZE);
 
-	// Find available interfaces
-	if (pcap_findalldevs(&devices, errbuf)) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find network interface (pcap_findalldevs error: %s)\n", errbuf);
-		exit(1);
-	}
-
-	// Find requested interface
-	next_device = devices;
-	while (next_device) {
-		printf("[Sniffer] Found network interface: %s\n", next_device->name);
-		if (strcmp(in_if, next_device->name) == 0) {
-			device_in = in_if;
-		}
-		if (strcmp(out_if, next_device->name) == 0) {
-			device_out = out_if;
-		}
-		next_device = next_device->next;
-	}
-	pcap_freealldevs(devices);
-	if (strcmp(in_if, STR_ANY) == 0) {
-		device_in = STR_ANY;
-	}
-
-	if (!device_in) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find input network interface\n");
-		exit(1);
-	}
-	if (!device_out) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find output network interface\n");
-		exit(1);
-	}
-
-	printf("[Sniffer] Sniffer is capturing from device: %s\n", device_in);
-	printf("[Sniffer] Packets are sent on device: %s\n", device_out);
-
-	for (i = 0; i < 2; i++) {
-		mode = (i == 0) ? "input" : "output";
-		// Create input PCAP handle
-		hpcap[i] = pcap_create(device_in, errbuf);
-		if (!hpcap[i]) {
-			fprintf(stderr, "[Sniffer] ERROR: Cannot create %s pcap handle (pcap_create error: %s)\n", mode ,errbuf);
+	if (in_if || out_if) {
+		// Find available interfaces
+		if (pcap_findalldevs(&devices, errbuf)) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find network interface (pcap_findalldevs error: %s)\n", errbuf);
 			exit(1);
 		}
 
-		if (i == 0) {
+		// Find requested interface
+		next_device = devices;
+		while (next_device) {
+			printf("[Sniffer] Found network interface: %s\n", next_device->name);
+			if (in_if && (strcmp(in_if, next_device->name) == 0)) {
+				device_in = in_if;
+			}
+			if (out_if && (strcmp(out_if, next_device->name) == 0)) {
+				device_out = out_if;
+			}
+			next_device = next_device->next;
+		}
+		pcap_freealldevs(devices);
+		if (in_if && (strcmp(in_if, STR_ANY) == 0)) {
+			device_in = STR_ANY;
+		}
+
+		if (in_if && !device_in) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find input network interface\n");
+			exit(1);
+		}
+		if (out_if && !device_out) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find output network interface\n");
+			exit(1);
+		}
+	}
+
+	if (in_if) {
+		printf("[Sniffer] Sniffer is capturing from device: %s\n", device_in);
+	} else {
+		printf("[Sniffer] Sniffer is reading packets from file: %s\n", in_file);
+	}
+	if (out_if) {
+		printf("[Sniffer] Packets are sent on device: %s\n", device_out);
+	} else {
+		printf("[Sniffer] Packets written to file: %s\n", out_file);
+	}
+
+	if (in_if) {
+		hpcap[0] = pcap_create(device_in, errbuf);
+	} else {
+		hpcap[0] = pcap_open_offline(in_file, errbuf);
+	}
+	if (out_if) {
+		hpcap[1] = pcap_create(device_out, errbuf);
+	} else {
+		//hpcap[1] = pcap_dump_fopen(out_file, errbuf);
+	}
+
+	for (i = 0; i < 2; i++) {
+		mode = (i == 0) ? "input" : "output";
+		// Check pcap handle
+		if (!hpcap[i]) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot create %s pcap handle (pcap_create/pcap_open_offline error: %s)\n", mode ,errbuf);
+			exit(1);
+		}
+
+		if (in_if && i == 0) {
 			// Set promiscuous mode
 			pcap_set_promisc(hpcap[0], 1);
 		}
 
 		// Activate PCAP
-		res = pcap_activate(hpcap[i]);
-		switch (res) {
-		case 0:
-			// Success
-			break;
-		case PCAP_WARNING_PROMISC_NOTSUP:
-			fprintf(stderr, "[Sniffer] WARNING: Promiscuous mode is not supported\n");
-			exit(1);
-			break;
-		case PCAP_WARNING:
-			fprintf(stderr, "[Sniffer] WARNING: Unknown (%s)\n", pcap_geterr(hpcap[i]));
-			exit(1);
-			break;
-		case PCAP_ERROR_NO_SUCH_DEVICE:
-			fprintf(stderr, "[Sniffer] ERROR: Device not found\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_PERM_DENIED:
-			fprintf(stderr, "[Sniffer] ERROR: Permission denied\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_PROMISC_PERM_DENIED:
-			fprintf(stderr, "[Sniffer] ERROR: Permission denied for promiscuous mode\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_RFMON_NOTSUP:
-			fprintf(stderr, "[Sniffer] ERROR: Monitor mode is not supported\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_IFACE_NOT_UP:
-			fprintf(stderr, "[Sniffer] ERROR: Interface %s is not available\n", (i == 0) ? device_in : device_out);
-			exit(1);
-			break;
-		default:
-			fprintf(stderr, "[Sniffer] ERROR: Unknown (%s)\n", pcap_geterr(hpcap[i]));
-			exit(1);
-			break;
+		if ((in_if && i == 0) || (out_if && i == 1)) {
+			res = pcap_activate(hpcap[i]);
+			switch (res) {
+			case 0:
+				// Success
+				break;
+			case PCAP_WARNING_PROMISC_NOTSUP:
+				fprintf(stderr, "[Sniffer] WARNING: Promiscuous mode is not supported\n");
+				exit(1);
+				break;
+			case PCAP_WARNING:
+				fprintf(stderr, "[Sniffer] WARNING: Unknown (%s)\n", pcap_geterr(hpcap[i]));
+				exit(1);
+				break;
+			case PCAP_ERROR_NO_SUCH_DEVICE:
+				fprintf(stderr, "[Sniffer] ERROR: Device not found\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_PERM_DENIED:
+				fprintf(stderr, "[Sniffer] ERROR: Permission denied\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_PROMISC_PERM_DENIED:
+				fprintf(stderr, "[Sniffer] ERROR: Permission denied for promiscuous mode\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_RFMON_NOTSUP:
+				fprintf(stderr, "[Sniffer] ERROR: Monitor mode is not supported\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_IFACE_NOT_UP:
+				fprintf(stderr, "[Sniffer] ERROR: Interface %s is not available\n", (i == 0) ? device_in : device_out);
+				exit(1);
+				break;
+			default:
+				fprintf(stderr, "[Sniffer] ERROR: Unknown (%s)\n", pcap_geterr(hpcap[i]));
+				exit(1);
+				break;
+			}
 		}
 
 		if (i == 0) {
-			// Set capture direction (ingress only)
-			res = pcap_setdirection(hpcap[0], PCAP_D_IN);
-			if (res) {
-				fprintf(stderr, "[Sniffer] ERROR: Cannot set capture direction (pcap_setdirection error: %s, return value: %d)\n", pcap_geterr(hpcap[0]), res);
-				exit(1);
+			if (in_if) {
+				// Set capture direction (ingress only)
+				res = pcap_setdirection(hpcap[0], PCAP_D_IN);
+				if (res) {
+					fprintf(stderr, "[Sniffer] ERROR: Cannot set capture direction (pcap_setdirection error: %s, return value: %d)\n", pcap_geterr(hpcap[0]), res);
+					exit(1);
+				}
 			}
 			// Compile PCAP filter (IP packets)
 			res = pcap_compile(hpcap[0], &bpf, STR_FILTER, 0, PCAP_NETMASK_UNKNOWN);
@@ -589,7 +627,7 @@ void sniff(char *in_if, char *out_if, int last) {
 	}
 
 	// Prepare processor
-	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen, last);
+	processor = init_processor(hpcap[0], hpcap[1], linkHdrLen, last, batch_mode);
 	_global_processor = processor;
 
 	// Set signal handler
@@ -611,11 +649,15 @@ void sniff(char *in_if, char *out_if, int last) {
 int main(int argc, char *argv[]) {
 	char *in_if = NULL;
 	char *out_if = NULL;
+	char *in_file = NULL;
+	char *out_file = NULL;
 	int i;
 	char *param, *arg;
-	int auto_mode, last;
+	int auto_mode, last, batch;
 
 	auto_mode = 0;
+	batch = 0;
+	last = 0;
 
 	if (argc > 1) {
 		for (i = 1; i < argc; i++) {
@@ -625,17 +667,23 @@ int main(int argc, char *argv[]) {
 				in_if = arg;
 			} else if (strcmp(param, "out") == 0) {
 				out_if = arg;
+			} else if (strcmp(param, "infile") == 0) {
+				in_file = arg;
+			} else if (strcmp(param, "outfile") == 0) {
+				out_file = arg;
 			} else if (strcmp(param, "last") == 0) {
 				last = 1;
+			} else if (strcmp(param, "batch") == 0) {
+				batch = 1;
 			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
 			}
 		}
 	}
-	if (auto_mode == 0 && (in_if == NULL || out_if == NULL)) {
+	if (auto_mode == 0 && ((in_if == NULL && in_file == NULL) || (out_if == NULL && out_file == NULL))) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in=<input-interface> out=<output-interface> [last]\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, USAGE, argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
@@ -645,7 +693,7 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	sniff(in_if, out_if, last);
+	sniff(in_if, out_if, in_file, out_file, last, batch);
 
 	return 0;
 }

@@ -318,7 +318,7 @@ void *match_rule_parser(char ***pairs, int numPairs, void *result) {
 #define MAX_RULES_FOR_DFA 65536
 #define MAX_RULES 65536
 
-void acBuildTree(ACTree *tree, const char *path) {
+int acBuildTree(ACTree *tree, const char *path, int max_rules) {
 	MatchRule rules[MAX_RULES];
 	int i, count, numRules;
 
@@ -330,7 +330,7 @@ void acBuildTree(ACTree *tree, const char *path) {
 		exit(numRules);
 	} else if (numRules == 0) {
 		// No rules
-		return;
+		return 0;
 	}
 
 	tree->size = 0;
@@ -338,7 +338,7 @@ void acBuildTree(ACTree *tree, const char *path) {
 	i = 0;
 	tree->root = createNewNode(tree, NULL);
 
-	while (i < numRules && (MAX_RULES_FOR_DFA <= 0 || count < MAX_RULES_FOR_DFA)) {
+	while (i < numRules && (MAX_RULES_FOR_DFA <= 0 || count < MAX_RULES_FOR_DFA) && (max_rules <= 0 || count < max_rules)) {
 		if (rules[i].len < MIN_PATTERN_LENGTH) {
 			i++;
 			continue;
@@ -363,6 +363,8 @@ void acBuildTree(ACTree *tree, const char *path) {
 	printf("| Total states: %17d |\n", tree->size);
 	printf("| Total bytes: %18d |\n", tree->size * 4 * 256);
 	printf("+---------------------------------+\n");
+
+	return count;
 }
 
 void acDestroyNodesRecursive(Node *node) {

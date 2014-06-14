@@ -10,6 +10,6 @@
 
 #include "TableStateMachine.h"
 
-TableStateMachine *generateTableStateMachine(const char *path, int verbose);
+TableStateMachine *generateTableStateMachine(const char *path, int max_rules, int verbose);
 
 #endif /* TABLESTATEMACHINEGENERATOR_H_ */

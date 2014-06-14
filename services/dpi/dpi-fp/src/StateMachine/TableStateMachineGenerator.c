@@ -82,13 +82,14 @@ void putStates(TableStateMachine *machine, ACTree *tree, int verbose) {
 	nodequeue_destroy_elements(&queue, 1);
 }
 
-TableStateMachine *generateTableStateMachine(const char *path, int verbose) {
+TableStateMachine *generateTableStateMachine(const char *path, int max_rules, int verbose) {
 	ACTree tree;
 	TableStateMachine *machine;
+	int count;
 
-	acBuildTree(&tree, path);
+	count = acBuildTree(&tree, path, max_rules);
 
-	machine = createTableStateMachine(tree.size);
+	machine = createTableStateMachine(tree.size, count);
 
 	// Put states data
 	putStates(machine, &tree, verbose);
