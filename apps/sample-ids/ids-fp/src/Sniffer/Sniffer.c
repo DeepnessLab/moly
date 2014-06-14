@@ -619,7 +619,7 @@ int main(int argc, char *argv[]) {
 
 	if (argc > 1) {
 		for (i = 1; i < argc; i++) {
-			param = strsep(&argv[i], ":");
+			param = strsep(&argv[i], "=");
 			arg = argv[i];
 			if (strcmp(param, "in") == 0) {
 				in_if = arg;
@@ -635,12 +635,12 @@ int main(int argc, char *argv[]) {
 	}
 	if (auto_mode == 0 && (in_if == NULL || out_if == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in:<input-interface> out:<output-interface> [last]\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, "Usage: %s in=<input-interface> out=<output-interface> [last]\nThis tool may require root privileges.\n", argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
-		in_if = "mbox1-eth0";
-		out_if = "mbox1-eth0";
+		in_if = "eth0:1";
+		out_if = "eth0:2";
 		last = 1;
 	}
 
