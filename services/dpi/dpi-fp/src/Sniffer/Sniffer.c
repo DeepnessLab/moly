@@ -25,11 +25,12 @@
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 1024
-#define MAX_REPORTS 1024
 #define STR_ANY "any"
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
 #define MAX_THREADS 8
+
+#define USAGE "Usage:\nLive capture and output: %s in=<input-interface> out=<output-interface> rules=<rules file> [workers=<number>] [noreport]\nRead/write packets from pcap file: %s infile=<input-interface> outfile=<output-interface> rules=<rules file> [workers=<number>] [noreport]\nYou can also mix in with outfile or infile with out.\nThis tool may require root privileges.\n"
 
 #define GET_MBPS(bytes, usecs) \
 	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
@@ -56,17 +57,19 @@ typedef struct st_processor_data {
 	int linkHdrLen;
 	pcap_t *pcap_in;
 	pcap_t *pcap_out;
-	struct timeval start, end, first_packet, last_packet;
-	int started;
+	struct timeval start, end;
+	struct timeval first_packet[MAX_THREADS], last_packet[MAX_THREADS];
+	int started[MAX_THREADS];
 	long bytes[MAX_THREADS];
 	// For Standalone middlebox mode that does not report its matches
 	int no_report;
-	long total_reports;
+	long total_reports[MAX_THREADS];
 	int terminated;
 	pthread_t workers[MAX_THREADS];
 	PacketBuffer queues[MAX_THREADS];
 	WorkerData workerData[MAX_THREADS];
 	int num_workers;
+	int next_queue;
 } ProcessorData;
 
 typedef struct {
@@ -94,14 +97,16 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->pcap_in = pcap_in;
 	processor->pcap_out = pcap_out;
 	processor->linkHdrLen = linkHdrLen;
-	processor->started = 0;
 	processor->no_report = no_report;
-	processor->total_reports = 0;
+	processor->terminated = 0;
+	processor->next_queue = 0;
 
 	processor->num_workers = num_workers;
 	for (i = 0; i < num_workers; i++) {
 		packet_buffer_init(&(processor->queues[i]));
+		processor->started[i] = 0;
 		processor->bytes[i] = 0;
+		processor->total_reports[i] = 0;
 		processor->workerData[i].id = i;
 		processor->workerData[i].processor = processor;
 		processor->workerData[i].queue = &(processor->queues[i]);
@@ -353,11 +358,18 @@ void *worker_start(void *param) {
 	id = workerData->id;
 	current = 0;
 
-	while (!processor->terminated) {
+	pkt = NULL;
+
+	while (pkt || !processor->terminated) {
 		pkt = packet_buffer_dequeue(queue);
 		if (!pkt) {
 			nanosleep(&_100_nanos, NULL);
 			continue;
+		}
+
+		if (!processor->started[id]) {
+			processor->started[id] = 1;
+			gettimeofday(&(processor->first_packet[id]), NULL);
 		}
 
 		packet = &(pkt->packet);
@@ -371,7 +383,7 @@ void *worker_start(void *param) {
 		if (processor->no_report) {
 			// Count reports
 			r = count_results_for_noreport_mode(processor, reports, res);
-			processor->total_reports += r;
+			processor->total_reports[id] += r;
 			// Forward packet
 			pcap_sendpacket(processor->pcap_out, pkt->pktdata, pkt->pkthdr.len);
 		} else {
@@ -398,6 +410,7 @@ void *worker_start(void *param) {
 		}
 
 		free_buffered_packet(pkt);
+		gettimeofday(&(processor->last_packet[id]), NULL);
 	}
 
 	return NULL;
@@ -406,43 +419,34 @@ void *worker_start(void *param) {
 void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr) {
 	ProcessorData *processor;
 	Packet packet;
-	int i;
 	InPacket *bpkt;
 
 	processor = (ProcessorData*)arg;
-	i = 0;
-
-	if (!processor->started) {
-		processor->started = 1;
-		gettimeofday(&(processor->first_packet), NULL);
-	}
 
 	parse_packet(processor, packetptr, &packet);
 
 	bpkt = buffer_packet(&packet, pkthdr, packetptr, 0);
-	packet_buffer_enqueue(&(processor->queues[i]), bpkt);
+	packet_buffer_enqueue(&(processor->queues[processor->next_queue]), bpkt);
 
-	i = (i + 1) % (processor->num_workers);
-
-	gettimeofday(&(processor->last_packet), NULL);
+	processor->next_queue = (processor->next_queue + 1) % (processor->num_workers);
 }
 
 void stop(int res) {
 	// Finish
-	long usecs_total, usecs_packets;
-	long total_bytes;
+	long usecs_packets[MAX_THREADS];
+	long total_bytes, thread_bytes[MAX_THREADS];
 	int i;
+	double throughput[MAX_THREADS];
+	double total_throughput;
+	long total_reports;
+
+	_global_processor->terminated = 1;
 
 	for (i = 0; i < _global_processor->num_workers; i++) {
 		pthread_join(_global_processor->workers[i], NULL);
 	}
 
 	gettimeofday(&(_global_processor->end), NULL);
-
-	total_bytes = 0;
-	for (i = 0; i < _global_processor->num_workers; i++) {
-		total_bytes += _global_processor->bytes[i];
-	}
 
 	switch (res) {
 	case 0:
@@ -468,23 +472,51 @@ void stop(int res) {
 
 	destroyTableStateMachine(_global_processor->machine);
 
-	usecs_total = (_global_processor->end.tv_sec * 1000000 + _global_processor->end.tv_usec) - (_global_processor->start.tv_sec * 1000000 + _global_processor->start.tv_usec);
-	if (_global_processor->started)
-		usecs_packets = (_global_processor->last_packet.tv_sec * 1000000 + _global_processor->last_packet.tv_usec) - (_global_processor->first_packet.tv_sec * 1000000 + _global_processor->first_packet.tv_usec);
-	else
-		usecs_packets = 0;
+	total_bytes = 0;
+	total_throughput = 0;
+	total_reports = 0;
+	for (i = 0; i < _global_processor->num_workers; i++) {
+		if (_global_processor->started[i]) {
+			total_bytes += _global_processor->bytes[i];
+			thread_bytes[i] = _global_processor->bytes[i];
+			usecs_packets[i] = (_global_processor->last_packet[i].tv_sec * 1000000 + _global_processor->last_packet[i].tv_usec) - (_global_processor->first_packet[i].tv_sec * 1000000 + _global_processor->first_packet[i].tv_usec);
+			throughput[i] = GET_MBPS(thread_bytes[i], usecs_packets[i]);
+			total_throughput += throughput[i];
+			total_reports += _global_processor[i].total_reports[i];
+		} else {
+			usecs_packets[i] = 0;
+			thread_bytes[i] = 0;
+			throughput[i] = 0;
+		}
+	}
 
-	printf("Total bytes: %ld\n", total_bytes);
-	printf("+---------------- Timing Results ---------------+\n");
-	printf("| Cat.  | Total Time (usec) | Throughput (Mbps) |\n");
-	printf("+-------+-------------------+-------------------+\n");
-	printf("| Gross | %17ld | %17.3f |\n", usecs_total, GET_MBPS(total_bytes, usecs_total));
-	printf("+-------+-------------------+-------------------+\n");
-	printf("| Neto  | %17ld | %17.3f |\n", usecs_packets, GET_MBPS(total_bytes, usecs_packets));
-	printf("+-------+-------------------+-------------------+\n");
+	if (!(_global_processor->no_report)) {
+		printf("+--------------------------- Timing Results --------------------------+\n");
+		printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |\n");
+		printf("+-------+-------------------+---------------------+-------------------+\n");
+		for (i = 0; i < _global_processor->num_workers; i++) {
+			printf("| %5d | %17ld | %19ld | %17.3f |\n", i, usecs_packets[i], thread_bytes[i], throughput[i]);
+		}
+		printf("+-------+-------------------+---------------------+-------------------+\n");
+		printf("| Total |         -         | %19ld | %17.3f |\n", total_bytes, total_throughput);
+		printf("+-------+-------------------+---------------------+-------------------+\n");
+	} else {
+		printf("+----------------------------------- Timing Results ------------------------------------+\n");
+		printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |     Reports     |\n");
+		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+		for (i = 0; i < _global_processor->num_workers; i++) {
+			printf("| %5d | %17ld | %19ld | %17.3f | %15ld |\n", i, usecs_packets[i], thread_bytes[i], throughput[i], _global_processor->total_reports[i]);
+		}
+		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+		printf("| Total |         -         | %19ld | %17.3f | %15ld |\n", total_bytes, total_throughput, total_reports);
+		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+	}
 
-	if (_global_processor->no_report) {
-		printf("Total reports: %ld\n", _global_processor->total_reports);
+	if (_global_processor->pcap_in) {
+		pcap_close(_global_processor->pcap_in);
+	}
+	if (_global_processor->pcap_out) {
+		pcap_close(_global_processor->pcap_out);
 	}
 
 	destroy_processor(_global_processor);
@@ -492,7 +524,7 @@ void stop(int res) {
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, TableStateMachine *machine, int num_workers, int no_report) {
+void sniff(char *in_if, char *out_if, char *in_file, char *out_file, TableStateMachine *machine, int num_workers, int no_report) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -505,101 +537,125 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine, int num_worker
 
 	memset(errbuf, 0, PCAP_ERRBUF_SIZE);
 
-	// Find available interfaces
-	if (pcap_findalldevs(&devices, errbuf)) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find network interface (pcap_findalldevs error: %s)\n", errbuf);
-		exit(1);
-	}
-
-	// Find requested interface
-	next_device = devices;
-	while (next_device) {
-		printf("[Sniffer] Found network interface: %s\n", next_device->name);
-		if (strcmp(in_if, next_device->name) == 0) {
-			device_in = in_if;
-		}
-		if (strcmp(out_if, next_device->name) == 0) {
-			device_out = out_if;
-		}
-		next_device = next_device->next;
-	}
-	pcap_freealldevs(devices);
-	if (strcmp(in_if, STR_ANY) == 0) {
-		device_in = STR_ANY;
-	}
-
-	if (!device_in) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find input network interface\n");
-		exit(1);
-	}
-	if (!device_out) {
-		fprintf(stderr, "[Sniffer] ERROR: Cannot find output network interface\n");
-		exit(1);
-	}
-
-	printf("[Sniffer] Sniffer is capturing from device: %s\n", device_in);
-	printf("[Sniffer] Packets are sent on device: %s\n", device_out);
-
-	for (i = 0; i < 2; i++) {
-		mode = (i == 0) ? "input" : "output";
-		// Create input PCAP handle
-		hpcap[i] = pcap_create(device_in, errbuf);
-		if (!hpcap[i]) {
-			fprintf(stderr, "[Sniffer] ERROR: Cannot create %s pcap handle (pcap_create error: %s)\n", mode ,errbuf);
+	if (in_if || out_if) {
+		// Find available interfaces
+		if (pcap_findalldevs(&devices, errbuf)) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find network interface (pcap_findalldevs error: %s)\n", errbuf);
 			exit(1);
 		}
 
-		if (i == 0) {
+		// Find requested interface
+		next_device = devices;
+		while (next_device) {
+			printf("[Sniffer] Found network interface: %s\n", next_device->name);
+			if (in_if && (strcmp(in_if, next_device->name) == 0)) {
+				device_in = in_if;
+			}
+			if (out_if && (strcmp(out_if, next_device->name) == 0)) {
+				device_out = out_if;
+			}
+			next_device = next_device->next;
+		}
+		pcap_freealldevs(devices);
+		if (in_if && (strcmp(in_if, STR_ANY) == 0)) {
+			device_in = STR_ANY;
+		}
+
+		if (in_if && !device_in) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find input network interface\n");
+			exit(1);
+		}
+		if (out_if && !device_out) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot find output network interface\n");
+			exit(1);
+		}
+	}
+
+	if (in_if) {
+		printf("[Sniffer] Sniffer is capturing from device: %s\n", device_in);
+	} else {
+		printf("[Sniffer] Sniffer is reading packets from file: %s\n", in_file);
+	}
+	if (out_if) {
+		printf("[Sniffer] Packets are sent on device: %s\n", device_out);
+	} else {
+		printf("[Sniffer] Packets written to file: %s\n", out_file);
+	}
+
+	if (in_if) {
+		hpcap[0] = pcap_create(device_in, errbuf);
+	} else {
+		hpcap[0] = pcap_open_offline(in_file, errbuf);
+	}
+	if (out_if) {
+		hpcap[1] = pcap_create(device_out, errbuf);
+	} else {
+		//hpcap[1] = pcap_dump_fopen(out_file, errbuf);
+	}
+
+	for (i = 0; i < 2; i++) {
+		mode = (i == 0) ? "input" : "output";
+		// Check pcap handle
+		if (!hpcap[i]) {
+			fprintf(stderr, "[Sniffer] ERROR: Cannot create %s pcap handle (pcap_create/pcap_open_offline error: %s)\n", mode ,errbuf);
+			exit(1);
+		}
+
+		if (in_if && i == 0) {
 			// Set promiscuous mode
 			pcap_set_promisc(hpcap[0], 1);
 		}
 
 		// Activate PCAP
-		res = pcap_activate(hpcap[i]);
-		switch (res) {
-		case 0:
-			// Success
-			break;
-		case PCAP_WARNING_PROMISC_NOTSUP:
-			fprintf(stderr, "[Sniffer] WARNING: Promiscuous mode is not supported\n");
-			exit(1);
-			break;
-		case PCAP_WARNING:
-			fprintf(stderr, "[Sniffer] WARNING: Unknown (%s)\n", pcap_geterr(hpcap[i]));
-			exit(1);
-			break;
-		case PCAP_ERROR_NO_SUCH_DEVICE:
-			fprintf(stderr, "[Sniffer] ERROR: Device not found\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_PERM_DENIED:
-			fprintf(stderr, "[Sniffer] ERROR: Permission denied\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_PROMISC_PERM_DENIED:
-			fprintf(stderr, "[Sniffer] ERROR: Permission denied for promiscuous mode\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_RFMON_NOTSUP:
-			fprintf(stderr, "[Sniffer] ERROR: Monitor mode is not supported\n");
-			exit(1);
-			break;
-		case PCAP_ERROR_IFACE_NOT_UP:
-			fprintf(stderr, "[Sniffer] ERROR: Interface %s is not available\n", (i == 0) ? device_in : device_out);
-			exit(1);
-			break;
-		default:
-			fprintf(stderr, "[Sniffer] ERROR: Unknown (%s)\n", pcap_geterr(hpcap[i]));
-			exit(1);
-			break;
+		if ((in_if && i == 0) || (out_if && i == 1)) {
+			res = pcap_activate(hpcap[i]);
+			switch (res) {
+			case 0:
+				// Success
+				break;
+			case PCAP_WARNING_PROMISC_NOTSUP:
+				fprintf(stderr, "[Sniffer] WARNING: Promiscuous mode is not supported\n");
+				exit(1);
+				break;
+			case PCAP_WARNING:
+				fprintf(stderr, "[Sniffer] WARNING: Unknown (%s)\n", pcap_geterr(hpcap[i]));
+				exit(1);
+				break;
+			case PCAP_ERROR_NO_SUCH_DEVICE:
+				fprintf(stderr, "[Sniffer] ERROR: Device not found\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_PERM_DENIED:
+				fprintf(stderr, "[Sniffer] ERROR: Permission denied\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_PROMISC_PERM_DENIED:
+				fprintf(stderr, "[Sniffer] ERROR: Permission denied for promiscuous mode\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_RFMON_NOTSUP:
+				fprintf(stderr, "[Sniffer] ERROR: Monitor mode is not supported\n");
+				exit(1);
+				break;
+			case PCAP_ERROR_IFACE_NOT_UP:
+				fprintf(stderr, "[Sniffer] ERROR: Interface %s is not available\n", (i == 0) ? device_in : device_out);
+				exit(1);
+				break;
+			default:
+				fprintf(stderr, "[Sniffer] ERROR: Unknown (%s)\n", pcap_geterr(hpcap[i]));
+				exit(1);
+				break;
+			}
 		}
 
 		if (i == 0) {
-			// Set capture direction (ingress only)
-			res = pcap_setdirection(hpcap[0], PCAP_D_IN);
-			if (res) {
-				fprintf(stderr, "[Sniffer] ERROR: Cannot set capture direction (pcap_setdirection error: %s, return value: %d)\n", pcap_geterr(hpcap[0]), res);
-				exit(1);
+			if (in_if) {
+				// Set capture direction (ingress only)
+				res = pcap_setdirection(hpcap[0], PCAP_D_IN);
+				if (res) {
+					fprintf(stderr, "[Sniffer] ERROR: Cannot set capture direction (pcap_setdirection error: %s, return value: %d)\n", pcap_geterr(hpcap[0]), res);
+					exit(1);
+				}
 			}
 			// Compile PCAP filter (IP packets)
 			res = pcap_compile(hpcap[0], &bpf, STR_FILTER, 0, PCAP_NETMASK_UNKNOWN);
@@ -669,6 +725,8 @@ void sniff(char *in_if, char *out_if, TableStateMachine *machine, int num_worker
 int main(int argc, char *argv[]) {
 	char *in_if = NULL;
 	char *out_if = NULL;
+	char *in_file = NULL;
+	char *out_file = NULL;
 	TableStateMachine *machine;
 	char *patterns = NULL;
 	int i;
@@ -696,6 +754,10 @@ int main(int argc, char *argv[]) {
 				in_if = arg;
 			} else if (strcmp(param, "out") == 0) {
 				out_if = arg;
+			} else if (strcmp(param, "infile") == 0) {
+				in_file = arg;
+			} else if (strcmp(param, "outfile") == 0) {
+				out_file = arg;
 			} else if (strcmp(param, "rules") == 0) {
 				patterns = arg;
 			} else if (strcmp(param, "workers") == 0) {
@@ -708,9 +770,9 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-	if (auto_mode == 0 && (in_if == NULL || out_if == NULL || patterns == NULL)) {
+	if (auto_mode == 0 && ((in_if == NULL && in_file == NULL) || (out_if == NULL && out_file == NULL) || patterns == NULL)) {
 		// Show usage
-		fprintf(stderr, "Usage: %s in=<input-interface> out=<output-interface> rules=<rules file> [workers=<number>] [noreport]\nThis tool may require root privileges.\n", argv[0]);
+		fprintf(stderr, USAGE, argv[0], argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
@@ -728,7 +790,7 @@ int main(int argc, char *argv[]) {
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
 
-	sniff(in_if, out_if, machine, num_workers, no_report);
+	sniff(in_if, out_if, in_file, out_file, machine, num_workers, no_report);
 
 	return 0;
 }

@@ -12,6 +12,8 @@
 #include "../Sniffer/MatchReport.h"
 #include "../Common/MatchRule.h"
 
+#define MAX_REPORTS 1024
+
 typedef struct {
 	STATE_PTR_TYPE_WIDE *table;
 	unsigned char *matches;
@@ -58,6 +60,8 @@ int matchTableMachine(TableStateMachine *tableMachine, char *input, int length, 
 			/* It's a match! */													\
 			(reports)[res].position = idx;										\
 			(reports)[res++].state = next;										\
+			if (res == MAX_REPORTS)												\
+				break;															\
 		}																		\
 		(current) = next;														\
 		idx++;																	\
