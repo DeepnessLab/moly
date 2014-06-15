@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick
+END
+ACBuilder.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/yotam_dpi/!svn/ver/2/AhoCorasick/ACBuilder.h
+END
+NodeQueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick/NodeQueue.h
+END
+FindLP.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick/FindLP.h
+END
+ACBuilder.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/yotam_dpi/!svn/ver/2/AhoCorasick/ACBuilder.c
+END
+NodeQueue.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick/NodeQueue.c
+END
+FindLP.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick/FindLP.c
+END
+ACTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/yotam_dpi/!svn/ver/1/AhoCorasick/ACTypes.h
+END
