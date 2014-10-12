@@ -73,6 +73,8 @@
 #include "generators.h"
 #include "detection_util.h"
 
+#include "dpisrv/DpiSrv.h"
+
 /*
 **  This define enables set-wise signature detection for
 **  IP and ICMP packets.  During early testing, the old
@@ -1277,8 +1279,15 @@ static inline int fpEvalHeaderSW(PORT_GROUP *port_group, Packet *p,
                         pattern_match_size = p->alt_dsize;
 
                     start_state = 0;
+#ifdef USE_DPI_SRV
+                    if (p->ip4h->ip_tos & IP_TOS_HAS_MATCHES_MASK == IP_TOS_HAS_MATCHES_MASK) {
+                    	// DPI Service Found Matches
+                    	mpseSearchDpiSrv(p, so, p->data, pattern_match_size, rule_tree_match, omd, &start_state);
+                    }
+#else
                     mpseSearch(so, p->data, pattern_match_size,
                             rule_tree_match, omd, &start_state);
+#endif
 #ifdef PPM_MGR
                     /* Bail if we spent too much time already */
                     if (PPM_PACKET_ABORT_FLAG())
