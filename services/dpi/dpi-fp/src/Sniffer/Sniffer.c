@@ -29,8 +29,9 @@
 #define STR_FILTER "ip"
 #define MAGIC_NUM 0xDEE4
 #define MAX_THREADS 8
+#define MAX_REPORTS_PER_PACKET 350
 
-#define USAGE "Usage:\nLive capture and output: %s in=<input-interface> out=<output-interface> rules=<rules file> [workers=<number>] [noreport]\nRead/write packets from pcap file: %s infile=<input-interface> outfile=<output-interface> rules=<rules file> [workers=<number>] [noreport]\nYou can also mix in with outfile or infile with out.\nThis tool may require root privileges.\n"
+#define USAGE "Usage: %s (in=<iface>|infile=<file>) (out=<iface>|outfile=<file>) rules=<file> [max=<#>] [workers=<#>] [noreport] [batch]\n\tin=<iface>\tSet input capture interface\n\tout=<iface>\tSet output interface\n\tinfile=<file>\tSet input pcap file (cannot use with 'in')\n\toutfile=<file>\tSet output pcap file (cannot use with 'out', not implemented yet)\n\trules=<file>\tSet rules file\n\tmax=<#>\t\tMaximal number of rules to use from file\n\tworkers=<#>\tSet number of workers (default: 1)\n\tnoreport\tDo not send report packets. Handle report internally.\n\tbatch\t\tReport results in batch mode\n\nThis tool may require root privileges.\n"
 
 #define GET_MBPS(bytes, usecs) \
 	((bytes) * 8.0 * 1000000) / ((usecs) * 1024 * 1024)
@@ -70,6 +71,7 @@ typedef struct st_processor_data {
 	WorkerData workerData[MAX_THREADS];
 	int num_workers;
 	int next_queue;
+	int batch_mode;
 } ProcessorData;
 
 typedef struct {
@@ -86,7 +88,7 @@ typedef struct {
 
 static ProcessorData *_global_processor;
 
-ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int num_workers, int no_report) {
+ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_t *pcap_out, int linkHdrLen, int num_workers, int no_report, int batch) {
 	int i;
 	ProcessorData *processor;
 
@@ -100,6 +102,7 @@ ProcessorData *init_processor(TableStateMachine *machine, pcap_t *pcap_in, pcap_
 	processor->no_report = no_report;
 	processor->terminated = 0;
 	processor->next_queue = 0;
+	processor->batch_mode = batch;
 
 	processor->num_workers = num_workers;
 	for (i = 0; i < num_workers; i++) {
@@ -258,6 +261,11 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	// Find results
 	r = find_results(processor, reports, num_reports, rules);
 
+	// TODO: Break into several packets
+	if (r > MAX_REPORTS_PER_PACKET) {
+		r = MAX_REPORTS_PER_PACKET;
+	}
+
 	// Compute data length
 	data_len = 12 + (r * 4);
 
@@ -290,7 +298,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	udphdr->dest = in_packet->transport.tp_dst;
 	udphdr->source = in_packet->transport.tp_src;
 	udphdr->check = 0;
-	udphdr->len = 8 + data_len;
+	udphdr->len = htons(8 + data_len);
 #endif
 	// Build results header
 	reshdr = (ResultsPacketHeader*)&(result[hdrs_len + 28]);
@@ -490,26 +498,46 @@ void stop(int res) {
 		}
 	}
 
-	if (!(_global_processor->no_report)) {
-		printf("+--------------------------- Timing Results --------------------------+\n");
-		printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |\n");
-		printf("+-------+-------------------+---------------------+-------------------+\n");
-		for (i = 0; i < _global_processor->num_workers; i++) {
-			printf("| %5d | %17ld | %19ld | %17.3f |\n", i, usecs_packets[i], thread_bytes[i], throughput[i]);
+	if (!_global_processor->batch_mode) {
+		if (!(_global_processor->no_report)) {
+			printf("+--------------------------- Timing Results --------------------------+\n");
+			printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |\n");
+			printf("+-------+-------------------+---------------------+-------------------+\n");
+			for (i = 0; i < _global_processor->num_workers; i++) {
+				printf("| %5d | %17ld | %19ld | %17.3f |\n", i, usecs_packets[i], thread_bytes[i], throughput[i]);
+			}
+			printf("+-------+-------------------+---------------------+-------------------+\n");
+			printf("| Total |         -         | %19ld | %17.3f |\n", total_bytes, total_throughput);
+			printf("+-------+-------------------+---------------------+-------------------+\n");
+		} else {
+			printf("+----------------------------------- Timing Results ------------------------------------+\n");
+			printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |     Reports     |\n");
+			printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+			for (i = 0; i < _global_processor->num_workers; i++) {
+				printf("| %5d | %17ld | %19ld | %17.3f | %15ld |\n", i, usecs_packets[i], thread_bytes[i], throughput[i], _global_processor->total_reports[i]);
+			}
+			printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+			printf("| Total |         -         | %19ld | %17.3f | %15ld |\n", total_bytes, total_throughput, total_reports);
+			printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
 		}
-		printf("+-------+-------------------+---------------------+-------------------+\n");
-		printf("| Total |         -         | %19ld | %17.3f |\n", total_bytes, total_throughput);
-		printf("+-------+-------------------+---------------------+-------------------+\n");
 	} else {
-		printf("+----------------------------------- Timing Results ------------------------------------+\n");
-		printf("| Thrd. | Total Time (usec) | Total Bytes (bytes) | Throughput (Mbps) |     Reports     |\n");
-		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+		printf("Batch Mode Results Report\n");
+		printf("=========================\n");
+		printf("(use with grep)\n\n");
+		printf("   \tTID\tpat#\tusecs\tTotalBytes\tThpt(Mbps)\t%s\n", (_global_processor->no_report) ? "Reports" : "");
+
 		for (i = 0; i < _global_processor->num_workers; i++) {
-			printf("| %5d | %17ld | %19ld | %17.3f | %15ld |\n", i, usecs_packets[i], thread_bytes[i], throughput[i], _global_processor->total_reports[i]);
+			if (!(_global_processor->no_report)) {
+				printf("RES\tT%d\t%d\t%ld\t%ld\t%f\n", i, _global_processor->machine->total_rules, usecs_packets[i], thread_bytes[i], throughput[i]);
+			} else {
+				printf("RES\tT%d\t%d\t%ld\t%ld\t%f\t%ld\n", i, _global_processor->machine->total_rules, usecs_packets[i], thread_bytes[i], throughput[i], _global_processor->total_reports[i]);
+			}
 		}
-		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
-		printf("| Total |         -         | %19ld | %17.3f | %15ld |\n", total_bytes, total_throughput, total_reports);
-		printf("+-------+-------------------+---------------------+-------------------+-----------------+\n");
+		if (!(_global_processor->no_report)) {
+			printf("RES\tTOT\t%d\t------\t%ld\t%f\n", _global_processor->machine->total_rules, total_bytes, total_throughput);
+		} else {
+			printf("RES\tTOT\t%d\t------\t%ld\t%f\t%ld\n", _global_processor->machine->total_rules, total_bytes, total_throughput, total_reports);
+		}
 	}
 
 	if (_global_processor->pcap_in) {
@@ -524,7 +552,8 @@ void stop(int res) {
 	exit(0);
 }
 
-void sniff(char *in_if, char *out_if, char *in_file, char *out_file, TableStateMachine *machine, int num_workers, int no_report) {
+
+void sniff(char *in_if, char *out_if, char *in_file, char *out_file, TableStateMachine *machine, int num_workers, int no_report, int batch) {
 	pcap_t *hpcap[2];
 	char errbuf[PCAP_ERRBUF_SIZE];
 	char *device_in = NULL, *device_out = NULL;
@@ -706,7 +735,7 @@ void sniff(char *in_if, char *out_if, char *in_file, char *out_file, TableStateM
 	}
 
 	// Prepare processor
-	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen, num_workers, no_report);
+	processor = init_processor(machine, hpcap[0], hpcap[1], linkHdrLen, num_workers, no_report, batch);
 	_global_processor = processor;
 
 	// Set signal handler
@@ -731,7 +760,7 @@ int main(int argc, char *argv[]) {
 	char *patterns = NULL;
 	int i;
 	char *param, *arg;
-	int auto_mode, no_report;
+	int auto_mode, no_report, batch, max_rules;
 	int num_workers;
 
 
@@ -745,6 +774,8 @@ int main(int argc, char *argv[]) {
 	auto_mode = 0;
 	no_report = 0;
 	num_workers = 1;
+	batch = 0;
+	max_rules = 0;
 
 	if (argc > 1) {
 		for (i = 1; i < argc; i++) {
@@ -760,28 +791,35 @@ int main(int argc, char *argv[]) {
 				out_file = arg;
 			} else if (strcmp(param, "rules") == 0) {
 				patterns = arg;
+			} else if (strcmp(param, "max") == 0) {
+				max_rules = atoi(arg);
 			} else if (strcmp(param, "workers") == 0) {
 				num_workers = atoi(arg);
 			} else if (strcmp(param, "noreport") == 0) {
 				no_report = 1;
+			} else if (strcmp(param, "batch") == 0) {
+				batch = 1;
 			} else if (strcmp(param, "auto") == 0) {
 				auto_mode = 1;
 				break;
 			}
 		}
 	}
-	if (auto_mode == 0 && ((in_if == NULL && in_file == NULL) || (out_if == NULL && out_file == NULL) || patterns == NULL)) {
+
+	if (auto_mode == 0 && ((in_if == NULL && in_file == NULL) || (out_if == NULL && out_file == NULL) || patterns == NULL || max_rules < 0 || num_workers < 1)) {
 		// Show usage
-		fprintf(stderr, USAGE, argv[0], argv[0]);
+		fprintf(stderr, USAGE, argv[0]);
 		exit(1);
 	} else if (auto_mode == 1) {
 		// Set defaults
 		in_if = "eth0:1";
 		out_if = "eth0:2";
 		patterns = "../../SnortPatternsFull2.json";
+		max_rules = 0;
+		num_workers = 1;
 	}
 
-	machine = generateTableStateMachine(patterns, 0);
+	machine = generateTableStateMachine(patterns, max_rules, 0);
 
 	// ************* BEGIN DEBUG
 	//void process_packet(unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr)
@@ -790,7 +828,8 @@ int main(int argc, char *argv[]) {
 	//process_packet((unsigned char *)processor, &pkthdr, (unsigned char*)pkt);
 	// ************* END
 
-	sniff(in_if, out_if, in_file, out_file, machine, num_workers, no_report);
+
+	sniff(in_if, out_if, in_file, out_file, machine, num_workers, no_report, batch);
 
 	return 0;
 }

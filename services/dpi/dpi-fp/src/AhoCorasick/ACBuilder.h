@@ -11,7 +11,7 @@
 #include "ACTypes.h"
 #include "../Common/Flags.h"
 
-void acBuildTree(ACTree *tree, const char *path);
+int acBuildTree(ACTree *tree, const char *path, int max_rules);
 void acDestroyTreeNodes(ACTree *tree);
 Node *acGetNextNode(Node *node, char c);
 void acPrintTree(ACTree *tree);

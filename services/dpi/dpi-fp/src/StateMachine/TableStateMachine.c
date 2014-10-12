@@ -16,7 +16,7 @@
 #define MAX_PATTERN_LENGTH 1024
 
 
-TableStateMachine *createTableStateMachine(unsigned int numStates) {
+TableStateMachine *createTableStateMachine(unsigned int numStates, int totalRules) {
 	TableStateMachine *machine;
 	STATE_PTR_TYPE_WIDE *table;
 	unsigned char *matches;
@@ -49,6 +49,7 @@ TableStateMachine *createTableStateMachine(unsigned int numStates) {
 	//machine->patterns = patterns;
 	machine->matchRules = rules;
 	machine->numRules = numRules;
+	machine->total_rules = totalRules;
 #ifdef DEPTHMAP
 	machine->depthMap = depthMap;
 #endif
