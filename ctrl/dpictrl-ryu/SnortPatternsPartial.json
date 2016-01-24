@@ -1,0 +1,6 @@
+{ className: 'MatchRule', rid: 1, pattern: '|27|', is_regex: false }
+{ className: 'MatchRule', rid: 2, pattern: '|2d|', is_regex: false }
+{ className: 'MatchRule', rid: 3, pattern: '|20|', is_regex: false }
+{ className: 'MatchRule', rid: 4, pattern: '|20||20||3e||3c||20||20|', is_regex: false }
+{ className: 'MatchRule', rid: 5, pattern: '|20||20|rad|20|', is_regex: false }
+
