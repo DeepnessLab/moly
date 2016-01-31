@@ -1,0 +1,8 @@
+# Eclipse files
+.cproject
+.project
+.settings/
+
+# C generated files
+*.o
+*.a
