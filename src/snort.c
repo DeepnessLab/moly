@@ -543,7 +543,7 @@ static void SnortIdle(void);
 #ifndef WIN32
 static void SnortStartThreads(void);
 #endif
-
+static int RegisterRulesToDPIController(SnortConfig *sc);
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
 static void SigExitHandler(int);
@@ -5280,9 +5280,38 @@ void SnortInit(int argc, char **argv)
     SideChannelInit();
 #endif
 
+    RegisterRulesToDPIController(snort_conf);
     // If we suppressed output at the beginning of SnortInit(),
     // then restore it now.
     ScRestoreInternalLogLevel();
+}
+
+/**
+ * Register Snort content rules to the DPI Controller.
+ */
+static int RegisterRulesToDPIController(SnortConfig *sc) {
+	RuleTreeNode *rtn;
+	OptTreeNode *otn;
+	SFGHASH_NODE *hashNode;
+
+	if (sc->otn_map == NULL)
+		return 0;
+
+	for (hashNode = sfghash_findfirst(sc->otn_map); hashNode; hashNode = sfghash_findnext(sc->otn_map)) {
+		otn = (OptTreeNode *)hashNode->data;
+		OptFpList *opt_fp = otn->opt_func;
+
+		while (opt_fp) {
+			if ((opt_fp->type == RULE_OPTION_TYPE_CONTENT) || (opt_fp->type == RULE_OPTION_TYPE_CONTENT_URI)) {
+				PatternMatchData *pmd = (PatternMatchData *)opt_fp->context;
+				printf("Pattern = %s\n", pmd->pattern_buf);
+			}
+
+			opt_fp = opt_fp->next;
+		}
+	}
+
+	return 1;
 }
 
 #if defined(INLINE_FAILOPEN) && !defined(WIN32)
