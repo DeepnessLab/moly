@@ -545,7 +545,7 @@ static void SnortIdle(void);
 #ifndef WIN32
 static void SnortStartThreads(void);
 #endif
-static int RegisterRulesToDPIController(SnortConfig *sc);
+static int RegisterContentRulesToDPIController(SnortConfig *sc);
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
 static void SigExitHandler(int);
@@ -5282,59 +5282,48 @@ void SnortInit(int argc, char **argv)
     SideChannelInit();
 #endif
 
-    RegisterRulesToDPIController(snort_conf);
+    RegisterContentRulesToDPIController(snort_conf);
     // If we suppressed output at the beginning of SnortInit(),
     // then restore it now.
     ScRestoreInternalLogLevel();
 }
 
 /**
- * Register Snort content rules to the DPI Controller.
+ * The function register Snort content rules to the DPI Controller.
  */
-static int RegisterRulesToDPIController(SnortConfig *sc) {
-	RuleTreeNode *rtn;
-	OptTreeNode *otn;
-	SFGHASH_NODE *hashNode;
-
+static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 	if (sc->otn_map == NULL)
 		return 0;
 
+	// Initialize variables to iterate over rules in memory.
+	OptTreeNode *otn;
+	SFGHASH_NODE *hashNode;
+
+	// Create JSON initialize.
+	cJSON *root, *strs; char *out;
+	root=cJSON_CreateObject();
+	cJSON_AddStringToObject(root, "snort_id", "master_snort");
+	strs=cJSON_CreateArray();
+	cJSON_AddItemToObject(root, "strs", strs);
+
+	// Iterate of content rules and add the pattern to the JSON.
 	for (hashNode = sfghash_findfirst(sc->otn_map); hashNode; hashNode = sfghash_findnext(sc->otn_map)) {
 		otn = (OptTreeNode *)hashNode->data;
 		OptFpList *opt_fp = otn->opt_func;
 
 		while (opt_fp) {
 			if ((opt_fp->type == RULE_OPTION_TYPE_CONTENT) || (opt_fp->type == RULE_OPTION_TYPE_CONTENT_URI)) {
+				// We found a content which needs to be searched in DPI.
 				PatternMatchData *pmd = (PatternMatchData *)opt_fp->context;
-				printf("Pattern = %s\n", pmd->pattern_buf);
+				cJSON_AddItemToArray(strs, cJSON_CreateString(pmd->pattern_buf));
 			}
 
 			opt_fp = opt_fp->next;
 		}
 	}
 
-	cJSON *root,*fmt,*img,*thm,*fld;char *out;int i;	/* declare a few. */
-	/* Our "days of the week" array: */
-	const char *strings[7]={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-	/* Our matrix: */
-	int numbers[3][3]={{0,-1,0},{1,0,0},{0,0,1}};
-	/* Our "gallery" item: */
-	int ids[4]={116,943,234,38793};
-	/* Our array of "records": */
-
-	/* Here we construct some JSON standards, from the JSON site. */
-
-	/* Our "Video" datatype: */
-	root=cJSON_CreateObject();
-	cJSON_AddStringToObject(root, "snort_id", "master_snort");
-	cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject());
-	cJSON_AddStringToObject(fmt,"type",		"rect");
-	cJSON_AddNumberToObject(fmt,"width",		1920);
-	cJSON_AddNumberToObject(fmt,"height",		1080);
-	cJSON_AddFalseToObject (fmt,"interlace");
-	cJSON_AddNumberToObject(fmt,"frame rate",	24);
-
-	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out);	free(out);	/* Print to text, Delete the cJSON, print it, release the string. */
+	/* Print to text (regular and minify), Delete the cJSON, print it, release the string. */
+	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
 
 	return 1;
 }
