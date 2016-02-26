@@ -82,7 +82,8 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in $(srcdir)/snort.pc.in COPYING ChangeLog \
-	compile config.guess config.sub install-sh missing ltmain.sh
+	compile config.guess config.sub depcomp install-sh missing \
+	ylwrap ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \

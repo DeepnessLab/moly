@@ -29,6 +29,7 @@ preprocids.h \
 snort.c snort.h \
 build.h \
 $(SNPRINTF_SOURCES) \
+cJSON.c cJSON.h \
 strlcatu.c strlcatu.h \
 strlcpyu.c strlcpyu.h \
 tag.c tag.h \

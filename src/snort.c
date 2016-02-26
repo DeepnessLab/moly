@@ -171,6 +171,8 @@
 #include "perf_indicators.h"
 #endif
 
+#include "cJSON.h"
+
 /* Macros *********************************************************************/
 #ifndef DLT_LANE8023
 /*
@@ -5310,6 +5312,29 @@ static int RegisterRulesToDPIController(SnortConfig *sc) {
 			opt_fp = opt_fp->next;
 		}
 	}
+
+	cJSON *root,*fmt,*img,*thm,*fld;char *out;int i;	/* declare a few. */
+	/* Our "days of the week" array: */
+	const char *strings[7]={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+	/* Our matrix: */
+	int numbers[3][3]={{0,-1,0},{1,0,0},{0,0,1}};
+	/* Our "gallery" item: */
+	int ids[4]={116,943,234,38793};
+	/* Our array of "records": */
+
+	/* Here we construct some JSON standards, from the JSON site. */
+
+	/* Our "Video" datatype: */
+	root=cJSON_CreateObject();
+	cJSON_AddStringToObject(root, "snort_id", "master_snort");
+	cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject());
+	cJSON_AddStringToObject(fmt,"type",		"rect");
+	cJSON_AddNumberToObject(fmt,"width",		1920);
+	cJSON_AddNumberToObject(fmt,"height",		1080);
+	cJSON_AddFalseToObject (fmt,"interlace");
+	cJSON_AddNumberToObject(fmt,"frame rate",	24);
+
+	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out);	free(out);	/* Print to text, Delete the cJSON, print it, release the string. */
 
 	return 1;
 }

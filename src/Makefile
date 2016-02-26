@@ -103,16 +103,16 @@ am__snort_SOURCES_DIST = cdefs.h event.h generators.h sf_protocols.h \
 	active.h log.c log.h mstring.c mstring.h hashstring.c \
 	hashstring.h parser.c parser.h profiler.c profiler.h \
 	plugbase.c plugbase.h preprocids.h snort.c snort.h build.h \
-	snprintf.c snprintf.h strlcatu.c strlcatu.h strlcpyu.c \
-	strlcpyu.h tag.c tag.h util.c util.h detect.c detect.h \
-	signature.c signature.h mempool.c mempool.h sf_sdlist.c \
-	sf_sdlist.h sf_sdlist_types.h fpcreate.c fpcreate.h fpdetect.c \
-	fpdetect.h pcrm.c pcrm.h snort_bounds.h byte_extract.c \
-	byte_extract.h timersub.h spo_plugbase.h sfthreshold.c \
-	sfthreshold.h packet_time.c packet_time.h event_wrapper.c \
-	event_wrapper.h event_queue.c event_queue.h ipv6_port.h ppm.c \
-	ppm.h pcap_pkthdr32.h cpuclock.h sf_types.h log_text.c \
-	log_text.h detection_filter.c detection_filter.h \
+	snprintf.c snprintf.h cJSON.c cJSON.h strlcatu.c strlcatu.h \
+	strlcpyu.c strlcpyu.h tag.c tag.h util.c util.h detect.c \
+	detect.h signature.c signature.h mempool.c mempool.h \
+	sf_sdlist.c sf_sdlist.h sf_sdlist_types.h fpcreate.c \
+	fpcreate.h fpdetect.c fpdetect.h pcrm.c pcrm.h snort_bounds.h \
+	byte_extract.c byte_extract.h timersub.h spo_plugbase.h \
+	sfthreshold.c sfthreshold.h packet_time.c packet_time.h \
+	event_wrapper.c event_wrapper.h event_queue.c event_queue.h \
+	ipv6_port.h ppm.c ppm.h pcap_pkthdr32.h cpuclock.h sf_types.h \
+	log_text.c log_text.h detection_filter.c detection_filter.h \
 	detection_util.c detection_util.h rate_filter.c rate_filter.h \
 	obfuscation.c obfuscation.h rule_option_types.h sfdaq.c \
 	sfdaq.h idle_processing.c idle_processing.h \
@@ -123,15 +123,15 @@ am_snort_OBJECTS = debug.$(OBJEXT) decode.$(OBJEXT) encode.$(OBJEXT) \
 	active.$(OBJEXT) log.$(OBJEXT) mstring.$(OBJEXT) \
 	hashstring.$(OBJEXT) parser.$(OBJEXT) profiler.$(OBJEXT) \
 	plugbase.$(OBJEXT) snort.$(OBJEXT) $(am__objects_1) \
-	strlcatu.$(OBJEXT) strlcpyu.$(OBJEXT) tag.$(OBJEXT) \
-	util.$(OBJEXT) detect.$(OBJEXT) signature.$(OBJEXT) \
-	mempool.$(OBJEXT) sf_sdlist.$(OBJEXT) fpcreate.$(OBJEXT) \
-	fpdetect.$(OBJEXT) pcrm.$(OBJEXT) byte_extract.$(OBJEXT) \
-	sfthreshold.$(OBJEXT) packet_time.$(OBJEXT) \
-	event_wrapper.$(OBJEXT) event_queue.$(OBJEXT) ppm.$(OBJEXT) \
-	log_text.$(OBJEXT) detection_filter.$(OBJEXT) \
-	detection_util.$(OBJEXT) rate_filter.$(OBJEXT) \
-	obfuscation.$(OBJEXT) sfdaq.$(OBJEXT) \
+	cJSON.$(OBJEXT) strlcatu.$(OBJEXT) strlcpyu.$(OBJEXT) \
+	tag.$(OBJEXT) util.$(OBJEXT) detect.$(OBJEXT) \
+	signature.$(OBJEXT) mempool.$(OBJEXT) sf_sdlist.$(OBJEXT) \
+	fpcreate.$(OBJEXT) fpdetect.$(OBJEXT) pcrm.$(OBJEXT) \
+	byte_extract.$(OBJEXT) sfthreshold.$(OBJEXT) \
+	packet_time.$(OBJEXT) event_wrapper.$(OBJEXT) \
+	event_queue.$(OBJEXT) ppm.$(OBJEXT) log_text.$(OBJEXT) \
+	detection_filter.$(OBJEXT) detection_util.$(OBJEXT) \
+	rate_filter.$(OBJEXT) obfuscation.$(OBJEXT) sfdaq.$(OBJEXT) \
 	idle_processing.$(OBJEXT) $(am__objects_2)
 snort_OBJECTS = $(am_snort_OBJECTS)
 snort_DEPENDENCIES = output-plugins/libspo.a \
@@ -263,7 +263,7 @@ AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CCONFIGFLAGS = 
-CFLAGS = -g -O0 -DSF_VISIBILITY -fvisibility=hidden -fno-strict-aliasing -Wall
+CFLAGS = -g -O2 -DSF_VISIBILITY -fvisibility=hidden -fno-strict-aliasing -Wall
 CONFIGFLAGS =  -DSF_WCHAR -DTARGET_BASED -DPERF_PROFILING -DPERF_PROFILING -DSNORT_RELOAD -DNO_NON_ETHER_DECODER -DNORMALIZER -DACTIVE_RESPONSE
 CPP = gcc -E
 CPPFLAGS = -DLZMA -DGRE -DMPLS -DPPM_MGR -DNDEBUG -DSOURCEFIRE -DPPM_MGR -DENABLE_REACT -DENABLE_RESPOND -DENABLE_RESPONSE3 -DSF_WCHAR -DTARGET_BASED -DPERF_PROFILING -DPERF_PROFILING -DSNORT_RELOAD -DNO_NON_ETHER_DECODER -DNORMALIZER -DACTIVE_RESPONSE
@@ -393,16 +393,16 @@ snort_SOURCES = cdefs.h event.h generators.h sf_protocols.h \
 	active.h log.c log.h mstring.c mstring.h hashstring.c \
 	hashstring.h parser.c parser.h profiler.c profiler.h \
 	plugbase.c plugbase.h preprocids.h snort.c snort.h build.h \
-	$(SNPRINTF_SOURCES) strlcatu.c strlcatu.h strlcpyu.c \
-	strlcpyu.h tag.c tag.h util.c util.h detect.c detect.h \
-	signature.c signature.h mempool.c mempool.h sf_sdlist.c \
-	sf_sdlist.h sf_sdlist_types.h fpcreate.c fpcreate.h fpdetect.c \
-	fpdetect.h pcrm.c pcrm.h snort_bounds.h byte_extract.c \
-	byte_extract.h timersub.h spo_plugbase.h sfthreshold.c \
-	sfthreshold.h packet_time.c packet_time.h event_wrapper.c \
-	event_wrapper.h event_queue.c event_queue.h ipv6_port.h ppm.c \
-	ppm.h pcap_pkthdr32.h cpuclock.h sf_types.h log_text.c \
-	log_text.h detection_filter.c detection_filter.h \
+	$(SNPRINTF_SOURCES) cJSON.c cJSON.h strlcatu.c strlcatu.h \
+	strlcpyu.c strlcpyu.h tag.c tag.h util.c util.h detect.c \
+	detect.h signature.c signature.h mempool.c mempool.h \
+	sf_sdlist.c sf_sdlist.h sf_sdlist_types.h fpcreate.c \
+	fpcreate.h fpdetect.c fpdetect.h pcrm.c pcrm.h snort_bounds.h \
+	byte_extract.c byte_extract.h timersub.h spo_plugbase.h \
+	sfthreshold.c sfthreshold.h packet_time.c packet_time.h \
+	event_wrapper.c event_wrapper.h event_queue.c event_queue.h \
+	ipv6_port.h ppm.c ppm.h pcap_pkthdr32.h cpuclock.h sf_types.h \
+	log_text.c log_text.h detection_filter.c detection_filter.h \
 	detection_util.c detection_util.h rate_filter.c rate_filter.h \
 	obfuscation.c obfuscation.h rule_option_types.h sfdaq.c \
 	sfdaq.h idle_processing.c idle_processing.h \
