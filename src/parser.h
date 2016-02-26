@@ -220,6 +220,11 @@
 #endif
 #define CONFIG_OPT__MAX_IP6_EXTENSIONS              "max_ip6_extensions"
 #define CONFIG_OPT__DISABLE_REPLACE                 "disable_replace"
+
+# define CONFIG_OPT__DPI_SERVICE                    "dpi_service"
+# define CONFIG_OPT__DPI_CONTROLLER_IP              "dpi_controller_ip"
+# define CONFIG_OPT__DPI_CONTROLLER_PORT            "dpi_controller_port"
+
 /* exported values */
 extern char *file_name;
 extern int file_line;
@@ -398,6 +403,7 @@ void ConfigFile(SnortConfig *, char *);
 void ConfigTunnelVerdicts(SnortConfig*, char*);
 void ConfigMaxIP6Extensions(SnortConfig *, char*);
 void ConfigDisableReplace(SnortConfig *, char*);
+void ConfigDPIaaService(SnortConfig *, char *);
 
 int addRtnToOtn(
         OptTreeNode *otn,

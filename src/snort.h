@@ -970,6 +970,12 @@ typedef struct _SnortConfig
 
     struct _MandatoryEarlySessionCreator* mandatoryESCreators;
     bool normalizer_set;
+
+    // DPI Service Configurations
+    bool dpi_service_active;
+    char *dpi_controller_ip;
+    int dpi_controller_port;
+
 } SnortConfig;
 
 /* struct to collect packet statistics */

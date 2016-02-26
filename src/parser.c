@@ -751,6 +751,7 @@ static const ConfigFunc config_opts[] =
 #endif
     { CONFIG_OPT__MAX_IP6_EXTENSIONS, 1, 1, 1, ConfigMaxIP6Extensions },
     { CONFIG_OPT__DISABLE_REPLACE, 0, 1, 0, ConfigDisableReplace },
+	{ CONFIG_OPT__DPI_SERVICE, 1, 0, 0, ConfigDPIaaService },
     { NULL, 0, 0, 0, NULL }   /* Marks end of array */
 };
 
@@ -9287,6 +9288,53 @@ void ConfigDisableReplace(SnortConfig *sc, char *args)
         return;
     sc->disable_replace_opt = 1;
 }
+
+void ConfigDPIaaService(SnortConfig *sc, char *args) {
+
+	int num_toks;
+	char **toks;
+	char **opts;
+	int num_opts;
+
+	if ((sc == NULL) || (args == NULL))
+		return;
+
+	toks = mSplit(args, ",", 0, &num_toks, 0);
+	if(num_toks != 2 ) {
+		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_SERVICE);
+	}
+
+	int i;
+	for(i = 0; i < num_toks; i++) {
+		opts = mSplit(toks[i], " ", 0, &num_opts, 0);
+		if (num_opts != 2) {
+			ParseError("config '%s': missing argument for '%s'.", CONFIG_OPT__DPI_SERVICE, toks[i]);
+		}
+
+		if (strcasecmp(opts[0], CONFIG_OPT__DPI_CONTROLLER_IP) == 0) {
+			sc->dpi_controller_ip = opts[1];
+		}
+
+		if (strcasecmp(opts[0], CONFIG_OPT__DPI_CONTROLLER_PORT) == 0) {
+			sc->dpi_controller_port = (int) strtol(opts[1], (char **)NULL, 10);
+		}
+
+		mSplitFree(&opts, num_opts);
+	}
+
+	if (sc->dpi_controller_ip == NULL) {
+		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_IP);
+	}
+
+	if (sc->dpi_controller_port == 0) {
+		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_PORT);
+	}
+
+	sc->dpi_service_active = true;
+
+	mSplitFree(&toks, num_toks);
+}
+
 /****************************************************************************
  *
  * Function: ParseRule()
