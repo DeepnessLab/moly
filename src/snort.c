@@ -5292,7 +5292,7 @@ void SnortInit(int argc, char **argv)
  * The function register Snort content rules to the DPI Controller.
  */
 static int RegisterContentRulesToDPIController(SnortConfig *sc) {
-	if (sc->otn_map == NULL)
+	if (sc->otn_map == NULL || !sc->dpi_service_active)
 		return 0;
 
 	// Initialize variables to iterate over rules in memory.
