@@ -42,6 +42,8 @@
 #include "snort_debug.h"
 #include "sf_types.h"
 #include "util.h"
+#include "fpcreate.h"
+#include "sp_pattern_match.h"
 
 #ifdef DYNAMIC_PREPROC_CONTEXT
 #include "sf_dynamic_preprocessor.h"
@@ -596,6 +598,37 @@ void mpseInitSummary(void)
     acsm_init_summary();
     bnfaInitSummary();
     KTrieInitMemUsed();
+}
+
+int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
+		int (*Match)(void * id, void *tree, int index, void *data, void *neg_list),
+		void * data, int* current_state )
+{
+	MPSE *mpse = (MPSE*)pvoid;
+	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
+	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
+	ACSM_PATTERN2 *mlist;
+	acstate_t state;
+	const char * NSH_RESULT_ABC = "abc";
+	const char * NSH_RESULT_ROOT = "root";
+
+	for (state = 0; state < (acstate_t)acsm->acsmNumStates; state++) {
+		if (MatchList[state]) {
+			mlist = MatchList[state];
+			PMX              *id     = (PMX*)mlist->udata;
+			PatternMatchData *pmd    = (PatternMatchData*)id->PatternMatchData;
+			if ((strcasecmp(pmd->pattern_buf, NSH_RESULT_ABC) == 0) ||
+				(strcasecmp(pmd->pattern_buf, NSH_RESULT_ROOT) == 0)) { // TODO replace the hard-coded compare with a lookup to the NSH HashMap results.
+				// We have a string anchor match with the NSH data. Perform the final match.
+				if (Match (mlist->udata, mlist->rule_option_tree, 0, data, mlist->neg_list) > 0) {
+					return 1; // TODO why do we need this? Seems redundant.
+				}
+			}
+
+		}
+	}
+
+	return 0;
 }
 
 int mpseSearch( void *pvoid, const unsigned char * T, int n,

@@ -43,6 +43,8 @@
 #include "sf_types.h"
 #include "bitop.h"
 #include "mpse_methods.h"
+#include "fpcreate.h"
+#include "sp_pattern_match.h"
 
 /*
 *   Move these defines to a generic Win32/Unix compatability file,
@@ -88,6 +90,10 @@ int  mpsePrepPatternsWithSnortConf  ( struct _SnortConfig *, void * pvoid,
                                       int ( *neg_list_func )(void *id, void **list) );
 
 void mpseSetRuleMask   ( void *pv, BITOP * rm );
+
+int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
+                int ( *action )(void* id, void * tree, int index, void *data, void *neg_list),
+                void * data, int* current_state );
 
 int  mpseSearch( void *pv, const unsigned char * T, int n,
                  int ( *action )(void* id, void * tree, int index, void *data, void *neg_list),
