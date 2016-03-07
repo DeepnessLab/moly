@@ -1,0 +1,2 @@
+* tsaConfig.properties should be in the configuration dir in the ODL run directory
+* tsa_policy is initial tsa policy sample refrenced from the above config

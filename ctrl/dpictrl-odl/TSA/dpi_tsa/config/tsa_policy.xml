@@ -1,0 +1,18 @@
+<PolicyChains>
+	<PolicyChain>
+		<TrafficClass>OFMatch[eth_type=0x0800,ip_proto=17,udp_dst=5555]</TrafficClass>
+		<Hosts>
+			<Host>10.0.0.2</Host>
+			<Host>10.0.0.5</Host>
+		</Hosts>
+	</PolicyChain>
+	<PolicyChain>
+		<TrafficClass>OFMatch[eth_type=0x0800,ip_proto=17,udp_dst=4444]</TrafficClass>
+		<Hosts>
+			<Host>10.0.0.4</Host>
+			<Host>10.0.0.2</Host>
+		</Hosts>
+	</PolicyChain>
+</PolicyChains>
+
+
