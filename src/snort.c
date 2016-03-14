@@ -545,7 +545,12 @@ static void SnortIdle(void);
 #ifndef WIN32
 static void SnortStartThreads(void);
 #endif
+
+/* DPI Service functions*******************************************************/
 static int RegisterContentRulesToDPIController(SnortConfig *sc);
+static SFGHASH * CreateDPIRuleMap(void);
+static void DPIServiceFree(SnortConfig *sc);
+static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern);
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
 static void SigExitHandler(int);
@@ -4374,6 +4379,8 @@ void SnortConfFree(SnortConfig *sc)
 
     FreeMandatoryEarlySessionCreators(sc->mandatoryESCreators);
 
+    DPIServiceFree(sc);
+
     free(sc);
 #ifdef HAVE_MALLOC_TRIM
     malloc_trim(0);
@@ -5295,6 +5302,15 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 	if (sc->otn_map == NULL || !sc->dpi_service_active)
 		return 0;
 
+	SFGHASH *dpiRuleMap = CreateDPIRuleMap();
+
+	// Initialize variables to iterate over rules in memory.
+	OptTreeNode *otn;
+	SFGHASH_NODE *hashNode;
+	int ruleId = 0;
+
+	// Create JSON initialize.
+
 	/*
 	 *  The Rule Pattern Match JSON structure for DPI Service - DPI Controller interface.
      *	{
@@ -5305,12 +5321,6 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 	 *	}
      */
 
-	// Initialize variables to iterate over rules in memory.
-	OptTreeNode *otn;
-	SFGHASH_NODE *hashNode;
-	int ruleId = 0;
-
-	// Create JSON initialize.
 	cJSON *root, *ruleList, * matchRule; char *out;
 	const char * SNORT_ID = "snort_id";
 	const char * RULE_LIST = "rules";
@@ -5340,8 +5350,11 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 				cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
 				ruleId++;
 				cJSON_AddNumberToObject(matchRule, RULE_ID, ruleId);
-
 				cJSON_AddItemToArray(ruleList, matchRule);
+
+				// Add Rule ID => Rule Pattern map to be used when processing packet content match.
+				DPIRuleAdd(dpiRuleMap, ruleId, pmd->pattern_buf);
+
 			}
 
 			opt_fp = opt_fp->next;
@@ -5350,9 +5363,55 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 
 	/* Print to text (regular and minify), Delete the cJSON, print it, release the string. */
 	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
+	sc->dpi_role_id_to_pattern_map = dpiRuleMap;
 
 	return 1;
 }
+
+static SFGHASH * CreateDPIRuleMap(void) {
+    return sfghash_new(10000, sizeof(RuleKey), 0, free);
+}
+
+static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern) {
+    int status;
+    RuleKey key;
+
+    if (dpiRuleMap == NULL)
+        return;
+
+    key.rid = rid;
+
+    status = sfghash_add(dpiRuleMap, &key, pattern);
+    switch (status)
+    {
+        case SFGHASH_OK:
+            /* pattern was inserted successfully */
+            break;
+
+        case SFGHASH_INTABLE:
+                ParseError("Duplicate Rule with same rid (%u).\n", key.rid);
+
+            break;
+        case SFGHASH_NOMEM:
+            FatalError("Failed to allocate memory for rule.\n");
+            break;
+        default:
+            FatalError("%s(%d): DPIRuleAdd() - unexpected return value "
+                       "from sfghash_add().\n", __FILE__, __LINE__);
+            break;
+    }
+}
+
+/* The function free memory allocated for the DPI Service processing. */
+static void DPIServiceFree(SnortConfig *sc) {
+    if (sc == NULL)
+        return;
+
+	if (sc->dpi_role_id_to_pattern_map != NULL)
+		sfghash_delete(sc->dpi_role_id_to_pattern_map);
+
+}
+
 
 #if defined(INLINE_FAILOPEN) && !defined(WIN32)
 static void * SnortPostInitThread(void *data)
