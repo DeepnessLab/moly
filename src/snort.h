@@ -975,8 +975,14 @@ typedef struct _SnortConfig
     bool dpi_service_active;
     char *dpi_controller_ip;
     int dpi_controller_port;
+    SFGHASH *dpi_role_id_to_pattern_map;
 
 } SnortConfig;
+
+typedef struct _RuleKey
+{
+   uint32_t rid;
+} RuleKey;
 
 /* struct to collect packet statistics */
 typedef struct _PacketCount
