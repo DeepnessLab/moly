@@ -5295,16 +5295,35 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 	if (sc->otn_map == NULL || !sc->dpi_service_active)
 		return 0;
 
+	/*
+	 *  The Rule Pattern Match JSON structure for DPI Service - DPI Controller interface.
+     *	{
+	 *		className: 'MatchRule',
+	 *		pattern: some exact-string or regular-expression string,
+	 *		is_regex: true if pattern is a regular-expression or false otherwise,
+	 *		rid: rule identification number
+	 *	}
+     */
+
 	// Initialize variables to iterate over rules in memory.
 	OptTreeNode *otn;
 	SFGHASH_NODE *hashNode;
+	int ruleId = 0;
 
 	// Create JSON initialize.
-	cJSON *root, *strs; char *out;
+	cJSON *root, *ruleList, * matchRule; char *out;
+	const char * SNORT_ID = "snort_id";
+	const char * RULE_LIST = "rules";
+	const char * CLASS_NAME = "className";
+	const char * CLASS_NAME_VALUE = "MatchRule";
+	const char * PATTERN = "pattern";
+	const char * IS_REGEX = "is_regex";
+	const char * RULE_ID = "rid";
+
 	root=cJSON_CreateObject();
-	cJSON_AddStringToObject(root, "snort_id", "master_snort");
-	strs=cJSON_CreateArray();
-	cJSON_AddItemToObject(root, "strs", strs);
+	cJSON_AddStringToObject(root, SNORT_ID, "master_snort");
+	ruleList=cJSON_CreateArray();
+	cJSON_AddItemToObject(root, RULE_LIST, ruleList);
 
 	// Iterate of content rules and add the pattern to the JSON.
 	for (hashNode = sfghash_findfirst(sc->otn_map); hashNode; hashNode = sfghash_findnext(sc->otn_map)) {
@@ -5315,7 +5334,14 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 			if ((opt_fp->type == RULE_OPTION_TYPE_CONTENT) || (opt_fp->type == RULE_OPTION_TYPE_CONTENT_URI)) {
 				// We found a content which needs to be searched in DPI.
 				PatternMatchData *pmd = (PatternMatchData *)opt_fp->context;
-				cJSON_AddItemToArray(strs, cJSON_CreateString(pmd->pattern_buf));
+				matchRule=cJSON_CreateObject();
+				cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
+				cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
+				cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
+				ruleId++;
+				cJSON_AddNumberToObject(matchRule, RULE_ID, ruleId);
+
+				cJSON_AddItemToArray(ruleList, matchRule);
 			}
 
 			opt_fp = opt_fp->next;
