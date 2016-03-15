@@ -5372,21 +5372,28 @@ static SFGHASH * CreateDPIRuleMap(void) {
     return sfghash_new(10000, sizeof(int), 0, free);
 }
 
+/* The function adds a rule pattern (Key: Rule ID => Value: Pattern) to the DPI Rule Map). */
 static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern) {
     if (dpiRuleMap == NULL)
         return;
 
 	int status;
-    status = sfghash_add(dpiRuleMap, &rid, pattern);
+	char * patternCopy;
+	size_t len;
+
+	// Copy the pattern and add it to the map.
+    len = strlen(pattern) + 1;
+    patternCopy = (char *)SnortAlloc(len);
+    memcpy(patternCopy, pattern, len);
+
+    status = sfghash_add(dpiRuleMap, &rid, patternCopy);
     switch (status)
     {
         case SFGHASH_OK:
             /* pattern was inserted successfully */
             break;
-
         case SFGHASH_INTABLE:
-                ParseError("Duplicate Rule with same rid (%u).\n", rid);
-
+            ParseError("Duplicate Rule with same rid (%u).\n", rid);
             break;
         case SFGHASH_NOMEM:
             FatalError("Failed to allocate memory for rule.\n");
@@ -5403,10 +5410,8 @@ static void DPIServiceFree(SnortConfig *sc) {
     if (sc == NULL)
         return;
 
-	if (sc->dpi_role_id_to_pattern_map != NULL) {
+	if (sc->dpi_role_id_to_pattern_map != NULL)
 		sfghash_delete(sc->dpi_role_id_to_pattern_map);
-		sc->dpi_role_id_to_pattern_map = NULL;
-	}
 
 }
 

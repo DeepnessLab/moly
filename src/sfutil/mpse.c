@@ -612,16 +612,16 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 
 	int one = 1;
 	int three = 3;
-	const char * NSH_RESULT_ABC = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &one);
-	const char * NSH_RESULT_ROOT = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &three);
+	const char * NSH_RESULT_ONE = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &one);
+	const char * NSH_RESULT_TWO = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &three);
 
 	for (state = 0; state < (acstate_t)acsm->acsmNumStates; state++) {
 		if (MatchList[state]) {
 			mlist = MatchList[state];
 			PMX              *id     = (PMX*)mlist->udata;
 			PatternMatchData *pmd    = (PatternMatchData*)id->PatternMatchData;
-			if ((strcasecmp(pmd->pattern_buf, NSH_RESULT_ABC) == 0) ||
-				(strcasecmp(pmd->pattern_buf, NSH_RESULT_ROOT) == 0)) { // TODO replace the hard-coded compare with a lookup to the NSH HashMap results.
+			if ((strcasecmp(pmd->pattern_buf, NSH_RESULT_ONE) == 0) ||
+				(strcasecmp(pmd->pattern_buf, NSH_RESULT_TWO) == 0)) { // TODO replace the hard-coded compare with a lookup to the NSH HashMap results.
 				// We have a string anchor match with the NSH data. Perform the final match.
 				if (Match (mlist->udata, mlist->rule_option_tree, 0, data, mlist->neg_list) > 0) {
 					return 1; // TODO why do we need this? Seems redundant.
