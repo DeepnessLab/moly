@@ -550,7 +550,7 @@ static void SnortStartThreads(void);
 static int RegisterContentRulesToDPIController(SnortConfig *sc);
 static SFGHASH * CreateDPIRuleMap(void);
 static void DPIServiceFree(SnortConfig *sc);
-static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern);
+static void DPIRuleAdd(SFGHASH *dpiRuleMap, unsigned short rid, char *pattern);
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
 static void SigExitHandler(int);
@@ -5307,7 +5307,7 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 	// Initialize variables to iterate over rules in memory.
 	OptTreeNode *otn;
 	SFGHASH_NODE *hashNode;
-	int ruleId = 0;
+	unsigned short ruleId = 0;
 
 	// Create JSON initialize.
 
@@ -5369,11 +5369,11 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 }
 
 static SFGHASH * CreateDPIRuleMap(void) {
-    return sfghash_new(10000, sizeof(int), 0, free);
+    return sfghash_new(10000, sizeof(unsigned short), 0, free);
 }
 
 /* The function adds a rule pattern (Key: Rule ID => Value: Pattern) to the DPI Rule Map). */
-static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern) {
+static void DPIRuleAdd(SFGHASH *dpiRuleMap, unsigned short rid, char *pattern) {
     if (dpiRuleMap == NULL)
         return;
 

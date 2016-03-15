@@ -91,9 +91,15 @@ int  mpsePrepPatternsWithSnortConf  ( struct _SnortConfig *, void * pvoid,
 
 void mpseSetRuleMask   ( void *pv, BITOP * rm );
 
+/* DPI Service functions **********************************************************************/
 int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
                 int ( *action )(void* id, void * tree, int index, void *data, void *neg_list),
                 void * data, int* current_state );
+
+static SFGHASH * CreatePatterMatchReportMap(void);
+static void MatchReportAdd(SFGHASH *patterMatchReportMap, char *pattern, void *matchRule);
+static void FreePatterMatchReport(SFGHASH *patterMatchReportHash);
+
 
 int  mpseSearch( void *pv, const unsigned char * T, int n,
                  int ( *action )(void* id, void * tree, int index, void *data, void *neg_list),
