@@ -9312,7 +9312,15 @@ void ConfigDPIaaService(SnortConfig *sc, char *args) {
 		}
 
 		if (strcasecmp(opts[0], CONFIG_OPT__DPI_CONTROLLER_IP) == 0) {
-			sc->dpi_controller_ip = opts[1];
+			char * ip;
+			size_t ipLength;
+
+			// Copy the IP and add it to the config.
+			char * ipOpt = opts[1];
+		    ipLength = strlen(ipOpt) + 1;
+		    ip = (char *)SnortAlloc(ipLength);
+		    memcpy(ip, ipOpt, ipLength);
+			sc->dpi_controller_ip = ip;
 		}
 
 		if (strcasecmp(opts[0], CONFIG_OPT__DPI_CONTROLLER_PORT) == 0) {

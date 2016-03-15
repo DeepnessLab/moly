@@ -5410,6 +5410,9 @@ static void DPIServiceFree(SnortConfig *sc) {
     if (sc == NULL)
         return;
 
+	if (sc->dpi_controller_ip != NULL)
+		free(sc->dpi_controller_ip);
+
 	if (sc->dpi_role_id_to_pattern_map != NULL)
 		sfghash_delete(sc->dpi_role_id_to_pattern_map);
 
