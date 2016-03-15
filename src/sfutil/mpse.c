@@ -610,11 +610,10 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	ACSM_PATTERN2 *mlist;
 	acstate_t state;
 
-	RuleKey key;
-	key.rid = 1;
-	const char * NSH_RESULT_ABC = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &key);
-	key.rid = 2;
-	const char * NSH_RESULT_ROOT = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &key);
+	int one = 1;
+	int three = 3;
+	const char * NSH_RESULT_ABC = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &one);
+	const char * NSH_RESULT_ROOT = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &three);
 
 	for (state = 0; state < (acstate_t)acsm->acsmNumStates; state++) {
 		if (MatchList[state]) {

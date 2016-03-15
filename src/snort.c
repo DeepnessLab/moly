@@ -5369,19 +5369,15 @@ static int RegisterContentRulesToDPIController(SnortConfig *sc) {
 }
 
 static SFGHASH * CreateDPIRuleMap(void) {
-    return sfghash_new(10000, sizeof(RuleKey), 0, free);
+    return sfghash_new(10000, sizeof(int), 0, free);
 }
 
 static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern) {
-    int status;
-    RuleKey key;
-
     if (dpiRuleMap == NULL)
         return;
 
-    key.rid = rid;
-
-    status = sfghash_add(dpiRuleMap, &key, pattern);
+	int status;
+    status = sfghash_add(dpiRuleMap, &rid, pattern);
     switch (status)
     {
         case SFGHASH_OK:
@@ -5389,7 +5385,7 @@ static void DPIRuleAdd(SFGHASH *dpiRuleMap, int rid, char *pattern) {
             break;
 
         case SFGHASH_INTABLE:
-                ParseError("Duplicate Rule with same rid (%u).\n", key.rid);
+                ParseError("Duplicate Rule with same rid (%u).\n", rid);
 
             break;
         case SFGHASH_NOMEM:
@@ -5407,8 +5403,10 @@ static void DPIServiceFree(SnortConfig *sc) {
     if (sc == NULL)
         return;
 
-	if (sc->dpi_role_id_to_pattern_map != NULL)
+	if (sc->dpi_role_id_to_pattern_map != NULL) {
 		sfghash_delete(sc->dpi_role_id_to_pattern_map);
+		sc->dpi_role_id_to_pattern_map = NULL;
+	}
 
 }
 

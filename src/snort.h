@@ -979,11 +979,6 @@ typedef struct _SnortConfig
 
 } SnortConfig;
 
-typedef struct _RuleKey
-{
-   uint32_t rid;
-} RuleKey;
-
 /* struct to collect packet statistics */
 typedef struct _PacketCount
 {
