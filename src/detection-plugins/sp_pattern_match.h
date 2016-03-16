@@ -106,6 +106,20 @@ typedef struct _PatternMatchData
     bool protected_pattern;
 } PatternMatchData;
 
+/* DPI Service */
+typedef struct {
+	unsigned short rid;
+	bool is_range;
+	unsigned short position : 15;
+} MatchReport;
+
+typedef struct {
+	unsigned short rid;
+	bool  is_range;
+	unsigned short position : 15;
+	unsigned short length;
+} MatchReportRange;
+
 /********************************************************************
  * Public function prototypes
  ********************************************************************/
