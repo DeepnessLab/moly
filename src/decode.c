@@ -5101,6 +5101,107 @@ void DecodeGTP(const uint8_t *pkt, uint32_t len, Packet *p)
 }
 
 //--------------------------------------------------------------------
+// decode.c::VXLAN
+//--------------------------------------------------------------------
+
+/* Function: DecodeVxLAN(uint8_t *, uint32_t, Packet *)
+ *
+ * NSH (Network Service Header) is encapsulation VxLAN-gpe which is layered over UDP.
+ * Decode these (if present) and to DecodeNSH.
+ *
+ */
+void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
+	uint8_t  flag;
+	uint16_t reserved;
+	uint8_t next_protocol;
+    uint32_t vni;
+	uint8_t reserved2;
+
+	VxLANHdr *hdr;
+	uint32_t vxlan_len;
+
+	DEBUG_WRAP(DebugMessage(DEBUG_DECODE, "Start VxLAN decoding.\n"););
+	hdr = (VxLANHdr *) pkt;
+	flag = hdr->flag;
+	reserved = hdr->reserved;
+	next_protocol = hdr->np;
+	vni = hdr->vni_reserved2 >> 8;
+	reserved2 = hdr->vni_reserved2 & 0x000000FF;
+
+	vxlan_len = 8;
+	PushLayer(PROTO_NSH, p, pkt, vxlan_len);
+
+	DecodeNSH(pkt + vxlan_len, len - vxlan_len, p);
+}
+
+//--------------------------------------------------------------------
+// decode.c::NSH
+//--------------------------------------------------------------------
+
+/* Function: DecodeNSH(uint8_t *, uint32_t, Packet *)
+ *
+ * NSH (Network Service Header) is encapsulation VXLAN-gpe which is layered over UDP.
+ * Decode these (if present) and go to DecodeIPv6/DecodeIP.
+ *
+ */
+void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
+	uint8_t version;
+	uint8_t flags;
+	uint8_t length;
+	uint8_t md_type;
+	uint8_t next_protocol;
+	uint32_t service_path_id;
+	uint8_t service_index;
+
+    NSHBaseHdr *baseHdr;
+    NSHContextHdr *ctxHdr;
+    uint32_t nsh_len;
+
+    DEBUG_WRAP(DebugMessage(DEBUG_DECODE, "Start NSH decoding.\n"););
+
+    // Decode the NSH base headers for a received packets.
+    baseHdr = (NSHBaseHdr *) pkt;
+    version = baseHdr->ver_flag_length >> 14;
+    flags = baseHdr->ver_flag_length >> 6;
+    length = baseHdr->ver_flag_length >> 0;
+    md_type = baseHdr->mtype;
+    next_protocol = baseHdr->np;
+    service_path_id = baseHdr->srvpid_srvidx >> 8;
+    service_index = baseHdr->srvpid_srvidx & 0x000000FF;
+
+    nsh_len = sizeof(NSHBaseHdr);
+    if (md_type == 1) {
+    	// Fixed Length.  NSH defines four 4-byte mandatory context headers.
+    	ctxHdr = (NSHContextHdr *) (pkt + nsh_len);
+    	nsh_len += sizeof(NSHContextHdr);
+    } else {
+    	// Variable Length
+
+    }
+
+    PushLayer(PROTO_NSH, p, pkt, nsh_len);
+
+    len -= nsh_len;
+    if (len > 0) {
+		switch (next_protocol) {
+			case NSH_NEXT_PROTOCOL_IPv4:
+				DecodeIP(pkt + nsh_len, len, p);
+				break;
+			case NSH_NEXT_PROTOCOL_IPv6:
+				DecodeIPV6(pkt + nsh_len, len, p);
+				break;
+			case NSH_NEXT_PROTOCOL_ETHERNET:
+				// TODO check if can not support.
+				break;
+			default:
+				DecodeIP(pkt + nsh_len, len, p);
+				break;
+		}
+    }
+
+}
+
+//--------------------------------------------------------------------
 // decode.c::UDP
 //--------------------------------------------------------------------
 
@@ -5346,6 +5447,11 @@ void DecodeUDP(const uint8_t * pkt, const uint32_t len, Packet * p)
     {
         if ( !p->frag_flag )
             DecodeGTP(pkt + sizeof(UDPHdr), len - sizeof(UDPHdr), p);
+    }
+
+    if (snort_conf->dpi_service_active && p->sp == VXLAN_GPE_UDP_PORT) {
+    	// VXLAN-gpe with dst port=4790 is used to encapsulate NSH.
+    	DecodeVxLAN(pkt + sizeof(UDPHdr), len - sizeof(UDPHdr), p);
     }
 
 }

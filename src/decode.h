@@ -196,6 +196,13 @@ struct _SnortConfig;
 #define GTP_MIN_LEN 8
 #define GTP_V0_HEADER_LEN 20
 #define GTP_V1_HEADER_LEN 12
+
+/* NSH values */
+#define VXLAN_GPE_UDP_PORT 4790
+#define NSH_NEXT_PROTOCOL_IPv4 1
+#define NSH_NEXT_PROTOCOL_IPv6 2
+#define NSH_NEXT_PROTOCOL_ETHERNET 3
+
 /* ESP constants */
 #define ESP_HEADER_LEN 8
 #define ESP_AUTH_DATA_LEN 12
@@ -1650,6 +1657,70 @@ typedef struct _GTPHdr
 
 } GTPHdr;
 
+/* DPI Service****************************************************************************/
+
+/* VXLAN Header:
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |R|R|R|R|I|P|R|R|   Reserved                    |Next Protocol  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                VXLAN Network Identifier (VNI) |   Reserved    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ */
+typedef struct _VxLANHdr
+{
+	uint8_t  flag;
+	uint16_t reserved;
+	uint8_t np;
+    uint32_t vni_reserved2;
+
+} VxLANHdr;
+
+/* NSH base Header
+
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |Ver|O|C|R|R|R|R|R|R|   Length  |  MD-type=0x1  | Next Protocol |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |          Service Path ID                      | Service Index |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+*/
+typedef struct _NSHBaseHdr
+{
+    uint16_t ver_flag_length;
+    uint8_t	mtype;				/* MD-type{1: 'Fixed Length', 2: 'Variable Length'} */
+    uint8_t np;					/* Next Protocol {1: 'IPv4', 2: 'IPv6', 3: 'Ethernet'} */
+    uint32_t srvpid_srvidx;		/* Service Path ID + Service Index */
+
+} NSHBaseHdr;
+
+/* NSH Context Header
+	When the base header specifies MD Type 1, NSH defines four 4-byte
+ 	mandatory context headers.
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  Network Platform Context                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  Network Shared Context                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  Service Platform Context                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  Service Shared Context                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ */
+
+typedef struct _NSHContextHdr
+{
+    uint32_t net_platform_ctx;
+    uint32_t net_shared_ctx;
+    uint32_t srv_platform_ctx;
+    uint32_t srv_shared_ctx;;
+
+} NSHContextHdr;
+
 #define LAYER_MAX  32
 
 // forward declaration for snort expected session created due to this packet.
@@ -1920,6 +1991,9 @@ void DecodeTeredo(const uint8_t *, uint32_t, Packet *);
 void DecodeAH(const uint8_t *, uint32_t, Packet *);
 void DecodeESP(const uint8_t *, uint32_t, Packet *);
 void DecodeGTP(const uint8_t *, uint32_t, Packet *);
+/* DPI Service **************************************************************************/
+void DecodeVxLAN(const uint8_t *, uint32_t, Packet *);
+void DecodeNSH(const uint8_t *, uint32_t, Packet *);
 
 #ifdef GRE
 void DecodeGRE(const uint8_t *, const uint32_t, Packet *);
