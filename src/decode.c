@@ -5147,7 +5147,7 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
 void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 	uint8_t version;
 	uint8_t flags;
-	uint8_t length;
+	uint16_t length;
 	uint8_t md_type;
 	uint8_t next_protocol;
 	uint32_t service_path_id;
@@ -5163,7 +5163,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     baseHdr = (NSHBaseHdr *) pkt;
     version = baseHdr->ver_flag_length >> 14;
     flags = baseHdr->ver_flag_length >> 6;
-    length = baseHdr->ver_flag_length >> 0;
+    length = ntohs(baseHdr->ver_flag_length >> 0);
     md_type = baseHdr->mtype;
     next_protocol = baseHdr->np;
     service_path_id = baseHdr->srvpid_srvidx >> 8;
