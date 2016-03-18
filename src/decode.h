@@ -1739,7 +1739,7 @@ typedef struct _NSHVarLenMDHdr
     int16_t tlv_class;  /* describes the scope of the "Type" field. */
     uint8_t	type;		/* the specific type of information being carried, within the scope of a given TLV Class */
     uint8_t rrr_len;	/* RRR: reserved bit are present for future use. Len: Length of the variable metadata, in 4-byte words. */
-    int8_t *var_md;
+    const char *var_md;
 
 } NSHVarLenMDHdr;
 
@@ -2016,6 +2016,8 @@ void DecodeGTP(const uint8_t *, uint32_t, Packet *);
 /* DPI Service **************************************************************************/
 void DecodeVxLAN(const uint8_t *, uint32_t, Packet *);
 void DecodeNSH(const uint8_t *, uint32_t, Packet *);
+static void DecodeNSHVarLenMetadata(const uint8_t *start, uint16_t o_len);
+//void DecodeIPOptions(const uint8_t *start, uint32_t o_len, Packet *p)
 
 #ifdef GRE
 void DecodeGRE(const uint8_t *, const uint32_t, Packet *);
