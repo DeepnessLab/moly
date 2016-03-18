@@ -5184,12 +5184,15 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     	while (varLenCtx > 0) {
     		// We have an Optional Variable Length Context Headers to parse.
     		varLenMd = (NSHVarLenMDHdr *) (pkt + nsh_len);
-    		int16_t tlv_class = varLenMd->tlv_class;
+    		int16_t tlv_class = ntohs(varLenMd->tlv_class);
     		uint8_t type = varLenMd->type;
     		uint8_t flags = varLenMd->rrr_len >> 5;
+
+    		// Decode the metadata.
     		uint8_t mdLen = varLenMd->rrr_len & 0x1F;
     		int mdLenBytes = mdLen * 4; // converting the metadata length to bytes.
-    		const char *var_md = varLenMd->var_md;
+    		char *metadata = (char *)SnortAlloc(mdLenBytes);
+            memcpy(metadata, varLenMd->var_md, mdLenBytes);
 
     		nsh_len += sizeof(NSHVarLenMDHdr); // Need to calculate the size dynamically. Since the struct contain a char *.
     		varLenCtx -= sizeof(NSHVarLenMDHdr); // Need to calculate the size dynamically. Since the struct contain a char *.
