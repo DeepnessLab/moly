@@ -5147,7 +5147,7 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
 void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 	uint8_t version;
 	uint8_t flags;
-	uint16_t length;
+	uint16_t length; //  total length, in 4-byte words, of the NSH header, including optional variable TLVs.
 	uint8_t md_type;
 	uint8_t next_protocol;
 	uint32_t service_path_id;
@@ -5155,6 +5155,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 
     NSHBaseHdr *baseHdr;
     NSHContextHdr *ctxHdr;
+    NSHVarLenMDHdr *varLenMd;
     uint32_t nsh_len;
 
     DEBUG_WRAP(DebugMessage(DEBUG_DECODE, "Start NSH decoding.\n"););
@@ -5174,9 +5175,22 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     	// Fixed Length.  NSH defines four 4-byte mandatory context headers.
     	ctxHdr = (NSHContextHdr *) (pkt + nsh_len);
     	nsh_len += sizeof(NSHContextHdr);
-    } else {
-    	// Variable Length
+    } else if (md_type == 2) {
+    	/**
+    	 * Variable Length. When the base header specifies MD Type 2, NSH defines variable length
+    	   only context headers. There may be zero or more of these headers as per the length field.
+    	 */
+    	int varLenCtx = (length * 4) - nsh_len; // converting the length to bytes.
+    	while (varLenCtx > 0) {
+    		// We have an Optional Variable Length Context Headers to parse.
+    		varLenMd = (NSHVarLenMDHdr *) (pkt + nsh_len);
+    		uint16_t mdLen = ntohs(varLenMd->rrr_len & 0x1F);
 
+
+
+    		nsh_len += sizeof(NSHVarLenMDHdr);
+    		varLenCtx -= sizeof(NSHVarLenMDHdr);
+    	}
     }
 
     PushLayer(PROTO_NSH, p, pkt, nsh_len);

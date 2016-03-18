@@ -1721,6 +1721,28 @@ typedef struct _NSHContextHdr
 
 } NSHContextHdr;
 
+/*
+	NSH Variable Length Context Header.
+	When the base header specifies MD Type 2, NSH defines variable length
+	only context headers.  There may be zero or more of these headers as
+	per the length field.
+
+	  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |          TLV Class            |      Type     |R|R|R|   Len   |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |                      Variable Metadata                        |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ */
+typedef struct _NSHVarLenMDHdr
+{
+    uint16_t tlv_class; /* describes the scope of the "Type" field. */
+    uint8_t	type;		/* the specific type of information being carried, within the scope of a given TLV Class */
+    uint8_t rrr_len;	/* RRR: reserved bit are present for future use. Len: Length of the variable metadata, in 4-byte words. */
+    uint32_t var_md;
+
+} NSHVarLenMDHdr;
+
 #define LAYER_MAX  32
 
 // forward declaration for snort expected session created due to this packet.
