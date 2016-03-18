@@ -1736,10 +1736,10 @@ typedef struct _NSHContextHdr
  */
 typedef struct _NSHVarLenMDHdr
 {
-    uint16_t tlv_class; /* describes the scope of the "Type" field. */
+    int16_t tlv_class;  /* describes the scope of the "Type" field. */
     uint8_t	type;		/* the specific type of information being carried, within the scope of a given TLV Class */
     uint8_t rrr_len;	/* RRR: reserved bit are present for future use. Len: Length of the variable metadata, in 4-byte words. */
-    uint32_t var_md;
+    int8_t *var_md;
 
 } NSHVarLenMDHdr;
 
