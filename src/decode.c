@@ -5187,17 +5187,21 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		int16_t tlv_class = ntohs(varLenMd->tlv_class);
     		uint8_t type = varLenMd->type;
     		uint8_t flags = varLenMd->rrr_len >> 5;
-
-    		// Decode the metadata.
     		uint8_t mdLen = varLenMd->rrr_len & 0x1F;
+
+    		nsh_len += sizeof(NSHVarLenMDHdr);
+    		varLenCtx -= sizeof(NSHVarLenMDHdr);
+
+    		// Decode the variable metadata.
     		int mdLenBytes = mdLen * 4; // converting the metadata length to number of bytes.
+    		const uint8_t *var_md = pkt + nsh_len;
     		uint8_t *metadata = (uint8_t *)malloc(sizeof(uint8_t) * (mdLenBytes));
-    		memcpy(metadata, varLenMd->var_md, sizeof(uint8_t) * mdLenBytes);
+    		memcpy(metadata, var_md, sizeof(uint8_t) * mdLenBytes);
             free(metadata);
 
-            int varLenHdrSize = sizeof(int32_t) + mdLenBytes;  // Need to calculate the size dynamically. Since the struct contain a char *.
-    		nsh_len += varLenHdrSize;
-    		varLenCtx -= varLenHdrSize;
+             // Need to calculate the size dynamically. Since the struct contain a char *.
+    		nsh_len += mdLenBytes;
+    		varLenCtx -= mdLenBytes;
     	}
     }
 
