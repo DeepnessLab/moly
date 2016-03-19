@@ -2015,8 +2015,6 @@ void DecodeGTP(const uint8_t *, uint32_t, Packet *);
 /* DPI Service **************************************************************************/
 void DecodeVxLAN(const uint8_t *, uint32_t, Packet *);
 void DecodeNSH(const uint8_t *, uint32_t, Packet *);
-static void DecodeNSHVarLenMetadata(const uint8_t *start, uint16_t o_len);
-//void DecodeIPOptions(const uint8_t *start, uint32_t o_len, Packet *p)
 
 #ifdef GRE
 void DecodeGRE(const uint8_t *, const uint32_t, Packet *);

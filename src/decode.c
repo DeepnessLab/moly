@@ -5195,8 +5195,8 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		// Decode the variable metadata.
     		int mdLenBytes = mdLen * 4; // converting the metadata length to number of bytes.
     		const uint8_t *var_md = pkt + nsh_len;
-    		uint8_t *metadata = (uint8_t *)malloc(sizeof(uint8_t) * (mdLenBytes));
-    		memcpy(metadata, var_md, sizeof(uint8_t) * mdLenBytes);
+			uint8_t *metadata = (uint8_t *)malloc(mdLenBytes);
+    		memcpy(metadata, var_md, mdLenBytes);
             free(metadata);
 
              // Need to calculate the size dynamically. Since the struct contain a char *.
