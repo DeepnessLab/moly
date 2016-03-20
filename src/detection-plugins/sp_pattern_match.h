@@ -108,16 +108,16 @@ typedef struct _PatternMatchData
 
 /* DPI Service */
 typedef struct {
-	unsigned short rid;
-	bool is_range;
-	unsigned short position : 15;
+	uint16_t rid;
+	uint8_t is_range;
+	uint16_t position : 15;
 } MatchReport;
 
 typedef struct {
-	unsigned short rid;
-	bool  is_range;
-	unsigned short position : 15;
-	unsigned short length;
+	uint16_t rid;
+	uint8_t  is_range;
+	uint16_t position : 15;
+	uint16_t length;
 } MatchReportRange;
 
 /********************************************************************

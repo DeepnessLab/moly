@@ -58,6 +58,7 @@
 #include "mempool.h"
 #include "spp_normalize.h"
 #include "sfdaq.h"
+#include "sp_pattern_match.h"
 
 extern tSfActionQueueId decoderActionQ;
 extern MemPool decoderAlertMemPool;
@@ -5184,7 +5185,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     	while (varLenCtx > 0) {
     		// We have an Optional Variable Length Context Headers to parse.
     		varLenMd = (NSHVarLenMDHdr *) (pkt + nsh_len);
-    		int16_t tlv_class = ntohs(varLenMd->tlv_class);
+    		uint16_t tlv_class = ntohs(varLenMd->tlv_class);
     		uint8_t type = varLenMd->type;
     		uint8_t flags = varLenMd->rrr_len >> 5;
     		uint8_t mdLen = varLenMd->rrr_len & 0x1F;
@@ -5195,11 +5196,35 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		// Decode the variable metadata.
     		int mdLenBytes = mdLen * 4; // converting the metadata length to number of bytes.
     		const uint8_t *var_md = pkt + nsh_len;
-			uint8_t *metadata = (uint8_t *)malloc(mdLenBytes);
+
+    		MatchReport *report;
+    		MatchReportRange *rangeReport;
+    		report = (MatchReport *) var_md;
+    		int num_reports = 2; // TODO (mdLenBytes - 1) / sizeof(MatchReport);
+    		int i;
+    		for (i = 0; i < num_reports; i++) {
+	    		uint16_t rid = ntohs(report->rid);
+	    		uint8_t is_range = report->is_range;
+	    		uint16_t pos = report->position;
+
+    			if (is_range) {
+    				rangeReport = (MatchReportRange *)report;
+    				uint16_t length = rangeReport->length;
+    				nsh_len += 7;// sizeof(MatchReport); sizeof(MatchReportRange);
+    				varLenCtx -= 7;
+    			} else {
+    				nsh_len += 5;// sizeof(MatchReport);
+    				varLenCtx -=5;
+    			}
+
+    			report = (MatchReport *)(pkt + nsh_len);
+    		}
+/*			uint8_t *metadata = (uint8_t *)malloc(mdLenBytes);
     		memcpy(metadata, var_md, mdLenBytes);
-            free(metadata);
+            free(metadata);*/
 
              // Need to calculate the size dynamically. Since the struct contain a char *.
+    		// TODO think if we need to do this?
     		nsh_len += mdLenBytes;
     		varLenCtx -= mdLenBytes;
     	}
