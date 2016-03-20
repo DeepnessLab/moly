@@ -5200,28 +5200,28 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		MatchReport *report;
     		MatchReportRange *rangeReport;
     		report = (MatchReport *) var_md;
-    		int num_reports = 2; // TODO (mdLenBytes - 1) / sizeof(MatchReport);
-    		int i;
-    		for (i = 0; i < num_reports; i++) {
-	    		uint16_t rid = ntohs(report->rid);
-	    		uint8_t is_range = report->is_range;
-	    		uint16_t pos = report->position;
+    		int bytesRead = 0;
+    		int bytesLeft = mdLenBytes;
+    		while (bytesLeft > 0 && bytesLeft >= 5) { // We have bytes to read and there are enough bytes for a match report (possibly not due to zero paddding).
+    			uint16_t rid = ntohs(report->rid);
+    			uint8_t is_range = report->is_range;
+    			uint16_t pos = report->position;
 
     			if (is_range) {
     				rangeReport = (MatchReportRange *)report;
     				uint16_t length = rangeReport->length;
-    				nsh_len += 7;// sizeof(MatchReport); sizeof(MatchReportRange);
-    				varLenCtx -= 7;
+
+    				// sizeof(MatchReportRange);
+    				bytesRead += 7;
+    				bytesLeft -= 7;
     			} else {
-    				nsh_len += 5;// sizeof(MatchReport);
-    				varLenCtx -=5;
+    				// sizeof(MatchReport);
+    				bytesRead += 5;
+    				bytesLeft -= 5;
     			}
 
-    			report = (MatchReport *)(pkt + nsh_len);
+    			report = (MatchReport *)(pkt + nsh_len + bytesRead);
     		}
-/*			uint8_t *metadata = (uint8_t *)malloc(mdLenBytes);
-    		memcpy(metadata, var_md, mdLenBytes);
-            free(metadata);*/
 
              // Need to calculate the size dynamically. Since the struct contain a char *.
     		// TODO think if we need to do this?
