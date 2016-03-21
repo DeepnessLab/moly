@@ -5237,7 +5237,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 				DecodeIPV6(pkt + nsh_len, len, p);
 				break;
 			case NSH_NEXT_PROTOCOL_ETHERNET:
-				// TODO check if can not support.
+				// Not supported.
 				break;
 			default:
 				DecodeIP(pkt + nsh_len, len, p);
