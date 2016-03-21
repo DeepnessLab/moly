@@ -5118,21 +5118,19 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
     uint32_t vni;
 	uint8_t reserved2;
 
-	VxLANHdr *hdr;
-	uint32_t vxlan_len;
+	VxLANHdr *vxlanHdr;
 
 	DEBUG_WRAP(DebugMessage(DEBUG_DECODE, "Start VxLAN decoding.\n"););
-	hdr = (VxLANHdr *) pkt;
-	flag = hdr->flag;
-	reserved = hdr->reserved;
-	next_protocol = hdr->np;
-	vni = hdr->vni_reserved2 >> 8;
-	reserved2 = hdr->vni_reserved2 & 0x000000FF;
+	vxlanHdr = (VxLANHdr *) pkt;
+	flag = vxlanHdr->flag;
+	reserved = vxlanHdr->reserved;
+	next_protocol = vxlanHdr->np;
+	vni = vxlanHdr->vni_reserved2 >> 8;
+	reserved2 = vxlanHdr->vni_reserved2 & 0x000000FF;
 
-	vxlan_len = 8;
-	PushLayer(PROTO_NSH, p, pkt, vxlan_len);
+	PushLayer(PROTO_NSH, p, pkt, VXLAN_LEN_HEADER_SIZE);
 
-	DecodeNSH(pkt + vxlan_len, len - vxlan_len, p);
+	DecodeNSH(pkt + VXLAN_LEN_HEADER_SIZE, len - VXLAN_LEN_HEADER_SIZE, p);
 }
 
 //--------------------------------------------------------------------
@@ -5202,7 +5200,8 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		report = (MatchReport *) var_md;
     		int bytesRead = 0;
     		int bytesLeft = mdLenBytes;
-    		while (bytesLeft > 0 && bytesLeft >= 5) { // We have bytes to read and there are enough bytes for a match report (possibly not due to zero paddding).
+    		while (bytesLeft >= MATCH_REPORT_SIZE) {
+    			// We have bytes to read and there are enough bytes for a match report (this may not be the case not due to zero padding).
     			uint16_t rid = ntohs(report->rid);
     			uint8_t is_range = report->is_range;
     			uint16_t pos = report->position;
@@ -5211,13 +5210,11 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     				rangeReport = (MatchReportRange *)report;
     				uint16_t length = rangeReport->length;
 
-    				// sizeof(MatchReportRange);
-    				bytesRead += 7;
-    				bytesLeft -= 7;
+    				bytesRead += MATCH_REPORT_RANGE_SIZE;
+    				bytesLeft -= MATCH_REPORT_RANGE_SIZE;
     			} else {
-    				// sizeof(MatchReport);
-    				bytesRead += 5;
-    				bytesLeft -= 5;
+    				bytesRead += MATCH_REPORT_SIZE;
+    				bytesLeft -= MATCH_REPORT_SIZE;
     			}
 
     			report = (MatchReport *)(pkt + nsh_len + bytesRead);
