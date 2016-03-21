@@ -5500,7 +5500,7 @@ void DecodeUDP(const uint8_t * pkt, const uint32_t len, Packet * p)
             DecodeGTP(pkt + sizeof(UDPHdr), len - sizeof(UDPHdr), p);
     }
 
-    if (snort_conf->dpi_service_active && p->sp == VXLAN_GPE_UDP_PORT) {
+    if (snort_conf->dpi_service_active && p->dp == VXLAN_GPE_UDP_PORT) {
     	// VXLAN-gpe with dst port=4790 is used to encapsulate NSH.
     	DecodeVxLAN(pkt + sizeof(UDPHdr), len - sizeof(UDPHdr), p);
     }
