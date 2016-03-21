@@ -5220,8 +5220,6 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     			report = (MatchReport *)(pkt + nsh_len + bytesRead);
     		}
 
-             // Need to calculate the size dynamically. Since the struct contain a char *.
-    		// TODO think if we need to do this?
     		nsh_len += mdLenBytes;
     		varLenCtx -= mdLenBytes;
     	}
