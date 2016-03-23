@@ -57,6 +57,16 @@
 #define MPSE_INCREMENT_GLOBAL_CNT 1
 #define MPSE_DONT_INCREMENT_GLOBAL_COUNT 0
 
+typedef struct _mpse_struct {
+
+    int    method;
+    void * obj;
+    int    verbose;
+    uint64_t bcnt;
+    char   inc_global_counter;
+
+} MPSE;
+
 /*
 ** PROTOTYPES
 */
@@ -95,10 +105,6 @@ void mpseSetRuleMask   ( void *pv, BITOP * rm );
 int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
                 int ( *action )(void* id, void * tree, int index, void *data, void *neg_list),
                 void * data, int* current_state );
-
-static SFGHASH * CreatePatterMatchReportMap(void);
-static void MatchReportAdd(SFGHASH *patterMatchReportMap, char *pattern, void *matchRule);
-static void FreePatterMatchReport(SFGHASH *patterMatchReportHash);
 
 
 int  mpseSearch( void *pv, const unsigned char * T, int n,

@@ -172,6 +172,8 @@
 #endif
 
 #include "cJSON.h"
+#include "mpse.h"
+#include "acsmx2.h"
 
 /* Macros *********************************************************************/
 #ifndef DLT_LANE8023
@@ -546,11 +548,25 @@ static void SnortIdle(void);
 static void SnortStartThreads(void);
 #endif
 
+/* DPI Service constants*******************************************************/
+const char * SNORT_ID = "snort_id";
+const char * RULE_LIST = "rules";
+const char * CLASS_NAME = "className";
+const char * CLASS_NAME_VALUE = "MatchRule";
+const char * PATTERN = "pattern";
+const char * IS_REGEX = "is_regex";
+const char * RULE_ID = "rid";
+
 /* DPI Service functions*******************************************************/
-static int RegisterContentRulesToDPIController(SnortConfig *sc);
-static SFGHASH * CreateDPIRuleMap(void);
+static void RegisterContentRulesToDPIController(SnortConfig *sc);
+static SFGHASH * CreateAcsmListMap(void);
+static SFGHASH * CreateRuleToMlistMap(void);
+static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist);
+static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
 static void DPIServiceFree(SnortConfig *sc);
-static void DPIRuleAdd(SFGHASH *dpiRuleMap, unsigned short rid, char *pattern);
+static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
+static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
+
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
 static void SigExitHandler(int);
@@ -5295,114 +5311,143 @@ void SnortInit(int argc, char **argv)
     ScRestoreInternalLogLevel();
 }
 
-/**
- * The function register Snort content rules to the DPI Controller.
- */
-static int RegisterContentRulesToDPIController(SnortConfig *sc) {
-	if (sc->otn_map == NULL || !sc->dpi_service_active)
-		return 0;
+static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
+	ProcessPortGroup(portRuleMap->prmSrcPort, acsmMap, ruleId, ruleList, sc);
+	ProcessPortGroup(portRuleMap->prmDstPort, acsmMap, ruleId, ruleList, sc);
+	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleId, ruleList, sc);
+}
 
-	SFGHASH *dpiRuleMap = CreateDPIRuleMap();
+static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
+	if (portGroup == NULL || portGroup->pgPms == NULL || portGroup->pgPms[PM_TYPE__CONTENT] == NULL)
+		return;
 
-	// Initialize variables to iterate over rules in memory.
-	OptTreeNode *otn;
-	SFGHASH_NODE *hashNode;
-	unsigned short ruleId = 0;
+	MPSE *mpse = (MPSE*)portGroup->pgPms[PM_TYPE__CONTENT];
+	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
+	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
+	acstate_t state;
+	ACSM_PATTERN2 *mlist;
+	cJSON *matchRule;
+
+	SFGHASH *ruleMlistMap = CreateRuleToMlistMap();
 
 	// Create JSON initialize.
 
 	/*
 	 *  The Rule Pattern Match JSON structure for DPI Service - DPI Controller interface.
-     *	{
+	 *	{
 	 *		className: 'MatchRule',
 	 *		pattern: some exact-string or regular-expression string,
 	 *		is_regex: true if pattern is a regular-expression or false otherwise,
 	 *		rid: rule identification number
 	 *	}
-     */
+	 */
 
-	cJSON *root, *ruleList, * matchRule; char *out;
-	const char * SNORT_ID = "snort_id";
-	const char * RULE_LIST = "rules";
-	const char * CLASS_NAME = "className";
-	const char * CLASS_NAME_VALUE = "MatchRule";
-	const char * PATTERN = "pattern";
-	const char * IS_REGEX = "is_regex";
-	const char * RULE_ID = "rid";
+	/* Go over the AC states and collect all the information from the accepting states. */
+	for (state = 0; state < (acstate_t)acsm->acsmNumStates; state++) {
+		if (MatchList[state]) {
+			mlist = MatchList[state];
+			PMX              *id     = (PMX*)mlist->udata;
+			PatternMatchData *pmd    = (PatternMatchData*)id->PatternMatchData;
 
+			// We found a content which needs to be searched in DPI.
+			matchRule=cJSON_CreateObject();
+			cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
+			cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
+			cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
+			(*ruleId)++;
+			cJSON_AddNumberToObject(matchRule, RULE_ID, *ruleId);
+			cJSON_AddItemToArray(ruleList, matchRule);
+
+			// Add Rule ID => mlist map to be used when processing packet content match.
+			RuleAdd(ruleMlistMap, *ruleId, mlist);
+		}
+	}
+
+	AcsmAdd(acsmMap, acsm, ruleMlistMap);
+}
+
+static void RegisterContentRulesToDPIController(SnortConfig *sc) {
+	if (!sc->dpi_service_active)
+		return;
+
+	uint16_t ruleId = 0;
+	sc->dpi_acsm_map = CreateAcsmListMap();
+
+	cJSON *root, *ruleList; char *out;
+
+	/* Initialize JSON message to controller objects. */
 	root=cJSON_CreateObject();
 	cJSON_AddStringToObject(root, SNORT_ID, "master_snort");
 	ruleList=cJSON_CreateArray();
 	cJSON_AddItemToObject(root, RULE_LIST, ruleList);
 
-	// Iterate of content rules and add the pattern to the JSON.
-	for (hashNode = sfghash_findfirst(sc->otn_map); hashNode; hashNode = sfghash_findnext(sc->otn_map)) {
-		otn = (OptTreeNode *)hashNode->data;
-		OptFpList *opt_fp = otn->opt_func;
-
-		while (opt_fp) {
-			if ((opt_fp->type == RULE_OPTION_TYPE_CONTENT) || (opt_fp->type == RULE_OPTION_TYPE_CONTENT_URI)) {
-				// We found a content which needs to be searched in DPI.
-				PatternMatchData *pmd = (PatternMatchData *)opt_fp->context;
-				matchRule=cJSON_CreateObject();
-				cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
-				cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
-				cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
-				ruleId++;
-				cJSON_AddNumberToObject(matchRule, RULE_ID, ruleId);
-				cJSON_AddItemToArray(ruleList, matchRule);
-
-				// Add Rule ID => Rule Pattern map to be used when processing packet content match.
-				DPIRuleAdd(dpiRuleMap, ruleId, pmd->pattern_buf);
-
-			}
-
-			opt_fp = opt_fp->next;
-		}
-	}
+	ProcessPortRuleMap(sc->prmIpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
+	ProcessPortRuleMap(sc->prmTcpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
+	ProcessPortRuleMap(sc->prmUdpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
+	ProcessPortRuleMap(sc->prmIcmpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
 
 	/* Print to text (regular and minify), Delete the cJSON, print it, release the string. */
 	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
-	sc->dpi_role_id_to_pattern_map = dpiRuleMap;
-
-	return 1;
 }
 
-static SFGHASH * CreateDPIRuleMap(void) {
-    return sfghash_new(10000, sizeof(unsigned short), 0, free);
+static SFGHASH * CreateAcsmListMap(void) {
+    return sfghash_new(20, sizeof(ACSM_STRUCT2 *), 1, NULL);
 }
 
-/* The function adds a rule pattern (Key: Rule ID => Value: Pattern) to the DPI Rule Map). */
-static void DPIRuleAdd(SFGHASH *dpiRuleMap, unsigned short rid, char *pattern) {
-    if (dpiRuleMap == NULL)
-        return;
+static SFGHASH * CreateRuleToMlistMap(void) {
+    return sfghash_new(10000, sizeof(uint16_t), 0, NULL);
+}
+
+/* The function adds a rule to mlist entry Key: Rule ID => Value: mlist) to the DPI Rule to mlist Map). */
+static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist) {
+	if (ruleMlistMap == NULL)
+		return;
 
 	int status;
-	char * patternCopy;
 	size_t len;
 
-	// Copy the pattern and add it to the map.
-    len = strlen(pattern) + 1;
-    patternCopy = (char *)SnortAlloc(len);
-    memcpy(patternCopy, pattern, len);
+	status = sfghash_add(ruleMlistMap, &rid, mlist);
+	switch (status)
+	{
+	case SFGHASH_OK:
+		/* entry was inserted successfully */
+		break;
+	case SFGHASH_INTABLE:
+		ParseError("Duplicate Rule with same rid (%u).\n", rid);
+		break;
+	case SFGHASH_NOMEM:
+		FatalError("Failed to allocate memory for rule.\n");
+		break;
+	default:
+		FatalError("%s(%d): DPIRuleAdd() - unexpected return value "
+				"from sfghash_add().\n", __FILE__, __LINE__);
+		break;
+	}
+}
 
-    status = sfghash_add(dpiRuleMap, &rid, patternCopy);
-    switch (status)
-    {
-        case SFGHASH_OK:
-            /* pattern was inserted successfully */
-            break;
-        case SFGHASH_INTABLE:
-            ParseError("Duplicate Rule with same rid (%u).\n", rid);
-            break;
-        case SFGHASH_NOMEM:
-            FatalError("Failed to allocate memory for rule.\n");
-            break;
-        default:
-            FatalError("%s(%d): DPIRuleAdd() - unexpected return value "
-                       "from sfghash_add().\n", __FILE__, __LINE__);
-            break;
-    }
+static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap) {
+	if (matchListMap == NULL)
+		return;
+
+	int status;
+
+	status = sfghash_add(matchListMap, acsm, ruleMlistMap);
+	switch (status)
+	{
+	case SFGHASH_OK:
+		/* entry was inserted successfully */
+		break;
+	case SFGHASH_INTABLE:
+		ParseError("Duplicate ACSM with same key.\n");
+		break;
+	case SFGHASH_NOMEM:
+		FatalError("Failed to allocate memory for the ACSM.\n");
+		break;
+	default:
+		FatalError("%s(%d): AcsmAdd() - unexpected return value "
+				"from sfghash_add().\n", __FILE__, __LINE__);
+		break;
+	}
 }
 
 /* The function free memory allocated for the DPI Service processing. */
@@ -5413,8 +5458,8 @@ static void DPIServiceFree(SnortConfig *sc) {
 	if (sc->dpi_controller_ip != NULL)
 		free(sc->dpi_controller_ip);
 
-	if (sc->dpi_role_id_to_pattern_map != NULL)
-		sfghash_delete(sc->dpi_role_id_to_pattern_map);
+/*	if (sc->dpi_acsm_map != NULL)
+		sfghash_delete(sc->dpi_acsm_map);*/
 
 }
 

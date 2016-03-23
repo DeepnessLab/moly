@@ -61,16 +61,6 @@ PreprocStats mpsePerfStats;
 
 static uint64_t s_bcnt=0;
 
-typedef struct _mpse_struct {
-
-    int    method;
-    void * obj;
-    int    verbose;
-    uint64_t bcnt;
-    char   inc_global_counter;
-
-} MPSE;
-
 void * mpseNew( int method, int use_global_counter_flag,
                 void (*userfree)(void *p),
                 void (*optiontreefree)(void **p),
@@ -607,6 +597,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	MPSE *mpse = (MPSE*)pvoid;
 	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
 	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
+	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
 	acstate_t state;
 
@@ -621,99 +612,37 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 
 	/* Simulate actual match data structure. */
 	MatchReport matchReport = { .rid = 1, .is_range = false, .position = 0};
+	MatchReport matchReport2 = { .rid = 4, .is_range = false, .position = 15};
 	MatchReportRange matchReportRange = {.rid = 3, .is_range = true, .position = 15, .length = 3};
 
-	/* Generate the stub map. */
-	SFGHASH * patterMatchReportMap = CreatePatterMatchReportMap();
-	char * NSH_RESULT_ONE = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &matchReport.rid);
-	MatchReportAdd(patterMatchReportMap, NSH_RESULT_ONE, &matchReport);
-	char * NSH_RESULT_TWO = (char *)sfghash_find(snort_conf->dpi_role_id_to_pattern_map, &matchReportRange.rid);
-	MatchReportAdd(patterMatchReportMap, NSH_RESULT_TWO, &matchReportRange);
-
-	/* Go over the AC states and check for content match in the NSH result map. */
-	for (state = 0; state < (acstate_t)acsm->acsmNumStates; state++) {
-		if (MatchList[state]) {
-			mlist = MatchList[state];
-			PMX              *id     = (PMX*)mlist->udata;
-			PatternMatchData *pmd    = (PatternMatchData*)id->PatternMatchData;
-			report = (MatchReport *)sfghash_find(patterMatchReportMap, pmd->pattern_buf);
-			if (report != NULL) {
-				// The pattern exists in the NSH results.
-				if (report->is_range) {
-					// The repost is of type range need to check for all the occurrences of the match.
-					rangeReport = (MatchReportRange*)report;
-					for (j = 0; j < rangeReport->length; j++) {
-						pos = rangeReport->position + j;
-						count++;
-						if (Match (mlist->udata, mlist->rule_option_tree, pos, data, mlist->neg_list) > 0) {
-							return count;
-						}
-					}
-				} else {
-					// The repost is for a single occurrence. Check for a match.
+	int i = 0;
+	MatchReport* matchReportArr[2] = {&matchReport, &matchReport2};
+	for (i = 0; i < 2; i++) {
+		MatchReport *report = matchReportArr[i];
+		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &report->rid);
+		if (mlist != NULL) {
+			// The pattern exists in the NSH results.
+			if (report->is_range) {
+				// The repost is of type range need to check for all the occurrences of the match.
+				rangeReport = (MatchReportRange*)report;
+				for (j = 0; j < rangeReport->length; j++) {
+					pos = rangeReport->position + j;
 					count++;
-					if (Match (mlist->udata, mlist->rule_option_tree, report->position, data, mlist->neg_list) > 0) {
+					if (Match (mlist->udata, mlist->rule_option_tree, pos, data, mlist->neg_list) > 0) {
 						return count;
 					}
 				}
-
-			}
-
-/*			if ((strcasecmp(pmd->pattern_buf, NSH_RESULT_ONE) == 0) ||
-				(strcasecmp(pmd->pattern_buf, NSH_RESULT_TWO) == 0)) { // TODO replace the hard-coded compare with a lookup to the NSH HashMap results.
-				// We have a string anchor match with the NSH data. Perform the final match.
-				if (Match (mlist->udata, mlist->rule_option_tree, 0, data, mlist->neg_list) > 0) {
-					return 1; // TODO Need to ask the Snort development team why the position is zero. Is't this a bug?
+			} else {
+				// The repost is for a single occurrence. Check for a match.
+				count++;
+				if (Match (mlist->udata, mlist->rule_option_tree, report->position, data, mlist->neg_list) > 0) {
+					return count;
 				}
-			}*/
-
+			}
 		}
 	}
 
-	//FreePatterMatchReport(patterMatchReportMap); TODO support memory free in the real implementation.
-
 	return 0;
-}
-
-static SFGHASH * CreatePatterMatchReportMap(void) {
-    return sfghash_new(10000, sizeof(unsigned short), 0, free);
-}
-
-static void FreePatterMatchReport(SFGHASH *patterMatchReportHash) {
-	if (patterMatchReportHash != NULL)
-		sfghash_delete(patterMatchReportHash);
-}
-
-static void MatchReportAdd(SFGHASH *patterMatchReportMap, char *pattern, void *matchRule) {
-    if (patterMatchReportMap == NULL)
-        return;
-
-	int status;
-	char * patternKey;
-	size_t len;
-
-	// Copy the pattern and add it to the map.
-    len = strlen(pattern) + 1;
-    patternKey = (char *)SnortAlloc(len);
-    memcpy(patternKey, pattern, len);
-
-    status = sfghash_add(patterMatchReportMap, patternKey, matchRule);
-    switch (status)
-    {
-        case SFGHASH_OK:
-            /* pattern was inserted successfully */
-            break;
-        case SFGHASH_INTABLE:
-            ParseError("Duplicate MatchReport with same pattern (%s).\n", pattern);
-            break;
-        case SFGHASH_NOMEM:
-            FatalError("Failed to allocate memory for MatchReport.\n");
-            break;
-        default:
-            FatalError("%s(%d): MatchReportAdd() - unexpected return value "
-                       "from sfghash_add().\n", __FILE__, __LINE__);
-            break;
-    }
 }
 
 int mpseSearch( void *pvoid, const unsigned char * T, int n,

@@ -975,7 +975,7 @@ typedef struct _SnortConfig
     bool dpi_service_active;
     char *dpi_controller_ip;
     int dpi_controller_port;
-    SFGHASH *dpi_role_id_to_pattern_map;
+    SFGHASH *dpi_acsm_map; // Map from ACSM to a map of rule ID => mlist (MatchList => Map (Rule ID => mlist)).
 
 } SnortConfig;
 
