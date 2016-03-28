@@ -566,6 +566,7 @@ static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlis
 static void DPIServiceFree(SnortConfig *sc);
 static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
 static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
+static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
 
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
@@ -5312,9 +5313,16 @@ void SnortInit(int argc, char **argv)
 }
 
 static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
-	ProcessPortGroup(portRuleMap->prmSrcPort, acsmMap, ruleId, ruleList, sc);
-	ProcessPortGroup(portRuleMap->prmDstPort, acsmMap, ruleId, ruleList, sc);
+	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleId, ruleList, sc);
+	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleId, ruleList, sc);
 	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleId, ruleList, sc);
+}
+
+static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
+	int i;
+	for(i=0;i<MAX_PORTS;i++) {
+		ProcessPortGroup(portGroups[i], acsmMap, ruleId, ruleList, sc);
+	}
 }
 
 static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
@@ -5458,8 +5466,8 @@ static void DPIServiceFree(SnortConfig *sc) {
 	if (sc->dpi_controller_ip != NULL)
 		free(sc->dpi_controller_ip);
 
-/*	if (sc->dpi_acsm_map != NULL)
-		sfghash_delete(sc->dpi_acsm_map);*/
+	if (sc->dpi_acsm_map != NULL)
+		sfghash_delete(sc->dpi_acsm_map);
 
 }
 
