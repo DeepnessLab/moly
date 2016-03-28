@@ -1919,6 +1919,9 @@ typedef struct _Packet
 
     // Expected session created due to this packet.
     struct _ExpectNode* expectedSession;
+
+    /* DPI Service Results */
+    SF_LIST *dpi_service_match_reports;
 } Packet;
 
 #define PKT_ZERO_LEN offsetof(Packet, ip_options)

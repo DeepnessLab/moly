@@ -5144,6 +5144,7 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
  *
  */
 void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
+	SF_LIST *dpi_service_match_reports;
 	uint8_t version;
 	uint8_t flags;
 	uint16_t length; //  total length, in 4-byte words, of the NSH header, including optional variable TLVs.
@@ -5179,6 +5180,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     	 * Variable Length. When the base header specifies MD Type 2, NSH defines variable length
     	   only context headers. There may be zero or more of these headers as per the length field.
     	 */
+    	dpi_service_match_reports = sflist_new();
     	int varLenCtx = (length * 4) - nsh_len; // converting the length to bytes.
     	while (varLenCtx > 0) {
     		// We have an Optional Variable Length Context Headers to parse.
@@ -5217,11 +5219,20 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     				bytesLeft -= MATCH_REPORT_SIZE;
     			}
 
+    			if (sflist_add_tail(dpi_service_match_reports, report)) {
+    				 FatalError("Could not add Match report object to list: rid = %hu\n", rid);
+    			}
+
     			report = (MatchReport *)(pkt + nsh_len + bytesRead);
     		}
 
     		nsh_len += mdLenBytes;
     		varLenCtx -= mdLenBytes;
+    	}
+
+    	if (sflist_count(dpi_service_match_reports) > 0) {
+    		// DPI match reports where found. Set them on the packet for usage in the content rule match phase.
+    		p->dpi_service_match_reports = dpi_service_match_reports;
     	}
     }
 

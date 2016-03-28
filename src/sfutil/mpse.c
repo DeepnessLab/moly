@@ -594,6 +594,11 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		int (*Match)(void * id, void *tree, int index, void *data, void *neg_list),
 		void * data, int* current_state )
 {
+	if (!p->dpi_service_match_reports) {
+		// No match reports where sent with the packet.
+		return 0;
+	}
+
 	MPSE *mpse = (MPSE*)pvoid;
 	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
 	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
@@ -606,20 +611,12 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	int j, count;
 	unsigned int pos;
 
-	/* Create a map from pattern to MatchReport/MatchReportRange which will be used as a lookup.
-	 * This is a stub the actual map will be created from the NSH results while parsing the packet.
-	 * Then the results will be available on the packet struct.*/
-
-	/* Simulate actual match data structure. */
-	MatchReport matchReport = { .rid = 1, .is_range = false, .position = 0};
-	MatchReport matchReport2 = { .rid = 4, .is_range = false, .position = 15};
-	MatchReportRange matchReportRange = {.rid = 3, .is_range = true, .position = 15, .length = 3};
-
-	int i = 0;
-	MatchReport* matchReportArr[2] = {&matchReport, &matchReport2};
-	for (i = 0; i < 2; i++) {
-		MatchReport *report = matchReportArr[i];
-		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &report->rid);
+	for (report = (MatchReport *)sflist_first(p->dpi_service_match_reports);
+		 report;
+		 report = (MatchReport *)sflist_next(p->dpi_service_match_reports))
+	{
+		uint16_t rid = ntohs(report->rid);
+		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
 		if (mlist != NULL) {
 			// The pattern exists in the NSH results.
 			if (report->is_range) {
