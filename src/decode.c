@@ -5172,7 +5172,10 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 
     nsh_len = sizeof(NSHBaseHdr);
     if (md_type == 1) {
-    	// Fixed Length.  NSH defines four 4-byte mandatory context headers.
+    	/**
+    	 * Fixed Length. When the base header specifies MD Type 2 NSH defines four 4-byte mandatory
+    	 * context headers. We do not use/support this type in the DPI Service implementation.
+    	 */
     	ctxHdr = (NSHContextHdr *) (pkt + nsh_len);
     	nsh_len += sizeof(NSHContextHdr);
     } else if (md_type == 2) {
@@ -5193,7 +5196,12 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		nsh_len += sizeof(NSHVarLenMDHdr);
     		varLenCtx -= sizeof(NSHVarLenMDHdr);
 
-    		// Decode the variable metadata.
+    		/**
+    		 * Decode the variable metadata.
+    		 * In our implementation we assume that all NSH Variable Length Context Headers are
+    		 * of the form of the DPI service MatchReport/MatchReportRange structures.
+    		 * Other context header formats are not supported.
+    		 */
     		int mdLenBytes = mdLen * 4; // converting the metadata length to number of bytes.
     		const uint8_t *var_md = pkt + nsh_len;
 
@@ -5203,7 +5211,10 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		int bytesRead = 0;
     		int bytesLeft = mdLenBytes;
     		while (bytesLeft >= MATCH_REPORT_SIZE) {
-    			// We have bytes to read and there are enough bytes for a match report (this may not be the case not due to zero padding).
+    			/**
+    			 * We have bytes to read and there are enough bytes for a match report
+    			 * (this may not be the case not due to zero padding).
+    			 */
     			uint16_t rid = ntohs(report->rid);
     			uint8_t is_range = report->is_range;
     			uint16_t pos = report->position;

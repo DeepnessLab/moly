@@ -590,6 +590,9 @@ void mpseInitSummary(void)
     KTrieInitMemUsed();
 }
 
+/**
+ * The function performs efficient DPI on the packet's content by leveraging information (match reports) from the DPI Service.
+ */
 int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		int (*Match)(void * id, void *tree, int index, void *data, void *neg_list),
 		void * data, int* current_state )
@@ -601,26 +604,28 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 
 	MPSE *mpse = (MPSE*)pvoid;
 	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
-	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
 	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
-	acstate_t state;
 
+	uint16_t rid;
 	MatchReport *report;
 	MatchReportRange *rangeReport;
 	int j, count;
 	unsigned int pos;
 
+	/* Go over the DPI service content match results and check if they match existing content rules.
+	 * Matching rules are send for advanced evaluation via the Match function.
+	 * */
 	for (report = (MatchReport *)sflist_first(p->dpi_service_match_reports);
 		 report;
 		 report = (MatchReport *)sflist_next(p->dpi_service_match_reports))
 	{
-		uint16_t rid = ntohs(report->rid);
+		rid = ntohs(report->rid);
 		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
 		if (mlist != NULL) {
-			// The pattern exists in the NSH results.
+			// The report/pattern has a matching content rule.
 			if (report->is_range) {
-				// The repost is of type range need to check for all the occurrences of the match.
+				// The repost is of type range. Hence, we need to check for all the occurrences of the match.
 				rangeReport = (MatchReportRange*)report;
 				for (j = 0; j < rangeReport->length; j++) {
 					pos = rangeReport->position + j;
