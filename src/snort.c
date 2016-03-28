@@ -560,6 +560,7 @@ const char * RULE_ID = "rid";
 /* DPI Service functions*******************************************************/
 static void RegisterContentRulesToDPIController(SnortConfig *sc);
 static SFGHASH * CreateAcsmListMap(void);
+static void AcsmListMapFree(void *ruleToMlist);
 static SFGHASH * CreateRuleToMlistMap(void);
 static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist);
 static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
@@ -5399,7 +5400,15 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 }
 
 static SFGHASH * CreateAcsmListMap(void) {
-    return sfghash_new(20, sizeof(ACSM_STRUCT2 *), 1, NULL);
+    return sfghash_new(20, sizeof(ACSM_STRUCT2 *), 1, AcsmListMapFree);
+}
+
+/**
+ * The function frees the user data (the data of each entry is the RuleToMlistMap)
+ * of the AcsmListMap which is also a hashmap of type SFGHASH *.
+ */
+static void AcsmListMapFree(void *ruleToMlist) {
+	sfghash_delete(ruleToMlist);
 }
 
 static SFGHASH * CreateRuleToMlistMap(void) {
