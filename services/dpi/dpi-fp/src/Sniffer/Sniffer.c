@@ -22,6 +22,8 @@
 #include "../StateMachine/TableStateMachineGenerator.h"
 #include "../Common/Types.h"
 #include "../Common/PacketBuffer.h"
+#include "../Common/NSH/Types.h"
+#include "../Common/NSH/Constants.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 1024
@@ -227,7 +229,7 @@ static inline void parse_packet(ProcessorData *processor, const unsigned char *p
     }
 }
 
-static inline int find_results(ProcessorData *processor, MatchReport *reports, int num_reports, ResultPacketReport *rules) {
+static inline int find_results(ProcessorData *processor, ContentMatchReport *reports, int num_reports, ResultPacketReport *rules) {
 	int i,j, r, num_rules;
 	MatchRule *state_rules;
 
@@ -245,7 +247,76 @@ static inline int find_results(ProcessorData *processor, MatchReport *reports, i
 }
 
 static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
-		Packet *in_packet, MatchReport *reports, int num_reports, unsigned char *result) {
+		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
+	int hdrs_len, data_len;
+	ResultPacketReport rules[MAX_REPORTED_RULES];
+	int r;
+	ResultsPacketHeader *reshdr;
+
+    struct ip *iphdr = (struct ip*)result;
+    struct udphdr *udphdr;
+
+	if (num_reports == 0) {
+		return 0;
+	}
+
+	// Find results
+	r = find_results(processor, reports, num_reports, rules);
+
+	// TODO: Break into several packets
+	if (r > MAX_REPORTS_PER_PACKET) {
+		r = MAX_REPORTS_PER_PACKET;
+	}
+
+	// Compute data length
+	data_len = 12 + (r * 4); // 12 = result packet header (e.g. magic num).
+
+	// Copy L2 headers
+	hdrs_len = pkthdr->len - in_packet->ip_len;
+	memcpy(result, packetptr, hdrs_len);
+
+	// Build IP header
+	iphdr = (struct ip*)&(result[hdrs_len]);
+	iphdr->ip_v = 4;
+	iphdr->ip_hl = 5;
+	iphdr->ip_tos = in_packet->ip_tos;
+	iphdr->ip_len = htons(28 + data_len);
+	iphdr->ip_id = 0;
+	iphdr->ip_off = 0;
+	iphdr->ip_ttl = 64;
+	iphdr->ip_p = IPPROTO_UDP;
+	iphdr->ip_sum = 0;
+	iphdr->ip_src.s_addr = in_packet->ip_src;
+	iphdr->ip_dst.s_addr = in_packet->ip_dst;
+
+	// Build UDP header
+	udphdr = (struct udphdr*)&(result[hdrs_len + 20]);
+#ifdef __APPLE__
+	udphdr->uh_dport = in_packet->transport.tp_dst;
+	udphdr->uh_sport = in_packet->transport.tp_src;
+	udphdr->uh_sum = 0;
+	udphdr->uh_ulen = 8 + data_len;
+#elif __linux__
+	udphdr->dest = in_packet->transport.tp_dst;
+	udphdr->source = in_packet->transport.tp_src;
+	udphdr->check = 0;
+	udphdr->len = htons(8 + data_len);
+#endif
+	// Build results header
+	reshdr = (ResultsPacketHeader*)&(result[hdrs_len + 28]);
+	reshdr->magicnum = htons(MAGIC_NUM);
+	reshdr->numReports = htons(r);
+	reshdr->flowOffset = 0;
+	reshdr->seqNum = htonl(in_packet->seqnum);
+
+	// Write reports to packet
+	memcpy(&(result[hdrs_len + 40]), rules, sizeof(ResultPacketReport) * r);
+
+	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
+}
+
+static inline int build_nsh_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
+		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
 	int hdrs_len, data_len;
 	ResultPacketReport rules[MAX_REPORTED_RULES];
 	int r;
@@ -339,7 +410,7 @@ static inline void free_buffered_packet(InPacket *pkt) {
 	free(pkt);
 }
 
-static inline int count_results_for_noreport_mode(ProcessorData *processor, MatchReport *reports, int num_reports) {
+static inline int count_results_for_noreport_mode(ProcessorData *processor, ContentMatchReport *reports, int num_reports) {
 	int r;
 	ResultPacketReport rules[MAX_REPORTED_RULES];
 
@@ -356,7 +427,7 @@ void *worker_start(void *param) {
 	int res, r;
 	Packet *packet;
 	unsigned char *ptr;
-	MatchReport reports[MAX_REPORTS];
+	ContentMatchReport reports[MAX_REPORTS];
 	unsigned char data[MAX_PACKET_SIZE];
 	int size, id;
 
