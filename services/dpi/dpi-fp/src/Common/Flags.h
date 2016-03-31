@@ -60,6 +60,6 @@
 
 //#define PCRE
 
-#define MIN_PATTERN_LENGTH 8
+#define MIN_PATTERN_LENGTH 3
 
 #endif /* FLAGS_H_ */
