@@ -267,7 +267,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 	}
 
 	// Compute data length
-	data_len = 12 + (r * 4);
+	data_len = 12 + (r * 4); // 12 = result packet header (e.g. magic num).
 
 	// Copy L2 headers
 	hdrs_len = pkthdr->len - in_packet->ip_len;
@@ -368,8 +368,7 @@ void *worker_start(void *param) {
 
 	pkt = NULL;
 
-	while (pkt || !processor->terminated) {
-		pkt = packet_buffer_dequeue(queue);
+	while ((pkt = packet_buffer_dequeue(queue)) || !processor->terminated) {
 		if (!pkt) {
 			nanosleep(&_100_nanos, NULL);
 			continue;
