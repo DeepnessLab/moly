@@ -24,6 +24,8 @@
 #include "../Common/PacketBuffer.h"
 #include "../Common/NSH/Types.h"
 #include "../Common/NSH/Constants.h"
+#include "MatchReport.h"
+#include "MatchReportRange.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 1024
@@ -32,6 +34,8 @@
 #define MAGIC_NUM 0xDEE4
 #define MAX_THREADS 8
 #define MAX_REPORTS_PER_PACKET 350
+
+#define USE_NSH 1
 
 #define USAGE "Usage: %s (in=<iface>|infile=<file>) (out=<iface>|outfile=<file>) rules=<file> [max=<#>] [workers=<#>] [noreport] [batch]\n\tin=<iface>\tSet input capture interface\n\tout=<iface>\tSet output interface\n\tinfile=<file>\tSet input pcap file (cannot use with 'in')\n\toutfile=<file>\tSet output pcap file (cannot use with 'out', not implemented yet)\n\trules=<file>\tSet rules file\n\tmax=<#>\t\tMaximal number of rules to use from file\n\tworkers=<#>\tSet number of workers (default: 1)\n\tnoreport\tDo not send report packets. Handle report internally.\n\tbatch\t\tReport results in batch mode\n\nThis tool may require root privileges.\n"
 
@@ -43,6 +47,7 @@ static struct timespec _100_nanos = {0, 100};
 struct st_processor_data;
 
 void *worker_start(void *);
+static inline int roundup(int x);
 
 typedef struct {
 	int id;
@@ -246,6 +251,24 @@ static inline int find_results(ProcessorData *processor, ContentMatchReport *rep
 	return r;
 }
 
+static inline int find_detection_results(ProcessorData *processor, ContentMatchReport *reports, int num_reports, MatchReport *match_reports) {
+	int i,j, r, num_rules;
+	MatchRule *state_rules;
+
+	r = 0;
+	for (i = 0; i < num_reports; i++) {
+		state_rules = processor->machine->matchRules[reports[i].state];
+		num_rules = processor->machine->numRules[reports[i].state];
+		for (j = 0; j < num_rules; j++) {
+			match_reports[r].rid = state_rules[j].rid;
+			match_reports[r].position = reports[i].position - state_rules[j].len;
+			match_reports[r].is_range = 0;
+			r++;
+		}
+	}
+	return r;
+}
+
 static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
 		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
 	int hdrs_len, data_len;
@@ -317,10 +340,12 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 
 static inline int build_nsh_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
 		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
-	int hdrs_len, data_len;
-	ResultPacketReport rules[MAX_REPORTED_RULES];
-	int r;
-	ResultsPacketHeader *reshdr;
+	int hdrs_len, NSH_CONST_LEN, nsh_var_len, nsh_var_len_round, data_len;
+	MatchReport match_reports[MAX_REPORTED_RULES];
+	int num_match_reports;
+	VxLANHdr *vxLanHdr;
+	NSHBaseHdr *nshBaseHdr;
+	NSHVarLenMDHdr *varLenMd;
 
     struct ip *iphdr = (struct ip*)result;
     struct udphdr *udphdr;
@@ -330,15 +355,17 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	}
 
 	// Find results
-	r = find_results(processor, reports, num_reports, rules);
-
-	// TODO: Break into several packets
-	if (r > MAX_REPORTS_PER_PACKET) {
-		r = MAX_REPORTS_PER_PACKET;
+	num_match_reports = find_detection_results(processor, reports, num_reports, match_reports);
+	if (num_match_reports > MAX_REPORTS_PER_PACKET) {
+		num_match_reports = MAX_REPORTS_PER_PACKET;
 	}
 
 	// Compute data length
-	data_len = 12 + (r * 4); // 12 = result packet header (e.g. magic num).
+	NSH_CONST_LEN = VXLAN_HEADER_SIZE + sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr);
+	nsh_var_len = (num_match_reports * MATCH_REPORT_SIZE);
+	nsh_var_len_round = roundup(nsh_var_len); // Need to write the length in 4-byte words, so round up if needed.
+	data_len = NSH_CONST_LEN + nsh_var_len_round + in_packet->ip_len;
+
 
 	// Copy L2 headers
 	hdrs_len = pkthdr->len - in_packet->ip_len;
@@ -349,7 +376,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	iphdr->ip_v = 4;
 	iphdr->ip_hl = 5;
 	iphdr->ip_tos = in_packet->ip_tos;
-	iphdr->ip_len = htons(28 + data_len);
+	iphdr->ip_len = htons(IP_HEADER_SIZE + UDP_HEADER_SIZE + data_len);
 	iphdr->ip_id = 0;
 	iphdr->ip_off = 0;
 	iphdr->ip_ttl = 64;
@@ -359,29 +386,66 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	iphdr->ip_dst.s_addr = in_packet->ip_dst;
 
 	// Build UDP header
-	udphdr = (struct udphdr*)&(result[hdrs_len + 20]);
+	udphdr = (struct udphdr*)&(result[hdrs_len + IP_HEADER_SIZE]);
 #ifdef __APPLE__
-	udphdr->uh_dport = in_packet->transport.tp_dst;
+	udphdr->uh_dport = VXLAN_GPE_UDP_PORT;
 	udphdr->uh_sport = in_packet->transport.tp_src;
 	udphdr->uh_sum = 0;
-	udphdr->uh_ulen = 8 + data_len;
+	udphdr->uh_ulen = UDP_HEADER_SIZE + data_len;
 #elif __linux__
-	udphdr->dest = in_packet->transport.tp_dst;
+	udphdr->dest = htons(VXLAN_GPE_UDP_PORT);
 	udphdr->source = in_packet->transport.tp_src;
 	udphdr->check = 0;
-	udphdr->len = htons(8 + data_len);
+	udphdr->len = htons(UDP_HEADER_SIZE + data_len);
 #endif
-	// Build results header
-	reshdr = (ResultsPacketHeader*)&(result[hdrs_len + 28]);
-	reshdr->magicnum = htons(MAGIC_NUM);
-	reshdr->numReports = htons(r);
-	reshdr->flowOffset = 0;
-	reshdr->seqNum = htonl(in_packet->seqnum);
+	// Build VxLAN header.
+	vxLanHdr = (VxLANHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE]);
+	vxLanHdr->flag = 0;
+	vxLanHdr->reserved = 0;
+	vxLanHdr->np = VXLAN_NEXT_PROTOCOL_NSH;
+	vxLanHdr->vni_reserved2 = (0x1234 << 8) + 0;
 
-	// Write reports to packet
-	memcpy(&(result[hdrs_len + 40]), rules, sizeof(ResultPacketReport) * r);
+	// Build NSH base headers.
+	nshBaseHdr = (NSHBaseHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + VXLAN_HEADER_SIZE]);
+	uint8_t version = 0;
+	uint8_t flags = 0;
+	// Need to write the length in 4-byte words. Perform conversion.
+	uint8_t length = (NSH_BASE_HEADER_LEN + NSH_SERVICE_PATH_HEADER_LEN + NSH_VAR_LEN_CTX_BASE_HEADR_LEN + nsh_var_len_round) / 4;
+	nshBaseHdr->ver_flag_length = (version << 14) + (flags << 6) + length;
 
-	return hdrs_len + 40 + (r * sizeof(ResultPacketReport));
+	nshBaseHdr->mtype = 2;
+	nshBaseHdr->np = NSH_NEXT_PROTOCOL_IPv4;
+
+	uint32_t service_path = 23;
+	uint8_t service_index = 45;
+	nshBaseHdr->srvpid_srvidx = (service_path << 8) + service_index;
+
+	// Build NSH Variable Length Context Header.
+	varLenMd = (NSHVarLenMDHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + VXLAN_HEADER_SIZE + sizeof(NSHBaseHdr)]);
+	varLenMd->tlv_class = 3;
+	varLenMd->type = 1;
+	uint8_t varFlags = 0;
+	uint8_t varLength =  nsh_var_len_round / 4; // Need to write the length in 4-byte words
+	varLenMd->rrr_len = (varFlags << 5) + varLength;
+
+	// Write the variable metadata to the packet.
+	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN]), match_reports, nsh_var_len);
+
+	// TODO think if need to fill with zero padding.
+
+	// Write the original IP packet as the NSH inner packet.
+	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + nsh_var_len_round]), pkthdr + hdrs_len, in_packet->ip_len);
+
+	return hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + data_len;
+}
+
+static inline int roundup(int x) {
+	int round = x;
+	if (x % 4 != 0) {
+		round = x + 4 - x % 4;
+	}
+
+	return round;
 }
 
 static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *pkthdr, const unsigned char *pktptr, unsigned int seqnum_key) {
@@ -469,6 +533,12 @@ void *worker_start(void *param) {
 			if (!res) {
 				// No matches - send as is
 				pcap_sendpacket(processor->pcap_out, pkt->pktdata, pkt->pkthdr.len);
+			} else if (USE_NSH) {
+				size = build_nsh_result_packet(processor, &(pkt->pkthdr), pkt->pktdata, packet, reports, res, data);
+				if (size) {
+					// Send results packet
+					pcap_sendpacket(processor->pcap_out, data, size);
+				}
 			} else {
 				// Matches exist - change ECN to 11b and send
 				ptr = (unsigned char *)(pkt->pktdata);
