@@ -607,11 +607,10 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
 
-	uint16_t rid;
+	uint16_t rid, position, pos;
 	MatchReport *report;
 	MatchReportRange *rangeReport;
 	int j, count;
-	unsigned int pos;
 
 	/* Go over the DPI service content match results and check if they match existing content rules.
 	 * Matching rules are send for advanced evaluation via the Match function.
@@ -621,6 +620,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		 report = (MatchReport *)sflist_next(p->dpi_service_match_reports))
 	{
 		rid = ntohs(report->rid);
+		position = ntohs(rangeReport->position);
 		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
 		if (mlist != NULL) {
 			// The report/pattern has a matching content rule.
@@ -628,7 +628,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 				// The repost is of type range. Hence, we need to check for all the occurrences of the match.
 				rangeReport = (MatchReportRange*)report;
 				for (j = 0; j < rangeReport->length; j++) {
-					pos = rangeReport->position + j;
+					pos = position + j;
 					count++;
 					if (Match (mlist->udata, mlist->rule_option_tree, pos, data, mlist->neg_list) > 0) {
 						return count;
@@ -637,7 +637,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 			} else {
 				// The repost is for a single occurrence. Check for a match.
 				count++;
-				if (Match (mlist->udata, mlist->rule_option_tree, report->position, data, mlist->neg_list) > 0) {
+				if (Match (mlist->udata, mlist->rule_option_tree, position, data, mlist->neg_list) > 0) {
 					return count;
 				}
 			}

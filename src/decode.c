@@ -5164,7 +5164,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     baseHdr = (NSHBaseHdr *) pkt;
     version = baseHdr->ver_flag_length >> 14;
     flags = baseHdr->ver_flag_length >> 6;
-    length = ntohs(baseHdr->ver_flag_length >> 0);
+    length = baseHdr->ver_flag_length >> 0;
     md_type = baseHdr->mtype;
     next_protocol = baseHdr->np;
     service_path_id = baseHdr->srvpid_srvidx >> 8;
@@ -5188,7 +5188,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     	while (varLenCtx > 0) {
     		// We have an Optional Variable Length Context Headers to parse.
     		varLenMd = (NSHVarLenMDHdr *) (pkt + nsh_len);
-    		uint16_t tlv_class = ntohs(varLenMd->tlv_class);
+    		uint16_t tlv_class = varLenMd->tlv_class;
     		uint8_t type = varLenMd->type;
     		uint8_t flags = varLenMd->rrr_len >> 5;
     		uint8_t mdLen = varLenMd->rrr_len & 0x1F;
@@ -5210,6 +5210,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		report = (MatchReport *) var_md;
     		int bytesRead = 0;
     		int bytesLeft = mdLenBytes;
+    		int MATCH_REPORT_SIZE = sizeof(MatchReport);
     		while (bytesLeft >= MATCH_REPORT_SIZE) {
     			/**
     			 * We have bytes to read and there are enough bytes for a match report
@@ -5217,7 +5218,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     			 */
     			uint16_t rid = ntohs(report->rid);
     			uint8_t is_range = report->is_range;
-    			uint16_t pos = report->position;
+    			uint16_t pos = ntohs(report->position);
 
     			if (is_range) {
     				rangeReport = (MatchReportRange *)report;

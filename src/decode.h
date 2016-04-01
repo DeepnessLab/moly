@@ -204,7 +204,6 @@ struct _SnortConfig;
 #define NSH_NEXT_PROTOCOL_ETHERNET 3
 #define VXLAN_LEN_HEADER_SIZE 8
 
-#define MATCH_REPORT_SIZE 5
 #define MATCH_REPORT_RANGE_SIZE 7
 
 /* ESP constants */
