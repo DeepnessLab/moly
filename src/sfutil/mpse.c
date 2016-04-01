@@ -620,7 +620,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		 report = (MatchReport *)sflist_next(p->dpi_service_match_reports))
 	{
 		rid = ntohs(report->rid);
-		position = ntohs(rangeReport->position);
+		position = ntohs(report->position);
 		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
 		if (mlist != NULL) {
 			// The report/pattern has a matching content rule.
