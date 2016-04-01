@@ -434,7 +434,11 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	// Write the variable metadata to the packet.
 	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN]), match_reports, nsh_var_len);
 
-	// TODO think if need to fill with zero padding.
+	if (nsh_var_len < nsh_var_len_round) {
+		// In case the we performed a round up. Fill the additional bytes with zero (AKAK zero padding).
+		int zero_bytes = nsh_var_len_round - nsh_var_len;
+		memset(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + nsh_var_len]), 0, zero_bytes);
+	}
 
 	// Write the original IP packet as the NSH inner packet.
 	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + nsh_var_len_round]), packetptr + hdrs_len, in_packet->ip_len);
