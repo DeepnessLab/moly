@@ -26,6 +26,7 @@
 #include "../Common/NSH/Constants.h"
 #include "MatchReport.h"
 #include "MatchReportRange.h"
+#include "checksum.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 1024
@@ -384,6 +385,8 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	iphdr->ip_sum = 0;
 	iphdr->ip_src.s_addr = in_packet->ip_src;
 	iphdr->ip_dst.s_addr = in_packet->ip_dst;
+	iphdr->ip_sum = ip_checksum(iphdr, IP_HEADER_SIZE); // Calculate the IP checksum.
+	
 
 	// Build UDP header
 	udphdr = (struct udphdr*)&(result[hdrs_len + IP_HEADER_SIZE]);
