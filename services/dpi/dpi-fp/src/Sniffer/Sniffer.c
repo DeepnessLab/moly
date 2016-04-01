@@ -260,8 +260,8 @@ static inline int find_detection_results(ProcessorData *processor, ContentMatchR
 		state_rules = processor->machine->matchRules[reports[i].state];
 		num_rules = processor->machine->numRules[reports[i].state];
 		for (j = 0; j < num_rules; j++) {
-			match_reports[r].rid = state_rules[j].rid;
-			match_reports[r].position = reports[i].position - state_rules[j].len;
+			match_reports[r].rid = htons(state_rules[j].rid);
+			match_reports[r].position = htons(reports[i].position - state_rules[j].len);
 			match_reports[r].is_range = 0;
 			r++;
 		}
@@ -362,7 +362,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 
 	// Compute data length
 	NSH_CONST_LEN = VXLAN_HEADER_SIZE + sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr);
-	nsh_var_len = (num_match_reports * MATCH_REPORT_SIZE);
+	nsh_var_len = (num_match_reports * sizeof(MatchReport));
 	nsh_var_len_round = roundup(nsh_var_len); // Need to write the length in 4-byte words, so round up if needed.
 	data_len = NSH_CONST_LEN + nsh_var_len_round + in_packet->ip_len;
 
@@ -410,7 +410,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	uint8_t version = 0;
 	uint8_t flags = 0;
 	// Need to write the length in 4-byte words. Perform conversion.
-	uint8_t length = (NSH_BASE_HEADER_LEN + NSH_SERVICE_PATH_HEADER_LEN + NSH_VAR_LEN_CTX_BASE_HEADR_LEN + nsh_var_len_round) / 4;
+	uint8_t length = (sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr) + nsh_var_len_round) / 4;
 	nshBaseHdr->ver_flag_length = (version << 14) + (flags << 6) + length;
 
 	nshBaseHdr->mtype = 2;
@@ -434,7 +434,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	// TODO think if need to fill with zero padding.
 
 	// Write the original IP packet as the NSH inner packet.
-	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + nsh_var_len_round]), pkthdr + hdrs_len, in_packet->ip_len);
+	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + nsh_var_len_round]), packetptr + hdrs_len, in_packet->ip_len);
 
 	return hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + data_len;
 }
