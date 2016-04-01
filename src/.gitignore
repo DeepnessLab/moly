@@ -6,3 +6,4 @@
 # C generated files
 *.o
 *.a
+/snort
