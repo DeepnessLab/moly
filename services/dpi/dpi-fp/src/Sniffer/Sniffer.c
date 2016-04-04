@@ -362,7 +362,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	}
 
 	// Compute data length
-	NSH_CONST_LEN = VXLAN_HEADER_SIZE + sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr);
+	NSH_CONST_LEN = sizeof(VxLANHdr) + sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr);
 	nsh_var_len = (num_match_reports * sizeof(MatchReport));
 	nsh_var_len_round = roundup(nsh_var_len); // Need to write the length in 4-byte words, so round up if needed.
 	data_len = NSH_CONST_LEN + nsh_var_len_round + in_packet->ip_len;
@@ -409,7 +409,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	vxLanHdr->vni_reserved2 = (0x1234 << 8) + 0;
 
 	// Build NSH base headers.
-	nshBaseHdr = (NSHBaseHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + VXLAN_HEADER_SIZE]);
+	nshBaseHdr = (NSHBaseHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + sizeof(VxLANHdr)]);
 	uint8_t version = 0;
 	uint8_t flags = 0;
 	// Need to write the length in 4-byte words. Perform conversion.
@@ -424,7 +424,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	nshBaseHdr->srvpid_srvidx = (service_path << 8) + service_index;
 
 	// Build NSH Variable Length Context Header.
-	varLenMd = (NSHVarLenMDHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + VXLAN_HEADER_SIZE + sizeof(NSHBaseHdr)]);
+	varLenMd = (NSHVarLenMDHdr *)&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + sizeof(VxLANHdr) + sizeof(NSHBaseHdr)]);
 	varLenMd->tlv_class = 3;
 	varLenMd->type = 1;
 	uint8_t varFlags = 0;
