@@ -203,8 +203,6 @@ struct _SnortConfig;
 #define NSH_NEXT_PROTOCOL_IPv6 2
 #define NSH_NEXT_PROTOCOL_ETHERNET 3
 
-#define MATCH_REPORT_RANGE_SIZE 7
-
 /* ESP constants */
 #define ESP_HEADER_LEN 8
 #define ESP_AUTH_DATA_LEN 12

@@ -5210,8 +5210,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     		report = (MatchReport *) var_md;
     		int bytesRead = 0;
     		int bytesLeft = mdLenBytes;
-    		int MATCH_REPORT_SIZE = sizeof(MatchReport);
-    		while (bytesLeft >= MATCH_REPORT_SIZE) {
+    		while (bytesLeft >= sizeof(MatchReport)) {
     			/**
     			 * We have bytes to read and there are enough bytes for a match report
     			 * (this may not be the case not due to zero padding).
@@ -5222,13 +5221,13 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 
     			if (is_range) {
     				rangeReport = (MatchReportRange *)report;
-    				uint16_t length = rangeReport->length;
+    				uint16_t length = ntohs(rangeReport->length);
 
-    				bytesRead += MATCH_REPORT_RANGE_SIZE;
-    				bytesLeft -= MATCH_REPORT_RANGE_SIZE;
+    				bytesRead += sizeof(MatchReportRange);
+    				bytesLeft -= sizeof(MatchReportRange);
     			} else {
-    				bytesRead += MATCH_REPORT_SIZE;
-    				bytesLeft -= MATCH_REPORT_SIZE;
+    				bytesRead += sizeof(MatchReport);
+    				bytesLeft -= sizeof(MatchReport);
     			}
 
     			if (sflist_add_tail(dpi_service_match_reports, report)) {

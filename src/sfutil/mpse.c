@@ -607,7 +607,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
 
-	uint16_t rid, position, pos;
+	uint16_t rid, position, length, pos;
 	MatchReport *report;
 	MatchReportRange *rangeReport;
 	int j, count;
@@ -627,7 +627,8 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 			if (report->is_range) {
 				// The repost is of type range. Hence, we need to check for all the occurrences of the match.
 				rangeReport = (MatchReportRange*)report;
-				for (j = 0; j < rangeReport->length; j++) {
+				length = ntohs(rangeReport->length);
+				for (j = 0; j < length; j++) {
 					pos = position + j;
 					count++;
 					if (Match (mlist->udata, mlist->rule_option_tree, pos, data, mlist->neg_list) > 0) {
