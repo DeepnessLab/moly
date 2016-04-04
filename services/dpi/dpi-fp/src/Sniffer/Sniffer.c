@@ -37,6 +37,8 @@
 #define MAX_REPORTS_PER_PACKET 350
 
 #define USE_NSH 1
+#define MATCH_REPORT_INDEX 0
+#define MATCH_REPORT_RANGE_INDEX 1
 
 #define USAGE "Usage: %s (in=<iface>|infile=<file>) (out=<iface>|outfile=<file>) rules=<file> [max=<#>] [workers=<#>] [noreport] [batch]\n\tin=<iface>\tSet input capture interface\n\tout=<iface>\tSet output interface\n\tinfile=<file>\tSet input pcap file (cannot use with 'in')\n\toutfile=<file>\tSet output pcap file (cannot use with 'out', not implemented yet)\n\trules=<file>\tSet rules file\n\tmax=<#>\t\tMaximal number of rules to use from file\n\tworkers=<#>\tSet number of workers (default: 1)\n\tnoreport\tDo not send report packets. Handle report internally.\n\tbatch\t\tReport results in batch mode\n\nThis tool may require root privileges.\n"
 
@@ -49,6 +51,9 @@ struct st_processor_data;
 
 void *worker_start(void *);
 static inline int roundup(int x);
+static inline int remove_impostor_match_reports(MatchReport *match_reports, int num_mr, int mr_range_len);
+static inline void add_match_report_range(uint16_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range);
+static inline void init_match_report_range(uint16_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range);
 
 typedef struct {
 	int id;
@@ -252,22 +257,86 @@ static inline int find_results(ProcessorData *processor, ContentMatchReport *rep
 	return r;
 }
 
-static inline int find_detection_results(ProcessorData *processor, ContentMatchReport *reports, int num_reports, MatchReport *match_reports) {
-	int i,j, r, num_rules;
+static inline int find_detection_results(ProcessorData *processor, ContentMatchReport *reports, int num_reports,
+		MatchReport *match_reports, MatchReportRange *match_reports_range, int *num_match_reports_by_type) {
+	int i,j, num_mr, num_mr_range, num_rules;
+	MatchReportRange tmp_mr_range;
 	MatchRule *state_rules;
 
-	r = 0;
+	num_mr = 0;
 	for (i = 0; i < num_reports; i++) {
 		state_rules = processor->machine->matchRules[reports[i].state];
 		num_rules = processor->machine->numRules[reports[i].state];
 		for (j = 0; j < num_rules; j++) {
-			match_reports[r].rid = htons(state_rules[j].rid);
-			match_reports[r].position = htons(reports[i].position - state_rules[j].len);
-			match_reports[r].is_range = 0;
-			r++;
+			// Enter a MatchReport to the result array, we might override it later in case this is actually part of a MatchReportRange.
+			match_reports[num_mr].rid = htons(state_rules[j].rid);
+			match_reports[num_mr].position = htons(reports[i].position - state_rules[j].len);
+			match_reports[num_mr].is_range = 0;
+			num_mr++;
+
+			if (tmp_mr_range.rid == state_rules[j].rid) {
+				// We have a potential for a range match.
+				if ((tmp_mr_range.position + tmp_mr_range.length) == (reports[i].position - state_rules[j].len)) {
+					// We have encountered the same rule again and the position is sequential to the previous position.
+					tmp_mr_range.length++;
+				} else {
+					// Same rule ID, but not part of the range. The current range has ended (in any even exited).
+					if (tmp_mr_range.length > 1) {
+						// We have a range which just ended. Add it to the MatchReportRange result array.
+						add_match_report_range(tmp_mr_range.rid, tmp_mr_range.position, tmp_mr_range.length, match_reports_range, num_mr_range);
+						num_mr_range++;
+
+						// Remove the MatchReport entries that were actually part of a range and reset the index.
+						num_mr = remove_impostor_match_reports(match_reports, num_mr, tmp_mr_range.length);
+					}
+
+					// Reset the temporary MatchReportRange with the initial range rule suspect details.
+					init_match_report_range(state_rules[j].rid, reports[i].position, state_rules[j].len, &tmp_mr_range);
+				}
+			} else if (tmp_mr_range.length > 1) {
+				// We have a range which just ended. Add it to the MatchReportRange result array.
+				add_match_report_range(tmp_mr_range.rid, tmp_mr_range.position, tmp_mr_range.length, match_reports_range, num_mr_range);
+				num_mr_range++;
+
+				// Remove the MatchReport entries that were actually part of a range and reset the index.
+				num_mr = remove_impostor_match_reports(match_reports, num_mr, tmp_mr_range.length);
+
+				// Reset the temporary MatchReportRange with the initial range rule suspect details.
+				init_match_report_range(state_rules[j].rid, reports[i].position, state_rules[j].len, &tmp_mr_range);
+			} else {
+				// Reset the temporary MatchReportRange with the initial range rule suspect details.
+				init_match_report_range(state_rules[j].rid, reports[i].position, state_rules[j].len, &tmp_mr_range);
+			}
 		}
 	}
-	return r;
+
+	// set result counters.
+	num_match_reports_by_type[MATCH_REPORT_INDEX] = num_mr;
+	num_match_reports_by_type[MATCH_REPORT_RANGE_INDEX] = num_mr_range;
+	return num_mr + num_mr_range;
+}
+
+static inline int remove_impostor_match_reports(MatchReport *match_reports, int num_mr, int mr_range_len) {
+	int last_mr_inser_idx = num_mr - 1;
+	int mr_reset_idx = last_mr_inser_idx - mr_range_len;
+	match_reports[mr_reset_idx].rid = match_reports[last_mr_inser_idx].rid;
+	match_reports[mr_reset_idx].position = match_reports[last_mr_inser_idx].position;
+	match_reports[mr_reset_idx].is_range = 0;
+
+	return mr_reset_idx + 1;
+}
+
+static inline void add_match_report_range(uint16_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range) {
+	mr_range[num_mr_range].rid = htons(rid);
+	mr_range[num_mr_range].position = htons(position);
+	mr_range[num_mr_range].is_range = 1;
+	mr_range[num_mr_range].length = htons(length);
+}
+
+static inline void init_match_report_range(uint16_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range) {
+	mr_range->rid = rid;
+	mr_range->position = pos - len;
+	mr_range->length = 1;
 }
 
 static inline int build_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
@@ -343,7 +412,9 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
 	int hdrs_len, NSH_CONST_LEN, nsh_var_len, nsh_var_len_round, data_len;
 	MatchReport match_reports[MAX_REPORTED_RULES];
-	int num_match_reports;
+	MatchReportRange match_reports_range[MAX_REPORTED_RULES];
+	int num_match_reports_by_type[2] = {0, 0}; // Array for counting the number of match reports (idx = 0) and match report range (idx = 1).
+	int num_match_reports; // The total number of match reports (match reports + match report range).
 	VxLANHdr *vxLanHdr;
 	NSHBaseHdr *nshBaseHdr;
 	NSHVarLenMDHdr *varLenMd;
@@ -356,7 +427,7 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	}
 
 	// Find results
-	num_match_reports = find_detection_results(processor, reports, num_reports, match_reports);
+	num_match_reports = find_detection_results(processor, reports, num_reports, match_reports, match_reports_range, num_match_reports_by_type);
 	if (num_match_reports > MAX_REPORTS_PER_PACKET) {
 		num_match_reports = MAX_REPORTS_PER_PACKET;
 	}
