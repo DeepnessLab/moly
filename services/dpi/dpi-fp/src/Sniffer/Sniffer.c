@@ -410,7 +410,7 @@ static inline int build_result_packet(ProcessorData *processor, const struct pca
 
 static inline int build_nsh_result_packet(ProcessorData *processor, const struct pcap_pkthdr *pkthdr, const unsigned char *packetptr,
 		Packet *in_packet, ContentMatchReport *reports, int num_reports, unsigned char *result) {
-	int hdrs_len, NSH_CONST_LEN, nsh_var_len, nsh_var_len_round, data_len;
+	int hdrs_len, NSH_CONST_LEN, match_report_size, match_report_range_size, nsh_var_len, nsh_var_len_round, data_len;
 	MatchReport match_reports[MAX_REPORTED_RULES];
 	MatchReportRange match_reports_range[MAX_REPORTED_RULES];
 	int num_match_reports_by_type[2] = {0, 0}; // Array for counting the number of match reports (idx = 0) and match report range (idx = 1).
@@ -429,12 +429,22 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	// Find results
 	num_match_reports = find_detection_results(processor, reports, num_reports, match_reports, match_reports_range, num_match_reports_by_type);
 	if (num_match_reports > MAX_REPORTS_PER_PACKET) {
+		if (num_match_reports_by_type[MATCH_REPORT_INDEX] >= MAX_REPORTS_PER_PACKET) {
+			// No room for match report range.
+			num_match_reports_by_type[MATCH_REPORT_INDEX] = MAX_REPORTS_PER_PACKET;
+			num_match_reports_by_type[MATCH_REPORT_RANGE_INDEX] = 0;
+		} else {
+			num_match_reports_by_type[MATCH_REPORT_RANGE_INDEX] = MAX_REPORTS_PER_PACKET - num_match_reports_by_type[MATCH_REPORT_INDEX];
+		}
+
 		num_match_reports = MAX_REPORTS_PER_PACKET;
 	}
 
 	// Compute data length
 	NSH_CONST_LEN = sizeof(VxLANHdr) + sizeof(NSHBaseHdr) + sizeof(NSHVarLenMDHdr);
-	nsh_var_len = (num_match_reports * sizeof(MatchReport));
+	match_report_size = num_match_reports_by_type[MATCH_REPORT_INDEX] * sizeof(MatchReport);
+	match_report_range_size = num_match_reports_by_type[MATCH_REPORT_RANGE_INDEX] * sizeof(MatchReportRange);
+	nsh_var_len = match_report_size + match_report_range_size;
 	nsh_var_len_round = roundup(nsh_var_len); // Need to write the length in 4-byte words, so round up if needed.
 	data_len = NSH_CONST_LEN + nsh_var_len_round + in_packet->ip_len;
 
@@ -503,7 +513,8 @@ static inline int build_nsh_result_packet(ProcessorData *processor, const struct
 	varLenMd->rrr_len = (varFlags << 5) + varLength;
 
 	// Write the variable metadata to the packet.
-	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN]), match_reports, nsh_var_len);
+	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN]), match_reports, match_report_size);
+	memcpy(&(result[hdrs_len + IP_HEADER_SIZE + UDP_HEADER_SIZE + NSH_CONST_LEN + match_report_size]), match_reports_range, match_report_range_size);
 
 	if (nsh_var_len < nsh_var_len_round) {
 		// In case the we performed a round up. Fill the additional bytes with zero (AKAK zero padding).
