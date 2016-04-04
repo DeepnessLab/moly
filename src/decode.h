@@ -1661,6 +1661,9 @@ typedef struct _GTPHdr
 
 /* DPI Service****************************************************************************/
 
+#pragma pack(push)  /* push current alignment to stack */
+#pragma pack(1)     /* set alignment to 1 byte boundary */
+
 /* VXLAN Header:
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1743,6 +1746,8 @@ typedef struct _NSHVarLenMDHdr
     uint8_t rrr_len;	/* RRR: reserved bit are present for future use. Len: Length of the variable metadata, in 4-byte words. */
 
 } NSHVarLenMDHdr;
+
+#pragma pack(pop)   /* restore original alignment from stack */
 
 #define LAYER_MAX  32
 
