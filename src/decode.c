@@ -5128,7 +5128,7 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
 	vni = vxlanHdr->vni_reserved2 >> 8;
 	reserved2 = vxlanHdr->vni_reserved2 & 0x000000FF;
 
-	PushLayer(PROTO_NSH, p, pkt, sizeof(VxLANHdr));
+	PushLayer(PROTO_VXLAN, p, pkt, sizeof(VxLANHdr));
 
 	DecodeNSH(pkt + sizeof(VxLANHdr), len - sizeof(VxLANHdr), p);
 }
