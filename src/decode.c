@@ -5130,7 +5130,9 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
 
 	PushLayer(PROTO_VXLAN, p, pkt, sizeof(VxLANHdr));
 
-	DecodeNSH(pkt + sizeof(VxLANHdr), len - sizeof(VxLANHdr), p);
+	if (next_protocol == VXLAN_NEXT_PROTOCOL_NSH) {
+		DecodeNSH(pkt + sizeof(VxLANHdr), len - sizeof(VxLANHdr), p);
+	}
 }
 
 //--------------------------------------------------------------------

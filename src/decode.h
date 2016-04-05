@@ -199,6 +199,7 @@ struct _SnortConfig;
 
 /* NSH values */
 #define VXLAN_GPE_UDP_PORT 4790
+#define VXLAN_NEXT_PROTOCOL_NSH 0x04
 #define NSH_NEXT_PROTOCOL_IPv4 1
 #define NSH_NEXT_PROTOCOL_IPv6 2
 #define NSH_NEXT_PROTOCOL_ETHERNET 3
