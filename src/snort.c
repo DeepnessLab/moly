@@ -174,6 +174,8 @@
 #include "cJSON.h"
 #include "mpse.h"
 #include "acsmx2.h"
+#include "pcrm.h"
+#include "limits.h"
 
 /* Macros *********************************************************************/
 #ifndef DLT_LANE8023
@@ -565,9 +567,9 @@ static SFGHASH * CreateRuleToMlistMap(void);
 static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist);
 static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
 static void DPIServiceFree(SnortConfig *sc);
-static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
-static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
-static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc);
+static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
+static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
+static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
 
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
@@ -5313,20 +5315,20 @@ void SnortInit(int argc, char **argv)
     ScRestoreInternalLogLevel();
 }
 
-static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
-	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleId, ruleList, sc);
-	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleId, ruleList, sc);
-	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleId, ruleList, sc);
+static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
+	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleList, sc);
+	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleList, sc);
+	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleList, sc);
 }
 
-static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
+static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	int i;
 	for(i=0;i<MAX_PORTS;i++) {
-		ProcessPortGroup(portGroups[i], acsmMap, ruleId, ruleList, sc);
+		ProcessPortGroup(portGroups[i], acsmMap, ruleList, sc);
 	}
 }
 
-static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *ruleId, cJSON *ruleList, SnortConfig *sc) {
+static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	if (portGroup == NULL || portGroup->pgPms == NULL || portGroup->pgPms[PM_TYPE__CONTENT] == NULL)
 		return;
 
@@ -5335,6 +5337,8 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *
 	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
 	acstate_t state;
 	ACSM_PATTERN2 *mlist;
+    RULE_NODE *rnNode = NULL;
+    OptTreeNode *otn = NULL;
 	cJSON *matchRule;
 
 	SFGHASH *ruleMlistMap = CreateRuleToMlistMap();
@@ -5357,18 +5361,24 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, uint16_t *
 			mlist = MatchList[state];
 			PMX              *id     = (PMX*)mlist->udata;
 			PatternMatchData *pmd    = (PatternMatchData*)id->PatternMatchData;
+		    rnNode = (RULE_NODE*)(id->RuleNode);
+		    otn    = (OptTreeNode *)rnNode->rnRuleData;
 
-			// We found a content which needs to be searched in DPI.
+		    if (otn->sigInfo.id > USHRT_MAX) {
+		    	// We currently limit the rule id to uint16_t, so we can keep the match report structure smaller.
+		    	FatalError("Duplicate Rule with same rid (%u).\n", otn->sigInfo.id);
+		    }
+
+		    // We found a content which needs to be searched in DPI.
 			matchRule=cJSON_CreateObject();
 			cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
 			cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
 			cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
-			(*ruleId)++;
-			cJSON_AddNumberToObject(matchRule, RULE_ID, *ruleId);
+			cJSON_AddNumberToObject(matchRule, RULE_ID, otn->sigInfo.id);
 			cJSON_AddItemToArray(ruleList, matchRule);
 
 			// Add Rule ID => mlist map to be used when processing packet content match.
-			RuleAdd(ruleMlistMap, *ruleId, mlist);
+			RuleAdd(ruleMlistMap, otn->sigInfo.id, mlist);
 		}
 	}
 
@@ -5379,7 +5389,6 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 	if (!sc->dpi_service_active)
 		return;
 
-	uint16_t ruleId = 0;
 	sc->dpi_acsm_map = CreateAcsmListMap();
 
 	cJSON *root, *ruleList; char *out;
@@ -5390,10 +5399,10 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 	ruleList=cJSON_CreateArray();
 	cJSON_AddItemToObject(root, RULE_LIST, ruleList);
 
-	ProcessPortRuleMap(sc->prmIpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
-	ProcessPortRuleMap(sc->prmTcpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
-	ProcessPortRuleMap(sc->prmUdpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
-	ProcessPortRuleMap(sc->prmIcmpRTNX, sc->dpi_acsm_map, &ruleId, ruleList, sc);
+	ProcessPortRuleMap(sc->prmIpRTNX, sc->dpi_acsm_map, ruleList, sc);
+	ProcessPortRuleMap(sc->prmTcpRTNX, sc->dpi_acsm_map, ruleList, sc);
+	ProcessPortRuleMap(sc->prmUdpRTNX, sc->dpi_acsm_map, ruleList, sc);
+	ProcessPortRuleMap(sc->prmIcmpRTNX, sc->dpi_acsm_map, ruleList, sc);
 
 	/* Print to text (regular and minify), Delete the cJSON, print it, release the string. */
 	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
@@ -5421,7 +5430,6 @@ static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist) {
 		return;
 
 	int status;
-	size_t len;
 
 	status = sfghash_add(ruleMlistMap, &rid, mlist);
 	switch (status)
