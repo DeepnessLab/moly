@@ -222,8 +222,13 @@
 #define CONFIG_OPT__DISABLE_REPLACE                 "disable_replace"
 
 # define CONFIG_OPT__DPI_SERVICE                    "dpi_service"
+# define CONFIG_OPT__DPI_SERVICE_RULE_EXPORT_MODE	"dpi_rule_export_mode"
+# define CONFIG_OPT__DPI_EXPORT_MODE_FILE			"file"
+# define CONFIG_OPT__DPI_EXPORT_MODE_CONTROLLER		"controller"
+# define CONFIG_OPT__DPI_EXPORT_MODE_CONSOLE		"console"
 # define CONFIG_OPT__DPI_CONTROLLER_IP              "dpi_controller_ip"
 # define CONFIG_OPT__DPI_CONTROLLER_PORT            "dpi_controller_port"
+# define CONFIG_OPT__DPI_RULE_EXPORT_DIR			"dpi_rule_export_dir"
 
 /* exported values */
 extern char *file_name;

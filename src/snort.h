@@ -669,6 +669,14 @@ typedef struct _SnortPolicy
 struct _IntelPmHandles;
 #endif
 struct _MandatoryEarlySessionCreator;
+
+typedef enum {
+	UNKNOWN,	// Not defined.
+    FILE_WRITE, // Write the Snort DPI JSON rules to a file.
+	REST_CALL,  // Send the Snort DPI JSON rules to the controller.
+	CONSOLE		// Print the Snort DPI JSON to the console.
+} DPI_EXPORT_MODE;
+
 typedef struct _SnortConfig
 {
     RunMode run_mode;
@@ -973,8 +981,10 @@ typedef struct _SnortConfig
 
     // DPI Service Configurations
     bool dpi_service_active;
+    DPI_EXPORT_MODE dpi_export_mode;
     char *dpi_controller_ip;
     int dpi_controller_port;
+    char *dpi_rule_export_dir;
     SFGHASH *dpi_acsm_map; // Map from ACSM to a map of rule ID => mlist (MatchList => Map (Rule ID => mlist)).
 
 } SnortConfig;

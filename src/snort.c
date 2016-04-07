@@ -5315,6 +5315,75 @@ void SnortInit(int argc, char **argv)
     ScRestoreInternalLogLevel();
 }
 
+/**
+ * The function write the date to the given file path.
+ * It checks for various error conditions such as file I/O problems and returns 1 (true) if okay, 0 (false) otherwise.
+ */
+static inline int WriteToFile(char *filepath, char *data, char *mode) {
+	int rc = 0;
+
+	FILE *fOut = fopen(filepath, mode);
+	if (fOut != NULL) {
+		if (fputs(data, fOut) != EOF) {
+			rc = 1;
+		}
+
+		if (fclose (fOut) == EOF) rc = 0;
+	}
+
+	return rc;
+}
+
+static inline void ExportSnortRules(SnortConfig *sc, cJSON *root) {
+	if (!sc->dpi_service_active)
+		return;
+
+	char *out;
+
+	switch (sc->dpi_export_mode) {
+			case FILE_WRITE:
+				if (sc->dpi_rule_export_dir == NULL) {
+					FatalError("Invalid argument to '%s'.", CONFIG_OPT__DPI_RULE_EXPORT_DIR);
+				}
+
+				char *ruleFilePrefix = "dpi_service_rules";
+				char filename[100];
+				char filepath[PATH_MAX];
+				char timestr[50];
+				time_t now = time(NULL);
+				struct tm *t = localtime(&now);
+				strftime(timestr, sizeof(timestr)-1, "%m-%d-%Y-%H:%M", t);
+				timestr[49] = 0;
+				filename[0] = '\0';
+				strcat(filename, ruleFilePrefix);
+				strcat(filename, "_");
+				strcat(filename, timestr);
+				strcat(filename, ".json");
+
+				// Generate file path.
+				filepath[0] = '\0';
+				strcat(filepath, sc->dpi_rule_export_dir);
+				strcat(filepath, filename);
+
+				out=cJSON_Print(root);
+				cJSON_Delete(root);
+				cJSON_Minify(out);
+				WriteToFile(filepath, out, "w");
+				free(out);
+				break;
+			case REST_CALL:
+				// Currently not supported.
+				break;
+			case UNKNOWN:
+				// No not export at all.
+				break;
+			case CONSOLE:
+				out=cJSON_Print(root);	cJSON_Delete(root);
+				printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
+				break;
+		}
+}
+
 static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleList, sc);
 	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleList, sc);
@@ -5391,7 +5460,7 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 
 	sc->dpi_acsm_map = CreateAcsmListMap();
 
-	cJSON *root, *ruleList; char *out;
+	cJSON *root, *ruleList;
 
 	/* Initialize JSON message to controller objects. */
 	root=cJSON_CreateObject();
@@ -5404,8 +5473,7 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 	ProcessPortRuleMap(sc->prmUdpRTNX, sc->dpi_acsm_map, ruleList, sc);
 	ProcessPortRuleMap(sc->prmIcmpRTNX, sc->dpi_acsm_map, ruleList, sc);
 
-	/* Print to text (regular and minify), Delete the cJSON, print it, release the string. */
-	out=cJSON_Print(root);	cJSON_Delete(root);	printf("%s\n",out); cJSON_Minify(out); printf("%s\n",out);  free(out);
+	ExportSnortRules(sc, root);
 }
 
 static SFGHASH * CreateAcsmListMap(void) {
@@ -5482,6 +5550,9 @@ static void DPIServiceFree(SnortConfig *sc) {
 
 	if (sc->dpi_controller_ip != NULL)
 		free(sc->dpi_controller_ip);
+
+	if (sc->dpi_rule_export_dir != NULL)
+		free(sc->dpi_rule_export_dir);
 
 	if (sc->dpi_acsm_map != NULL)
 		sfghash_delete(sc->dpi_acsm_map);

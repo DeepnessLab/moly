@@ -9300,7 +9300,7 @@ void ConfigDPIaaService(SnortConfig *sc, char *args) {
 		return;
 
 	toks = mSplit(args, ",", 0, &num_toks, 0);
-	if(num_toks != 2 ) {
+	if(num_toks < 2 ) {
 		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_SERVICE);
 	}
 
@@ -9309,6 +9309,17 @@ void ConfigDPIaaService(SnortConfig *sc, char *args) {
 		opts = mSplit(toks[i], " ", 0, &num_opts, 0);
 		if (num_opts != 2) {
 			ParseError("config '%s': missing argument for '%s'.", CONFIG_OPT__DPI_SERVICE, toks[i]);
+		}
+
+		if (strcasecmp(opts[0], CONFIG_OPT__DPI_SERVICE_RULE_EXPORT_MODE) == 0) {
+			char * mode = opts[1];
+			if (strcasecmp(mode, CONFIG_OPT__DPI_EXPORT_MODE_FILE) == 0) {
+				sc->dpi_export_mode = FILE_WRITE;
+			} else if (strcasecmp(mode, CONFIG_OPT__DPI_EXPORT_MODE_CONTROLLER) == 0) {
+				sc->dpi_export_mode = REST_CALL;
+			} else if (strcasecmp(mode, CONFIG_OPT__DPI_EXPORT_MODE_CONSOLE) == 0) {
+				sc->dpi_export_mode = CONSOLE;
+			}
 		}
 
 		if (strcasecmp(opts[0], CONFIG_OPT__DPI_CONTROLLER_IP) == 0) {
@@ -9327,15 +9338,43 @@ void ConfigDPIaaService(SnortConfig *sc, char *args) {
 			sc->dpi_controller_port = (int) strtol(opts[1], (char **)NULL, 10);
 		}
 
+		if (strcasecmp(opts[0], CONFIG_OPT__DPI_RULE_EXPORT_DIR) == 0) {
+			char *exportDir;
+			size_t dirLen;
+
+			// Copy the rule export dir and add it to the config.
+			char * dirOpt = opts[1];
+		    dirLen = strlen(dirOpt) + 1;
+		    exportDir = (char *)SnortAlloc(dirLen);
+		    memcpy(exportDir, dirOpt, dirLen);
+			sc->dpi_rule_export_dir = exportDir;
+		}
+
 		mSplitFree(&opts, num_opts);
 	}
 
-	if (sc->dpi_controller_ip == NULL) {
-		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_IP);
-	}
+	// Perform configuration validation.
+	switch (sc->dpi_export_mode) {
+		case FILE_WRITE:
+			if (sc->dpi_rule_export_dir == NULL) {
+				ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_RULE_EXPORT_DIR);
+			}
+			break;
+		case REST_CALL:
+			if (sc->dpi_controller_ip == NULL) {
+				ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_IP);
+			}
 
-	if (sc->dpi_controller_port == 0) {
-		ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_PORT);
+			if (sc->dpi_controller_port == 0) {
+				ParseError("Invalid argument to '%s'.", CONFIG_OPT__DPI_CONTROLLER_PORT);
+			}
+			break;
+		case CONSOLE:
+			// No need for additional parameters.
+			break;
+		case UNKNOWN:
+			ParseError("Invalid arguments to '%s'.", CONFIG_OPT__DPI_SERVICE_RULE_EXPORT_MODE);
+			break;
 	}
 
 	sc->dpi_service_active = true;
