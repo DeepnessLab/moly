@@ -5,23 +5,25 @@
     For more information run: node rule-converter.js --help
  */
 
+var fs = require("fs");
 var moment = require('moment');
 var program = require('commander');
+var path = require('path');
 
 program
     .version("1.0.0")
-    .option('-i, --input <inputFile>', 'DPI Snort rules input file path')
-    .option('-o, --output <outputFile>', 'DPI Service rule output folder path')
+    .option('-i, --input <input>', 'DPI Snort rules input file path')
+    .option('-o, --output <output>', 'DPI Service rule output folder path')
     .parse(process.argv);
 
-if (!program.inputFile || !program.outputFile) {
+if (!program.input || !program.output) {
     console.log("Input params are not valid. For more information run: node rule-converter.js --help");
     return;
-};
+}
 
 console.info("Start rule conversion.");
 
-convertRules(program.inputFile, program.outputFolderPath);
+convertRules(program.input, program.output);
 
 console.info("End rule conversion.");
 
@@ -34,29 +36,40 @@ function convertRules(inputRulePath, outputFolderPath) {
 
         // Conver the Snort rules to a JSON object.
         var snortRules = JSON.parse(data);
-        
+        writeDpiServiceRules(snortRules.rules, outputFolderPath);
     });
-};
+}
 
 function writeDpiServiceRules(dpiServiceRules, outputFolderPath) {
-	var now = moment.utc();
-    var fileName = outputFolderPath + "_" + now;
-
-    var file = fs.createWriteStream(outputFolderPath + "/" + fileName + '.json');
+	var now = moment();
+    var filename = "dpi_service_rules" + "_" + now.format('MM-DD-YYYY-h.mm.ssa') + '.json';
+    var filepath = path.join(outputFolderPath, filename);
+    var file = fs.createWriteStream(filepath);
     file.on('error', function(err) {
-        console.log("Failed to write the DPI Service rules to output file." + "Error: " + err + ".");
+        console.log("Failed to write the output file." + "Error: " + err + ".");
         file.close();
     });
 
     file.once('open', function(fd) {
-        // Write lines to the file with the site name as the first word.
-        file.write(siteURL +  " " + words + '\n'); // Write the words that were extracted from the site.
-
-        // Write the URLs extracted from the site.
-        urls.forEach(function(url) {
-            file.write(siteURL +  " " + url + '\n');
+        // Write the rules in the format the DPI Service accepts (i.e. fileds without qutation marks and string with a Single quotation mark).
+        dpiServiceRules.forEach(function(rule) {
+            file.write("{" + "className:\'MatchRule\'" + "," + "rid:" + rule.rid + "," + "pattern:" + "\'" + rule.pattern + "\'" + "," + "is_regex:" + rule.is_regex + "}" + "\n");
         });
 
         file.end();
     });
+}
+
+function writeDpiServiceRulesOld(dpiServiceRules, outputFolderPath) {
+	var now = moment.utc();
+    var filename = "dpi_service_rules" + "_" + now.format('MM-DD-YYYY-h_mm_ssa') + '.json';
+    var filepath = path.join(outputFolderPath, filename);
+    fs.writeFile(filepath, JSON.stringify(dpiServiceRules),  function(err) {
+   		if (err) {
+   			console.error(err);
+   			return;
+   		}
+       	
+       	console.log("Data written successfully!");
+	});
 }
