@@ -21,13 +21,11 @@ if (!program.input || !program.output) {
     return;
 }
 
-console.info("Start rule conversion.");
-
 convertRules(program.input, program.output);
 
-console.info("End rule conversion.");
-
 function convertRules(inputRulePath, outputFolderPath) {
+    console.info("Start rule conversion.");
+    
     fs.readFile(inputRulePath, function (err, data) {
         if (err) {
             console.error(err);
@@ -48,6 +46,7 @@ function writeDpiServiceRules(dpiServiceRules, outputFolderPath) {
     file.on('error', function(err) {
         console.log("Failed to write the output file." + "Error: " + err + ".");
         file.close();
+        console.info("End rule conversion.");
     });
 
     file.once('open', function(fd) {
@@ -57,6 +56,7 @@ function writeDpiServiceRules(dpiServiceRules, outputFolderPath) {
         });
 
         file.end();
+        console.info("End rule conversion.");
     });
 }
 
