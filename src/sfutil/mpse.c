@@ -620,7 +620,11 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		 report;
 		 report = (MatchReport *)sflist_next(p->dpi_service_match_reports))
 	{
+#if RULE_ID_SIZE == 16
 		rid = ntohs(report->rid);
+#else
+		rid = ntohl(report->rid);
+#endif
 		position = ntohs(report->position);
 		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
 		if (mlist != NULL) {
