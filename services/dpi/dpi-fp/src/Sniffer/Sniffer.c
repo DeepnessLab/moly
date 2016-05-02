@@ -27,6 +27,7 @@
 #include "MatchReport.h"
 #include "MatchReportRange.h"
 #include "checksum.h"
+#include "RuleId.h"
 
 #define MAX_PACKET_SIZE 65535
 #define MAX_REPORTED_RULES 1024
@@ -52,8 +53,8 @@ struct st_processor_data;
 void *worker_start(void *);
 static inline int roundup(int x);
 static inline int remove_impostor_match_reports(MatchReport *match_reports, int num_mr, int mr_range_len);
-static inline void add_match_report_range(uint16_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range);
-static inline void init_match_report_range(uint16_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range);
+static inline void add_match_report_range(rule_id_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range);
+static inline void init_match_report_range(rule_id_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range);
 
 typedef struct {
 	int id;
@@ -269,7 +270,11 @@ static inline int find_detection_results(ProcessorData *processor, ContentMatchR
 		num_rules = processor->machine->numRules[reports[i].state];
 		for (j = 0; j < num_rules; j++) {
 			// Enter a MatchReport to the result array, we might override it later in case this is actually part of a MatchReportRange.
+#if RULE_ID_SIZE == 16
 			match_reports[num_mr].rid = htons(state_rules[j].rid);
+#else
+			match_reports[num_mr].rid = htonl(state_rules[j].rid);
+#endif
 			match_reports[num_mr].position = htons(reports[i].position - state_rules[j].len);
 			match_reports[num_mr].is_range = 0;
 			num_mr++;
@@ -326,14 +331,18 @@ static inline int remove_impostor_match_reports(MatchReport *match_reports, int 
 	return mr_reset_idx + 1;
 }
 
-static inline void add_match_report_range(uint16_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range) {
+static inline void add_match_report_range(rule_id_t rid, uint16_t position, uint16_t length, MatchReportRange *mr_range, int num_mr_range) {
+#if RULE_ID_SIZE == 16
 	mr_range[num_mr_range].rid = htons(rid);
+#else
+	mr_range[num_mr_range].rid = htonl(rid);
+#endif
 	mr_range[num_mr_range].position = htons(position);
 	mr_range[num_mr_range].is_range = 1;
 	mr_range[num_mr_range].length = htons(length);
 }
 
-static inline void init_match_report_range(uint16_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range) {
+static inline void init_match_report_range(rule_id_t rid, uint16_t pos, uint16_t len, MatchReportRange *mr_range) {
 	mr_range->rid = rid;
 	mr_range->position = pos - len;
 	mr_range->length = 1;
