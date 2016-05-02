@@ -564,7 +564,7 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc);
 static SFGHASH * CreateAcsmListMap(void);
 static void AcsmListMapFree(void *ruleToMlist);
 static SFGHASH * CreateRuleToMlistMap(void);
-static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist);
+static void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
 static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
 static void DPIServiceFree(SnortConfig *sc);
 static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
@@ -5375,7 +5375,7 @@ static inline void ExportSnortRules(SnortConfig *sc, cJSON *root) {
 				// Currently not supported.
 				break;
 			case UNKNOWN:
-				// No not export at all.
+				// Do not export at all.
 				break;
 			case CONSOLE:
 				out=cJSON_Print(root);	cJSON_Delete(root);
@@ -5433,11 +5433,6 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 		    rnNode = (RULE_NODE*)(id->RuleNode);
 		    otn    = (OptTreeNode *)rnNode->rnRuleData;
 
-		    if (otn->sigInfo.id > USHRT_MAX) {
-		    	// We currently limit the rule id to uint16_t, so we can keep the match report structure smaller.
-		    	FatalError("Duplicate Rule with same rid (%u).\n", otn->sigInfo.id);
-		    }
-
 		    // We found a content which needs to be searched in DPI.
 			matchRule=cJSON_CreateObject();
 			cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
@@ -5489,11 +5484,11 @@ static void AcsmListMapFree(void *ruleToMlist) {
 }
 
 static SFGHASH * CreateRuleToMlistMap(void) {
-    return sfghash_new(10000, sizeof(uint16_t), 0, NULL);
+    return sfghash_new(10000, sizeof(rule_id_t), 0, NULL);
 }
 
 /* The function adds a rule to mlist entry Key: Rule ID => Value: mlist) to the DPI Rule to mlist Map). */
-static void RuleAdd(SFGHASH *ruleMlistMap, uint16_t rid, ACSM_PATTERN2 *mlist) {
+static void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
 	if (ruleMlistMap == NULL)
 		return;
 

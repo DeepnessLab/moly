@@ -5217,7 +5217,7 @@ void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     			 * We have bytes to read and there are enough bytes for a match report
     			 * (this may not be the case not due to zero padding).
     			 */
-    			uint16_t rid = ntohs(report->rid);
+    			rule_id_t rid = ntohs(report->rid);
     			uint8_t is_range = report->is_range;
     			uint16_t pos = ntohs(report->position);
 

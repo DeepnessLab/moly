@@ -607,7 +607,8 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
 
-	uint16_t rid, position, length, pos;
+	rule_id_t rid;
+	uint16_t position, length, pos;
 	MatchReport *report;
 	MatchReportRange *rangeReport;
 	int j, count;

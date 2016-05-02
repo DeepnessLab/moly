@@ -107,14 +107,26 @@ typedef struct _PatternMatchData
 } PatternMatchData;
 
 /* DPI Service */
+
+/* The rule ID size can be of two sizes: uint16, uint32.
+ * Out of the box the size is uint16, in order to save space. */
+#define RULE_ID_SIZE 16
+
+#if RULE_ID_SIZE == 16
+	typedef uint16_t rule_id_t;
+#else
+	typedef uint32_t rule_id_t;
+#endif
+
+
 typedef struct {
-	uint16_t rid;
+	rule_id_t rid;
 	uint8_t is_range;
 	uint16_t position : 15;
 } MatchReport;
 
 typedef struct {
-	uint16_t rid;
+	rule_id_t rid;
 	uint8_t  is_range;
 	uint16_t position : 15;
 	uint16_t length;
