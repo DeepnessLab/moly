@@ -560,16 +560,16 @@ const char * IS_REGEX = "is_regex";
 const char * RULE_ID = "rid";
 
 /* DPI Service functions*******************************************************/
-static void RegisterContentRulesToDPIController(SnortConfig *sc);
-static SFGHASH * CreateAcsmListMap(void);
-static void AcsmListMapFree(void *ruleToMlist);
-static SFGHASH * CreateRuleToMlistMap(void);
-static void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
-static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
-static void DPIServiceFree(SnortConfig *sc);
-static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
-static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
-static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
+static inline void RegisterContentRulesToDPIController(SnortConfig *sc);
+static inline SFGHASH * CreateAcsmListMap(void);
+static inline void AcsmListMapFree(void *ruleToMlist);
+static inline SFGHASH * CreateRuleToMlistMap(void);
+static inline void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
+static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
+static inline void DPIServiceFree(SnortConfig *sc);
+static inline void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
+static inline void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
+static inline void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
 
 /* Signal handler declarations ************************************************/
 static void SigDumpStatsHandler(int);
@@ -5384,13 +5384,13 @@ static inline void ExportSnortRules(SnortConfig *sc, cJSON *root) {
 		}
 }
 
-static void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
+static inline void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleList, sc);
 	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleList, sc);
 	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleList, sc);
 }
 
-static void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
+static inline void ProcessPortGroups(PORT_GROUP **portGroups, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	int i;
 	for(i=0;i<MAX_PORTS;i++) {
 		ProcessPortGroup(portGroups[i], acsmMap, ruleList, sc);
@@ -5449,7 +5449,7 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 	AcsmAdd(acsmMap, acsm, ruleMlistMap);
 }
 
-static void RegisterContentRulesToDPIController(SnortConfig *sc) {
+static inline void RegisterContentRulesToDPIController(SnortConfig *sc) {
 	if (!sc->dpi_service_active)
 		return;
 
@@ -5471,7 +5471,7 @@ static void RegisterContentRulesToDPIController(SnortConfig *sc) {
 	ExportSnortRules(sc, root);
 }
 
-static SFGHASH * CreateAcsmListMap(void) {
+static inline SFGHASH * CreateAcsmListMap(void) {
     return sfghash_new(20, sizeof(ACSM_STRUCT2 *), 1, AcsmListMapFree);
 }
 
@@ -5479,16 +5479,16 @@ static SFGHASH * CreateAcsmListMap(void) {
  * The function frees the user data (the data of each entry is the RuleToMlistMap)
  * of the AcsmListMap which is also a hashmap of type SFGHASH *.
  */
-static void AcsmListMapFree(void *ruleToMlist) {
+static inline void AcsmListMapFree(void *ruleToMlist) {
 	sfghash_delete(ruleToMlist);
 }
 
-static SFGHASH * CreateRuleToMlistMap(void) {
+static inline SFGHASH * CreateRuleToMlistMap(void) {
     return sfghash_new(10000, sizeof(rule_id_t), 0, NULL);
 }
 
 /* The function adds a rule to mlist entry Key: Rule ID => Value: mlist) to the DPI Rule to mlist Map). */
-static void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
+static inline void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
 	if (ruleMlistMap == NULL)
 		return;
 
@@ -5513,7 +5513,7 @@ static void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) 
 	}
 }
 
-static void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap) {
+static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap) {
 	if (matchListMap == NULL)
 		return;
 
