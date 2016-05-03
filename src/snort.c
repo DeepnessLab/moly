@@ -5433,7 +5433,13 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 		    rnNode = (RULE_NODE*)(id->RuleNode);
 		    otn    = (OptTreeNode *)rnNode->rnRuleData;
 
-		    // We found a content which needs to be searched in DPI.
+		    /* We found a content which needs to be searched via the DPI Service.
+		     * The detection engine eliminate duplicates rules (with the same content) and therefore only
+		     * one rule which associated with the accepting state which will be added to the map. But, since
+		     * we are adding the mlist to the map, once that rule match will be reported by the DPI Service all
+		     * rules will be sent for matching advance analysis. i.e. if the content of the state was found
+		     * all rules associated to that state will be alerted (or any other action).
+		     */
 			matchRule=cJSON_CreateObject();
 			cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
 			cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
