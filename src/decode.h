@@ -2022,8 +2022,8 @@ void DecodeAH(const uint8_t *, uint32_t, Packet *);
 void DecodeESP(const uint8_t *, uint32_t, Packet *);
 void DecodeGTP(const uint8_t *, uint32_t, Packet *);
 /* DPI Service **************************************************************************/
-void DecodeVxLAN(const uint8_t *, uint32_t, Packet *);
-void DecodeNSH(const uint8_t *, uint32_t, Packet *);
+inline void DecodeVxLAN(const uint8_t *, uint32_t, Packet *);
+inline void DecodeNSH(const uint8_t *, uint32_t, Packet *);
 
 #ifdef GRE
 void DecodeGRE(const uint8_t *, const uint32_t, Packet *);

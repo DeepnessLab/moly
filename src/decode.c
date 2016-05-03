@@ -5111,7 +5111,7 @@ void DecodeGTP(const uint8_t *pkt, uint32_t len, Packet *p)
  * Decode these (if present) and to DecodeNSH.
  *
  */
-void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
+inline void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
 	uint8_t  flag;
 	uint16_t reserved;
 	uint8_t next_protocol;
@@ -5145,7 +5145,7 @@ void DecodeVxLAN(const uint8_t *pkt, uint32_t len, Packet *p) {
  * Decode these (if present) and go to DecodeIPv6/DecodeIP.
  *
  */
-void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
+inline void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
 	SF_LIST *dpi_service_match_reports;
 	uint8_t version;
 	uint8_t flags;
