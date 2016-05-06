@@ -5404,6 +5404,12 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 	MPSE *mpse = (MPSE*)portGroup->pgPms[PM_TYPE__CONTENT];
 	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
 	ACSM_PATTERN2 **MatchList = acsm->acsmMatchList;
+	SFGHASH *acsmExist = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
+	if (acsmExist) {
+		// Multiple ports can use the same PORT_GROUP. We need to process each PORT_GROUP once.
+		return;
+	}
+
 	acstate_t state;
 	ACSM_PATTERN2 *mlist;
     RULE_NODE *rnNode = NULL;
