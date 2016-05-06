@@ -30,6 +30,8 @@ snort.c snort.h \
 build.h \
 $(SNPRINTF_SOURCES) \
 cJSON.c cJSON.h \
+uthash.h \
+HashMap.c HashMap.h \
 strlcatu.c strlcatu.h \
 strlcpyu.c strlcpyu.h \
 tag.c tag.h \

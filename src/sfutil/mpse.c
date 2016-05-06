@@ -55,6 +55,7 @@
 
 #include "profiler.h"
 #include "snort.h"
+#include "HashMap.h"
 #ifdef PERF_PROFILING
 PreprocStats mpsePerfStats;
 #endif
@@ -604,7 +605,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 
 	MPSE *mpse = (MPSE*)pvoid;
 	ACSM_STRUCT2 * acsm = (ACSM_STRUCT2*) mpse->obj;
-	SFGHASH *ruleMlistMap = (SFGHASH *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
+	HashMap *ruleMlistMap = (HashMap *)sfghash_find(snort_conf->dpi_acsm_map, acsm);
 	ACSM_PATTERN2 *mlist;
 
 	rule_id_t rid;
@@ -626,7 +627,7 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		rid = ntohl(report->rid);
 #endif
 		position = ntohs(report->position);
-		mlist = (ACSM_PATTERN2 *)sfghash_find(ruleMlistMap, &rid);
+		mlist = (ACSM_PATTERN2 *)hashmap_get(ruleMlistMap, rid);
 		if (mlist != NULL) {
 			// The report/pattern has a matching content rule.
 			if (report->is_range) {

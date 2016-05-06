@@ -176,6 +176,7 @@
 #include "acsmx2.h"
 #include "pcrm.h"
 #include "limits.h"
+#include "HashMap.h"
 
 /* Macros *********************************************************************/
 #ifndef DLT_LANE8023
@@ -562,10 +563,10 @@ const char * RULE_ID = "rid";
 /* DPI Service functions*******************************************************/
 static inline void RegisterContentRulesToDPIController(SnortConfig *sc);
 static inline SFGHASH * CreateAcsmListMap(void);
-static inline void AcsmListMapFree(void *ruleToMlist);
-static inline SFGHASH * CreateRuleToMlistMap(void);
-static inline void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
-static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap);
+static inline void AcsmListMapFree(HashMap *ruleToMlist);
+static inline HashMap * CreateRuleToMlistMap(void);
+static inline void RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
+static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, HashMap *ruleMlistMap);
 static inline void DPIServiceFree(SnortConfig *sc);
 static inline void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
 static inline void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
@@ -5416,7 +5417,7 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
     OptTreeNode *otn = NULL;
 	cJSON *matchRule;
 
-	SFGHASH *ruleMlistMap = CreateRuleToMlistMap();
+	HashMap *ruleMlistMap = CreateRuleToMlistMap();
 
 	// Create JSON initialize.
 
@@ -5491,41 +5492,23 @@ static inline SFGHASH * CreateAcsmListMap(void) {
  * The function frees the user data (the data of each entry is the RuleToMlistMap)
  * of the AcsmListMap which is also a hashmap of type SFGHASH *.
  */
-static inline void AcsmListMapFree(void *ruleToMlist) {
-	sfghash_delete(ruleToMlist);
+static inline void AcsmListMapFree(HashMap *ruleToMlist) {
+	hashmap_destroy(ruleToMlist);
 }
 
-static inline SFGHASH * CreateRuleToMlistMap(void) {
-    return sfghash_new(10000, sizeof(rule_id_t), 0, NULL);
+static inline HashMap * CreateRuleToMlistMap(void) {
+    return hashmap_create();
 }
 
 /* The function adds a rule to mlist entry Key: Rule ID => Value: mlist) to the DPI Rule to mlist Map). */
-static inline void RuleAdd(SFGHASH *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
+static inline void RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
 	if (ruleMlistMap == NULL)
 		return;
 
-	int status;
-
-	status = sfghash_add(ruleMlistMap, &rid, mlist);
-	switch (status)
-	{
-	case SFGHASH_OK:
-		/* entry was inserted successfully */
-		break;
-	case SFGHASH_INTABLE:
-		ParseError("Duplicate Rule with same rid (%u).\n", rid);
-		break;
-	case SFGHASH_NOMEM:
-		FatalError("Failed to allocate memory for rule.\n");
-		break;
-	default:
-		FatalError("%s(%d): DPIRuleAdd() - unexpected return value "
-				"from sfghash_add().\n", __FILE__, __LINE__);
-		break;
-	}
+	hashmap_put(ruleMlistMap, rid, mlist);
 }
 
-static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, SFGHASH *ruleMlistMap) {
+static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, HashMap *ruleMlistMap) {
 	if (matchListMap == NULL)
 		return;
 
