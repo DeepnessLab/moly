@@ -1,0 +1,676 @@
+{className:'MatchRule',rid:6694,pattern:'hIST',is_regex:false}
+{className:'MatchRule',rid:16241,pattern:'g',is_regex:false}
+{className:'MatchRule',rid:18217,pattern:'X-UA-Compatible',is_regex:false}
+{className:'MatchRule',rid:4647,pattern:'window',is_regex:false}
+{className:'MatchRule',rid:8058,pattern:'window.navigator',is_regex:false}
+{className:'MatchRule',rid:17265,pattern:'outputStream.init(file,0x04|0x08|0x20,420',is_regex:false}
+{className:'MatchRule',rid:15695,pattern:'',is_regex:false}
+{className:'MatchRule',rid:2707,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:13807,pattern:'���',is_regex:false}
+{className:'MatchRule',rid:20141,pattern:'',is_regex:false}
+{className:'MatchRule',rid:15540,pattern:'CollectGarbage()',is_regex:false}
+{className:'MatchRule',rid:9843,pattern:'document.',is_regex:false}
+{className:'MatchRule',rid:17629,pattern:'document.write',is_regex:false}
+{className:'MatchRule',rid:16470,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16345,pattern:'[Setnet32]',is_regex:false}
+{className:'MatchRule',rid:17272,pattern:'strf',is_regex:false}
+{className:'MatchRule',rid:4134,pattern:'3F8A6C33-E0FD-11D0-8A8C-00A0C90C2BC5',is_regex:false}
+{className:'MatchRule',rid:16183,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17149,pattern:'PK',is_regex:false}
+{className:'MatchRule',rid:17572,pattern:'.parseError',is_regex:false}
+{className:'MatchRule',rid:19147,pattern:'obj.outerHTML++',is_regex:false}
+{className:'MatchRule',rid:17124,pattern:'',is_regex:false}
+{className:'MatchRule',rid:6695,pattern:'tRNS',is_regex:false}
+{className:'MatchRule',rid:18537,pattern:'/* XPM */',is_regex:false}
+{className:'MatchRule',rid:13316,pattern:'�ART',is_regex:false}
+{className:'MatchRule',rid:17153,pattern:'""',is_regex:false}
+{className:'MatchRule',rid:18706,pattern:'pFragments',is_regex:false}
+{className:'MatchRule',rid:13964,pattern:'span',is_regex:false}
+{className:'MatchRule',rid:19807,pattern:'documentElement',is_regex:false}
+{className:'MatchRule',rid:16359,pattern:'%!PS-Adobe-',is_regex:false}
+{className:'MatchRule',rid:19418,pattern:'x���<�{�?~*)�d�2�%E�
+�"�d%{��',is_regex:false}
+{className:'MatchRule',rid:19448,pattern:'T����K�7kt�ĸ',is_regex:false}
+{className:'MatchRule',rid:18246,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:15854,pattern:'AVI LIST',is_regex:false}
+{className:'MatchRule',rid:16236,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:18331,pattern:'HEADER',is_regex:false}
+{className:'MatchRule',rid:13834,pattern:'setRequestHeader("',is_regex:false}
+{className:'MatchRule',rid:16677,pattern:'FlateDecode',is_regex:false}
+{className:'MatchRule',rid:6692,pattern:'sRGB',is_regex:false}
+{className:'MatchRule',rid:7202,pattern:'��՜.��',is_regex:false}
+{className:'MatchRule',rid:20270,pattern:'������Qh� ',is_regex:false}
+{className:'MatchRule',rid:16655,pattern:'',is_regex:false}
+{className:'MatchRule',rid:20659,pattern:'/U3D',is_regex:false}
+{className:'MatchRule',rid:17319,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:6502,pattern:'!�ANIMEXTS1.0',is_regex:false}
+{className:'MatchRule',rid:19011,pattern:'Lnam',is_regex:false}
+{className:'MatchRule',rid:18219,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17271,pattern:'',is_regex:false}
+{className:'MatchRule',rid:14262,pattern:'onenote:',is_regex:false}
+{className:'MatchRule',rid:18801,pattern:'jp2c�O',is_regex:false}
+{className:'MatchRule',rid:14645,pattern:'clearattributes',is_regex:false}
+{className:'MatchRule',rid:18069,pattern:'
+�',is_regex:false}
+{className:'MatchRule',rid:14642,pattern:'',is_regex:false}
+{className:'MatchRule',rid:3689,pattern:'�PNG
+
+',is_regex:false}
+{className:'MatchRule',rid:17379,pattern:'IHDR',is_regex:false}
+{className:'MatchRule',rid:15694,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17231,pattern:'',is_regex:false}
+{className:'MatchRule',rid:9849,pattern:'recolorinfo',is_regex:false}
+{className:'MatchRule',rid:15428,pattern:'createSVGPathSegMoveto',is_regex:false}
+{className:'MatchRule',rid:5741,pattern:'file',is_regex:false}
+{className:'MatchRule',rid:17725,pattern:'file://',is_regex:false}
+{className:'MatchRule',rid:17612,pattern:'',is_regex:false}
+{className:'MatchRule',rid:18633,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16647,pattern:'',is_regex:false}
+{className:'MatchRule',rid:20565,pattern:'AMF',is_regex:false}
+{className:'MatchRule',rid:19294,pattern:'3',is_regex:false}
+{className:'MatchRule',rid:17179,pattern:'pamm',is_regex:false}
+{className:'MatchRule',rid:3552,pattern:'R',is_regex:false}
+{className:'MatchRule',rid:19204,pattern:'"\\',is_regex:false}
+{className:'MatchRule',rid:16378,pattern:'cells.item',is_regex:false}
+{className:'MatchRule',rid:15869,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17245,pattern:'.bat',is_regex:false}
+{className:'MatchRule',rid:17187,pattern:'�AE®',is_regex:false}
+{className:'MatchRule',rid:17506,pattern:'��ࡱ�',is_regex:false}
+{className:'MatchRule',rid:9840,pattern:'> T<',is_regex:false}
+{className:'MatchRule',rid:15384,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17120,pattern:'\datafield \emfblip',is_regex:false}
+{className:'MatchRule',rid:17130,pattern:'event.boundElements',is_regex:false}
+{className:'MatchRule',rid:20072,pattern:'.invalidateSelection',is_regex:false}
+{className:'MatchRule',rid:13822,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:13317,pattern:'�nam',is_regex:false}
+{className:'MatchRule',rid:17216,pattern:'cellspacing',is_regex:false}
+{className:'MatchRule',rid:4643,pattern:'L',is_regex:false}
+{className:'MatchRule',rid:19956,pattern:'P',is_regex:false}
+{className:'MatchRule',rid:8445,pattern:'{\object\objemb{\*\objclass Package}',is_regex:false}
+{className:'MatchRule',rid:3550,pattern:'http',is_regex:false}
+{className:'MatchRule',rid:18961,pattern:'HTTP 99
+',is_regex:false}
+{className:'MatchRule',rid:8448,pattern:'}',is_regex:false}
+{className:'MatchRule',rid:4195,pattern:'Interactive Training]',is_regex:false}
+{className:'MatchRule',rid:17655,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:12256,pattern:'`',is_regex:false}
+{className:'MatchRule',rid:19894,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17123,pattern:'\dppolycount',is_regex:false}
+{className:'MatchRule',rid:15539,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19231,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19243,pattern:'layout-grid-char:',is_regex:false}
+{className:'MatchRule',rid:16465,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16601,pattern:'<bdo',is_regex:false}
+{className:'MatchRule',rid:13300,pattern:'JFIF',is_regex:false}
+{className:'MatchRule',rid:16331,pattern:'JFIF',is_regex:false}
+{className:'MatchRule',rid:12281,pattern:'stroke',is_regex:false}
+{className:'MatchRule',rid:19449,pattern:'N��f�
+0C��
+�פM',is_regex:false}
+{className:'MatchRule',rid:19445,pattern:'압9g�-N�ۘ�L�l',is_regex:false}
+{className:'MatchRule',rid:18507,pattern:'/CCITTFaxDecode',is_regex:false}
+{className:'MatchRule',rid:3473,pattern:'system-screen-size="',is_regex:false}
+{className:'MatchRule',rid:7199,pattern:'',is_regex:false}
+{className:'MatchRule',rid:7024,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:19462,pattern:'E�',is_regex:false}
+{className:'MatchRule',rid:5712,pattern:'BM',is_regex:false}
+{className:'MatchRule',rid:18535,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:20162,pattern:'������㡇ꈨ�ދ�ꀀ֋��Ё���ꀨ���Ѐ�',is_regex:false}
+{className:'MatchRule',rid:6698,pattern:'tIME',is_regex:false}
+{className:'MatchRule',rid:19237,pattern:'#default#time2',is_regex:false}
+{className:'MatchRule',rid:19671,pattern:'<xsl:template match',is_regex:false}
+{className:'MatchRule',rid:19099,pattern:'format(',is_regex:false}
+{className:'MatchRule',rid:19871,pattern:'0x400000',is_regex:false}
+{className:'MatchRule',rid:13158,pattern:'35907DE0-E415-11CF-A917-00805F5C442B',is_regex:false}
+{className:'MatchRule',rid:16310,pattern:'overflow',is_regex:false}
+{className:'MatchRule',rid:19148,pattern:'stsc',is_regex:false}
+{className:'MatchRule',rid:18233,pattern:'�������_�����qޞ�q܃',is_regex:false}
+{className:'MatchRule',rid:19225,pattern:'K',is_regex:false}
+{className:'MatchRule',rid:16316,pattern:',�J������O��`�g�f�',is_regex:false}
+{className:'MatchRule',rid:16507,pattern:'onreadystatechange',is_regex:false}
+{className:'MatchRule',rid:15872,pattern:'__defineSetter__(',is_regex:false}
+{className:'MatchRule',rid:18776,pattern:'XFIR',is_regex:false}
+{className:'MatchRule',rid:17182,pattern:'tSAC�',is_regex:false}
+{className:'MatchRule',rid:17129,pattern:'location.protocol',is_regex:false}
+{className:'MatchRule',rid:17459,pattern:'<h1> id="header" onmousemove="alert('Assurent Secure T',is_regex:false}
+{className:'MatchRule',rid:17189,pattern:'RL',is_regex:false}
+{className:'MatchRule',rid:19174,pattern:'expression(',is_regex:false}
+{className:'MatchRule',rid:7201,pattern:'�����Oh��',is_regex:false}
+{className:'MatchRule',rid:19169,pattern:'strlstrh',is_regex:false}
+{className:'MatchRule',rid:20237,pattern:'http://',is_regex:false}
+{className:'MatchRule',rid:16223,pattern:'tSAC<',is_regex:false}
+{className:'MatchRule',rid:16044,pattern:'style="letter-spacing: -2147483648',is_regex:false}
+{className:'MatchRule',rid:18235,pattern:'IC',is_regex:false}
+{className:'MatchRule',rid:16545,pattern:'/Subtype/RichMedia',is_regex:false}
+{className:'MatchRule',rid:4132,pattern:'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F',is_regex:false}
+{className:'MatchRule',rid:13981,pattern:'A',is_regex:false}
+{className:'MatchRule',rid:16157,pattern:'@�i�M[���',is_regex:false}
+{className:'MatchRule',rid:15166,pattern:'<time ',is_regex:false}
+{className:'MatchRule',rid:19943,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16640,pattern:'',is_regex:false}
+{className:'MatchRule',rid:3149,pattern:'<OBJECT',is_regex:false}
+{className:'MatchRule',rid:14261,pattern:'focussize',is_regex:false}
+{className:'MatchRule',rid:18403,pattern:'onCellChange',is_regex:false}
+{className:'MatchRule',rid:16053,pattern:'GNU.sparse.numblocks=',is_regex:false}
+{className:'MatchRule',rid:5713,pattern:'��ƚ',is_regex:false}
+{className:'MatchRule',rid:18583,pattern:'��ƚ',is_regex:false}
+{className:'MatchRule',rid:5318,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:16411,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:19303,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16643,pattern:'T',is_regex:false}
+{className:'MatchRule',rid:17513,pattern:'onclick',is_regex:false}
+{className:'MatchRule',rid:16517,pattern:'7:comment',is_regex:false}
+{className:'MatchRule',rid:15362,pattern:'String.fromCharCode(',is_regex:false}
+{className:'MatchRule',rid:19419,pattern:'x���<���?~##��(i�d!D��
+�h��[F',is_regex:false}
+{className:'MatchRule',rid:17318,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:18244,pattern:'launchjnlp',is_regex:false}
+{className:'MatchRule',rid:20535,pattern:'opera:config',is_regex:false}
+{className:'MatchRule',rid:16151,pattern:'createEventObject',is_regex:false}
+{className:'MatchRule',rid:20279,pattern:'window.open',is_regex:false}
+{className:'MatchRule',rid:15873,pattern:'window.open(',is_regex:false}
+{className:'MatchRule',rid:1290,pattern:'window.open("readme.eml"',is_regex:false}
+{className:'MatchRule',rid:16416,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:13980,pattern:'449',is_regex:false}
+{className:'MatchRule',rid:16353,pattern:'�theora',is_regex:false}
+{className:'MatchRule',rid:18506,pattern:'/Columns',is_regex:false}
+{className:'MatchRule',rid:13160,pattern:'BFC3CD50-618F-11CF-8BB2-00AA00B4E220',is_regex:false}
+{className:'MatchRule',rid:10126,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:18987,pattern:'/TrueType',is_regex:false}
+{className:'MatchRule',rid:20140,pattern:'cel',is_regex:false}
+{className:'MatchRule',rid:15505,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17511,pattern:'',is_regex:false}
+{className:'MatchRule',rid:15535,pattern:'setCapture',is_regex:false}
+{className:'MatchRule',rid:16452,pattern:'vbscript',is_regex:false}
+{className:'MatchRule',rid:13448,pattern:'VBScript.Encode',is_regex:false}
+{className:'MatchRule',rid:16518,pattern:'8:announce',is_regex:false}
+{className:'MatchRule',rid:12972,pattern:'͇�Q����',is_regex:false}
+{className:'MatchRule',rid:13962,pattern:'Content-Transfer-Encoding',is_regex:false}
+{className:'MatchRule',rid:17516,pattern:'onmousedown',is_regex:false}
+{className:'MatchRule',rid:15430,pattern:'F',is_regex:false}
+{className:'MatchRule',rid:12286,pattern:'RegExp(',is_regex:false}
+{className:'MatchRule',rid:17104,pattern:'<outline',is_regex:false}
+{className:'MatchRule',rid:17482,pattern:'news://',is_regex:false}
+{className:'MatchRule',rid:16234,pattern:'ܥ',is_regex:false}
+{className:'MatchRule',rid:9842,pattern:'.pdf#',is_regex:false}
+{className:'MatchRule',rid:16360,pattern:'rpza',is_regex:false}
+{className:'MatchRule',rid:17351,pattern:'ID3',is_regex:false}
+{className:'MatchRule',rid:11258,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17695,pattern:'',is_regex:false}
+{className:'MatchRule',rid:13319,pattern:'�des',is_regex:false}
+{className:'MatchRule',rid:16665,pattern:'hcp://',is_regex:false}
+{className:'MatchRule',rid:15682,pattern:'stbl',is_regex:false}
+{className:'MatchRule',rid:8416,pattern:'method',is_regex:false}
+{className:'MatchRule',rid:17202,pattern:'Shockwave 3D',is_regex:false}
+{className:'MatchRule',rid:12280,pattern:'imagedata',is_regex:false}
+{className:'MatchRule',rid:6700,pattern:'tEXt',is_regex:false}
+{className:'MatchRule',rid:15305,pattern:'<textarea',is_regex:false}
+{className:'MatchRule',rid:12279,pattern:'substringData',is_regex:false}
+{className:'MatchRule',rid:15114,pattern:'embed src',is_regex:false}
+{className:'MatchRule',rid:4679,pattern:'hdlr',is_regex:false}
+{className:'MatchRule',rid:13974,pattern:'createElement',is_regex:false}
+{className:'MatchRule',rid:16229,pattern:'9A',is_regex:false}
+{className:'MatchRule',rid:15542,pattern:'',is_regex:false}
+{className:'MatchRule',rid:13570,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:19075,pattern:'unescape',is_regex:false}
+{className:'MatchRule',rid:20149,pattern:'Subtype/image',is_regex:false}
+{className:'MatchRule',rid:19666,pattern:'.document.open()',is_regex:false}
+{className:'MatchRule',rid:6701,pattern:'zTXt',is_regex:false}
+{className:'MatchRule',rid:13919,pattern:'text',is_regex:false}
+{className:'MatchRule',rid:14641,pattern:'Q',is_regex:false}
+{className:'MatchRule',rid:18671,pattern:'.onpropertychange',is_regex:false}
+{className:'MatchRule',rid:9430,pattern:'<?quicktime type="application/x-quicktime-media-link',is_regex:false}
+{className:'MatchRule',rid:17042,pattern:'  �!�:i��',is_regex:false}
+{className:'MatchRule',rid:2705,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:19253,pattern:'2=',is_regex:false}
+{className:'MatchRule',rid:16650,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:15116,pattern:'search-ms:',is_regex:false}
+{className:'MatchRule',rid:15871,pattern:'strk(',is_regex:false}
+{className:'MatchRule',rid:15703,pattern:'itms://',is_regex:false}
+{className:'MatchRule',rid:6504,pattern:'MSCF',is_regex:false}
+{className:'MatchRule',rid:20263,pattern:'25336920-03F9-11CF-8FD0-00AA00686F13',is_regex:false}
+{className:'MatchRule',rid:19886,pattern:'RIFF',is_regex:false}
+{className:'MatchRule',rid:18066,pattern:'B�',is_regex:false}
+{className:'MatchRule',rid:9801,pattern:'MThd',is_regex:false}
+{className:'MatchRule',rid:16506,pattern:'innerHTML',is_regex:false}
+{className:'MatchRule',rid:19808,pattern:'.body.innerHTML +=',is_regex:false}
+{className:'MatchRule',rid:16603,pattern:'stream
+U3D',is_regex:false}
+{className:'MatchRule',rid:13456,pattern:'D',is_regex:false}
+{className:'MatchRule',rid:7198,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19710,pattern:'display: -webkit-inline-box',is_regex:false}
+{className:'MatchRule',rid:16410,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17776,pattern:'',is_regex:false}
+{className:'MatchRule',rid:15304,pattern:'clearAttributes',is_regex:false}
+{className:'MatchRule',rid:13961,pattern:'.clearAttributes()',is_regex:false}
+{className:'MatchRule',rid:17133,pattern:'HTTP 1
+',is_regex:false}
+{className:'MatchRule',rid:13970,pattern:'
+����',is_regex:false}
+{className:'MatchRule',rid:16719,pattern:'MSCF',is_regex:false}
+{className:'MatchRule',rid:15583,pattern:'
+`�',is_regex:false}
+{className:'MatchRule',rid:15363,pattern:'unescape(',is_regex:false}
+{className:'MatchRule',rid:17603,pattern:'getElement',is_regex:false}
+{className:'MatchRule',rid:15933,pattern:'%01@',is_regex:false}
+{className:'MatchRule',rid:16050,pattern:'BGCOLOR="http:"-�"" DP=-� UNITS="����',is_regex:false}
+{className:'MatchRule',rid:2439,pattern:'http://',is_regex:false}
+{className:'MatchRule',rid:20593,pattern:'xmlns:sx="http://icl.com/saxon"',is_regex:false}
+{className:'MatchRule',rid:16554,pattern:'Collab.getIcon',is_regex:false}
+{className:'MatchRule',rid:18634,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:18102,pattern:'printSeps',is_regex:false}
+{className:'MatchRule',rid:9642,pattern:'@Rц1���',is_regex:false}
+{className:'MatchRule',rid:16752,pattern:'smb://',is_regex:false}
+{className:'MatchRule',rid:20211,pattern:'B�hĩ9��K9q���r�8�;ĒK',is_regex:false}
+{className:'MatchRule',rid:20261,pattern:'h�',is_regex:false}
+{className:'MatchRule',rid:18401,pattern:'//**Start Encode**#@~^',is_regex:false}
+{className:'MatchRule',rid:19251,pattern:'/W [0 [778 0] 2 3 250 4 [333 408]',is_regex:false}
+{className:'MatchRule',rid:12284,pattern:'8',is_regex:false}
+{className:'MatchRule',rid:13823,pattern:'text/css',is_regex:false}
+{className:'MatchRule',rid:17388,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17236,pattern:'-moz-column-',is_regex:false}
+{className:'MatchRule',rid:17308,pattern:'�����',is_regex:false}
+{className:'MatchRule',rid:17301,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:10131,pattern:'InstallVersion',is_regex:false}
+{className:'MatchRule',rid:19621,pattern:'200 OK',is_regex:false}
+{className:'MatchRule',rid:16423,pattern:'file://127.0.0.1',is_regex:false}
+{className:'MatchRule',rid:13960,pattern:'createTextRange',is_regex:false}
+{className:'MatchRule',rid:4136,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:19130,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:13320,pattern:'�cpy',is_regex:false}
+{className:'MatchRule',rid:14657,pattern:'.componentFromPoint(',is_regex:false}
+{className:'MatchRule',rid:15536,pattern:'callback',is_regex:false}
+{className:'MatchRule',rid:19685,pattern:'(((((((((((((((((',is_regex:false}
+{className:'MatchRule',rid:18237,pattern:'',is_regex:false}
+{className:'MatchRule',rid:13159,pattern:'49F1A440-4ECE-11d0-A3AC-00A0C90348F6',is_regex:false}
+{className:'MatchRule',rid:18973,pattern:'display: block',is_regex:false}
+{className:'MatchRule',rid:17154,pattern:'''',is_regex:false}
+{className:'MatchRule',rid:20288,pattern:'QLCMfmt ',is_regex:false}
+{className:'MatchRule',rid:19679,pattern:'�%��A',is_regex:false}
+{className:'MatchRule',rid:17144,pattern:'AnglUntF',is_regex:false}
+{className:'MatchRule',rid:12618,pattern:'Reference',is_regex:false}
+{className:'MatchRule',rid:17349,pattern:'bXYZ',is_regex:false}
+{className:'MatchRule',rid:10116,pattern:'aim:GoChat?',is_regex:false}
+{className:'MatchRule',rid:16414,pattern:'#://',is_regex:false}
+{className:'MatchRule',rid:16654,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17217,pattern:'scrolling',is_regex:false}
+{className:'MatchRule',rid:3686,pattern:'name',is_regex:false}
+{className:'MatchRule',rid:13453,pattern:'1e54333b-2a00-11d1-8198-0000f87557db',is_regex:false}
+{className:'MatchRule',rid:17720,pattern:'.text = 'AAAAAAAAAAAAA',is_regex:false}
+{className:'MatchRule',rid:15014,pattern:'util.printf',is_regex:false}
+{className:'MatchRule',rid:11180,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19450,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:13318,pattern:'�cmt',is_regex:false}
+{className:'MatchRule',rid:17121,pattern:'\datafield \pngblip',is_regex:false}
+{className:'MatchRule',rid:19552,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16231,pattern:'hmtx',is_regex:false}
+{className:'MatchRule',rid:15303,pattern:'',is_regex:false}
+{className:'MatchRule',rid:15946,pattern:'&lt;',is_regex:false}
+{className:'MatchRule',rid:17803,pattern:'rcsL',is_regex:false}
+{className:'MatchRule',rid:17186,pattern:'rcsL',is_regex:false}
+{className:'MatchRule',rid:17188,pattern:'rcsL',is_regex:false}
+{className:'MatchRule',rid:15709,pattern:'/DecodeParms',is_regex:false}
+{className:'MatchRule',rid:17105,pattern:'<',is_regex:false}
+{className:'MatchRule',rid:17303,pattern:'.cloneNode()',is_regex:false}
+{className:'MatchRule',rid:19012,pattern:'manL',is_regex:false}
+{className:'MatchRule',rid:15538,pattern:'doc.replaceChild(doc,doc)',is_regex:false}
+{className:'MatchRule',rid:14644,pattern:'tabindex',is_regex:false}
+{className:'MatchRule',rid:6690,pattern:'iCCP',is_regex:false}
+{className:'MatchRule',rid:19560,pattern:'[playlist]',is_regex:false}
+{className:'MatchRule',rid:16464,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:4917,pattern:'setTimeout',is_regex:false}
+{className:'MatchRule',rid:18308,pattern:'mluc',is_regex:false}
+{className:'MatchRule',rid:18332,pattern:'postMessage',is_regex:false}
+{className:'MatchRule',rid:12282,pattern:'vmlframe',is_regex:false}
+{className:'MatchRule',rid:19240,pattern:'stylesheet',is_regex:false}
+{className:'MatchRule',rid:9641,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:6506,pattern:'udta',is_regex:false}
+{className:'MatchRule',rid:9847,pattern:'S',is_regex:false}
+{className:'MatchRule',rid:16727,pattern:'
+[Group,Export,Yes]
+',is_regex:false}
+{className:'MatchRule',rid:15506,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16188,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:12707,pattern:'LYRICSBEGIN',is_regex:false}
+{className:'MatchRule',rid:17398,pattern:'a[10] = "AAAAAAAAAA";',is_regex:false}
+{className:'MatchRule',rid:18527,pattern:'begin ',is_regex:false}
+{className:'MatchRule',rid:18928,pattern:'<smil',is_regex:false}
+{className:'MatchRule',rid:17212,pattern:'__parent__.eval',is_regex:false}
+{className:'MatchRule',rid:17711,pattern:'0&�u�f���',is_regex:false}
+{className:'MatchRule',rid:17689,pattern:'#default#userData',is_regex:false}
+{className:'MatchRule',rid:13454,pattern:'1',is_regex:false}
+{className:'MatchRule',rid:17114,pattern:'ImageSource',is_regex:false}
+{className:'MatchRule',rid:15698,pattern:'%u0c0c%u0c0c',is_regex:false}
+{className:'MatchRule',rid:17487,pattern:'javascript',is_regex:false}
+{className:'MatchRule',rid:19254,pattern:'/F (javascript:',is_regex:false}
+{className:'MatchRule',rid:16373,pattern:'U3D',is_regex:false}
+{className:'MatchRule',rid:13972,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:8413,pattern:'uplddrvinfo.htm?',is_regex:false}
+{className:'MatchRule',rid:9625,pattern:'<ref',is_regex:false}
+{className:'MatchRule',rid:2438,pattern:'file://',is_regex:false}
+{className:'MatchRule',rid:17517,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:19444,pattern:'P����I���y!�3�',is_regex:false}
+{className:'MatchRule',rid:17213,pattern:'about:config',is_regex:false}
+{className:'MatchRule',rid:15913,pattern:'function arguments',is_regex:false}
+{className:'MatchRule',rid:13918,pattern:'tmci',is_regex:false}
+{className:'MatchRule',rid:7025,pattern:'n�|�m����DEST',is_regex:false}
+{className:'MatchRule',rid:20182,pattern:'navigateToURL',is_regex:false}
+{className:'MatchRule',rid:12983,pattern:'<SAMI>',is_regex:false}
+{className:'MatchRule',rid:12743,pattern:'fLaC',is_regex:false}
+{className:'MatchRule',rid:15499,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17403,pattern:'\prtdata',is_regex:false}
+{className:'MatchRule',rid:20283,pattern:'SCRM',is_regex:false}
+{className:'MatchRule',rid:10062,pattern:'GIF',is_regex:false}
+{className:'MatchRule',rid:18239,pattern:'location.search.substring(1)',is_regex:false}
+{className:'MatchRule',rid:17347,pattern:'rXYZ',is_regex:false}
+{className:'MatchRule',rid:13971,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16027,pattern:'MThd',is_regex:false}
+{className:'MatchRule',rid:16520,pattern:'4:pathl',is_regex:false}
+{className:'MatchRule',rid:13950,pattern:'<j2se',is_regex:false}
+{className:'MatchRule',rid:15562,pattern:'jP  ',is_regex:false}
+{className:'MatchRule',rid:3679,pattern:'IFRAME',is_regex:false}
+{className:'MatchRule',rid:15147,pattern:'<IFRAME ',is_regex:false}
+{className:'MatchRule',rid:6689,pattern:'cHRM',is_regex:false}
+{className:'MatchRule',rid:16656,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16721,pattern:'OrbitalFileV1.0
+',is_regex:false}
+{className:'MatchRule',rid:9619,pattern:'%%DocumentMedia:',is_regex:false}
+{className:'MatchRule',rid:16734,pattern:'FILE "',is_regex:false}
+{className:'MatchRule',rid:17573,pattern:'6BF52A52-394A-11d3-B153-00C04F79FAA6',is_regex:false}
+{className:'MatchRule',rid:4675,pattern:'FWS',is_regex:false}
+{className:'MatchRule',rid:13838,pattern:'iframe.contentDocument.designMode',is_regex:false}
+{className:'MatchRule',rid:15081,pattern:'encoding',is_regex:false}
+{className:'MatchRule',rid:17512,pattern:'onmouseover',is_regex:false}
+{className:'MatchRule',rid:18297,pattern:'transform',is_regex:false}
+{className:'MatchRule',rid:17642,pattern:'parentNode.removeAttribute("class")',is_regex:false}
+{className:'MatchRule',rid:17262,pattern:'.createTextRange();',is_regex:false}
+{className:'MatchRule',rid:17122,pattern:'\datafield \jpegblip',is_regex:false}
+{className:'MatchRule',rid:17258,pattern:'selection.timedSelect(1,8000);',is_regex:false}
+{className:'MatchRule',rid:9432,pattern:'īͫ',is_regex:false}
+{className:'MatchRule',rid:15705,pattern:'pcast://',is_regex:false}
+{className:'MatchRule',rid:17399,pattern:'a.splice(6, 1);',is_regex:false}
+{className:'MatchRule',rid:17285,pattern:'�7z',is_regex:false}
+{className:'MatchRule',rid:8091,pattern:'<imfl>',is_regex:false}
+{className:'MatchRule',rid:15357,pattern:'JBIG2Decode',is_regex:false}
+{className:'MatchRule',rid:17363,pattern:'',is_regex:false}
+{className:'MatchRule',rid:18456,pattern:'<!ENTITY',is_regex:false}
+{className:'MatchRule',rid:15012,pattern:'application/xml',is_regex:false}
+{className:'MatchRule',rid:11290,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17165,pattern:'setInterval',is_regex:false}
+{className:'MatchRule',rid:19417,pattern:'(i��B�
+�!%R��##',is_regex:false}
+{className:'MatchRule',rid:15909,pattern:'tkhd',is_regex:false}
+{className:'MatchRule',rid:19910,pattern:'urn:schemas-microsoft-com:vml',is_regex:false}
+{className:'MatchRule',rid:16293,pattern:'����H',is_regex:false}
+{className:'MatchRule',rid:16696,pattern:'<DeepBurner_record',is_regex:false}
+{className:'MatchRule',rid:19873,pattern:'position',is_regex:false}
+{className:'MatchRule',rid:19005,pattern:'<dialog style='position:relative'>',is_regex:false}
+{className:'MatchRule',rid:2440,pattern:'rtsp://',is_regex:false}
+{className:'MatchRule',rid:3088,pattern:'.cda',is_regex:false}
+{className:'MatchRule',rid:17362,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17360,pattern:'static char gopher_binary_bits[]',is_regex:false}
+{className:'MatchRule',rid:16318,pattern:'',is_regex:false}
+{className:'MatchRule',rid:15893,pattern:'fCreateShellLink(',is_regex:false}
+{className:'MatchRule',rid:12688,pattern:'".cmd',is_regex:false}
+{className:'MatchRule',rid:17200,pattern:'LsCM',is_regex:false}
+{className:'MatchRule',rid:17180,pattern:'LsCM:',is_regex:false}
+{className:'MatchRule',rid:18637,pattern:'P',is_regex:false}
+{className:'MatchRule',rid:19461,pattern:'t�h',is_regex:false}
+{className:'MatchRule',rid:18903,pattern:'document.body.removeChild(',is_regex:false}
+{className:'MatchRule',rid:15299,pattern:'',is_regex:false}
+{className:'MatchRule',rid:10115,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16208,pattern:'<object classid='clsid:10020200-E260-11CF-AE68-00AA004A34D5' id='SQLServer'',is_regex:false}
+{className:'MatchRule',rid:18335,pattern:'mhtml',is_regex:false}
+{className:'MatchRule',rid:6510,pattern:'mhtml://',is_regex:false}
+{className:'MatchRule',rid:13466,pattern:'STSH',is_regex:false}
+{className:'MatchRule',rid:16585,pattern:'-XXaltjvm',is_regex:false}
+{className:'MatchRule',rid:19246,pattern:'document.selection.empty',is_regex:false}
+{className:'MatchRule',rid:13920,pattern:'obji',is_regex:false}
+{className:'MatchRule',rid:18168,pattern:'%u4141%u4141',is_regex:false}
+{className:'MatchRule',rid:13893,pattern:'type="notCondition"',is_regex:false}
+{className:'MatchRule',rid:16549,pattern:'application/npruntime-scriptable-plugin;deploymenttoolkit',is_regex:false}
+{className:'MatchRule',rid:16037,pattern:'<filter',is_regex:false}
+{className:'MatchRule',rid:3820,pattern:'ITSF',is_regex:false}
+{className:'MatchRule',rid:16744,pattern:'<dxstudio',is_regex:false}
+{className:'MatchRule',rid:17468,pattern:'launchURL',is_regex:false}
+{className:'MatchRule',rid:6691,pattern:'sBIT',is_regex:false}
+{className:'MatchRule',rid:16492,pattern:'<NOBR',is_regex:false}
+{className:'MatchRule',rid:19239,pattern:'toStaticHTML(',is_regex:false}
+{className:'MatchRule',rid:17238,pattern:'#define',is_regex:false}
+{className:'MatchRule',rid:9844,pattern:'#EXTM3U',is_regex:false}
+{className:'MatchRule',rid:17365,pattern:'Content-Type: text/plain',is_regex:false}
+{className:'MatchRule',rid:16361,pattern:'BM',is_regex:false}
+{className:'MatchRule',rid:18404,pattern:'document.insertBefore(document',is_regex:false}
+{className:'MatchRule',rid:1841,pattern:'javascript://',is_regex:false}
+{className:'MatchRule',rid:17366,pattern:'HLP',is_regex:false}
+{className:'MatchRule',rid:15502,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17804,pattern:'var html = "<" + tags[i] + " " + atts[j]',is_regex:false}
+{className:'MatchRule',rid:10063,pattern:'Components.interfaces.nsIClassInfo',is_regex:false}
+{className:'MatchRule',rid:20156,pattern:'.getCosObj(',is_regex:false}
+{className:'MatchRule',rid:17602,pattern:'�|�{��',is_regex:false}
+{className:'MatchRule',rid:16733,pattern:'[CloneCD]',is_regex:false}
+{className:'MatchRule',rid:16000,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16596,pattern:'.prompt',is_regex:false}
+{className:'MatchRule',rid:18304,pattern:'white-space:normal;',is_regex:false}
+{className:'MatchRule',rid:16043,pattern:'		pre {
+			white-space:normal;
+',is_regex:false}
+{className:'MatchRule',rid:17757,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:18632,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:17146,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17131,pattern:'parentNode.style',is_regex:false}
+{className:'MatchRule',rid:15559,pattern:'crgn',is_regex:false}
+{className:'MatchRule',rid:18196,pattern:'@import ',is_regex:false}
+{className:'MatchRule',rid:20445,pattern:'/Title',is_regex:false}
+{className:'MatchRule',rid:18508,pattern:'.sheet.rules[',is_regex:false}
+{className:'MatchRule',rid:15706,pattern:'daap://',is_regex:false}
+{className:'MatchRule',rid:9433,pattern:'«ͫ',is_regex:false}
+{className:'MatchRule',rid:17232,pattern:'',is_regex:false}
+{className:'MatchRule',rid:8414,pattern:'GIF8',is_regex:false}
+{className:'MatchRule',rid:16502,pattern:'wOFFOTTO',is_regex:false}
+{className:'MatchRule',rid:17462,pattern:'MARQUEE',is_regex:false}
+{className:'MatchRule',rid:17458,pattern:'X5O!P%@AP[4\PZX5',is_regex:false}
+{className:'MatchRule',rid:16311,pattern:'document.getElementsByTagName('STYLE')[0].outerHTML',is_regex:false}
+{className:'MatchRule',rid:17514,pattern:'onmouseup',is_regex:false}
+{className:'MatchRule',rid:17284,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:3553,pattern:'NULL',is_regex:false}
+{className:'MatchRule',rid:17408,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17692,pattern:'ExecWB',is_regex:false}
+{className:'MatchRule',rid:17368,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:15157,pattern:'<identifier>',is_regex:false}
+{className:'MatchRule',rid:19872,pattern:'eval("r=o"',is_regex:false}
+{className:'MatchRule',rid:17166,pattern:'.replace(',is_regex:false}
+{className:'MatchRule',rid:15126,pattern:'datasrc',is_regex:false}
+{className:'MatchRule',rid:17646,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:15501,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17304,pattern:'"',is_regex:false}
+{className:'MatchRule',rid:3814,pattern:'03D9F3F2-B0E3-11D2-B081-006008039BF0',is_regex:false}
+{className:'MatchRule',rid:19687,pattern:'',is_regex:false}
+{className:'MatchRule',rid:4133,pattern:'083863F1-70DE-11d0-BD40-00A0C911CE86',is_regex:false}
+{className:'MatchRule',rid:19683,pattern:'�?',is_regex:false}
+{className:'MatchRule',rid:19100,pattern:'snd ',is_regex:false}
+{className:'MatchRule',rid:9637,pattern:'<?aom',is_regex:false}
+{className:'MatchRule',rid:20579,pattern:'<ruby>',is_regex:false}
+{className:'MatchRule',rid:16736,pattern:'4�',is_regex:false}
+{className:'MatchRule',rid:16508,pattern:'meta http-equiv="X-UA-Compatible" content="IE=7"',is_regex:false}
+{className:'MatchRule',rid:19926,pattern:'AppletX',is_regex:false}
+{className:'MatchRule',rid:16335,pattern:'Type/ObjStm',is_regex:false}
+{className:'MatchRule',rid:17218,pattern:'<li',is_regex:false}
+{className:'MatchRule',rid:17591,pattern:'If',is_regex:false}
+{className:'MatchRule',rid:6697,pattern:'sPLT',is_regex:false}
+{className:'MatchRule',rid:19446,pattern:'�e���E��%��⎛',is_regex:false}
+{className:'MatchRule',rid:18809,pattern:'<applet',is_regex:false}
+{className:'MatchRule',rid:16730,pattern:'Photodex(R) ProShow(TM) Show File Version',is_regex:false}
+{className:'MatchRule',rid:20133,pattern:'MIME-Version',is_regex:false}
+{className:'MatchRule',rid:15461,pattern:'<marquee ',is_regex:false}
+{className:'MatchRule',rid:18510,pattern:'',is_regex:false}
+{className:'MatchRule',rid:12219,pattern:'wallclock(',is_regex:false}
+{className:'MatchRule',rid:17227,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:16032,pattern:'charset=UTF-8',is_regex:false}
+{className:'MatchRule',rid:19460,pattern:'P�@',is_regex:false}
+{className:'MatchRule',rid:16726,pattern:'Mjik',is_regex:false}
+{className:'MatchRule',rid:17631,pattern:'java-vm-args',is_regex:false}
+{className:'MatchRule',rid:18280,pattern:'.CacheSize',is_regex:false}
+{className:'MatchRule',rid:15541,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17330,pattern:'',is_regex:false}
+{className:'MatchRule',rid:16382,pattern:'ANIMATEMOTION',is_regex:false}
+{className:'MatchRule',rid:17181,pattern:'LsCM:',is_regex:false}
+{className:'MatchRule',rid:16720,pattern:'�Fz�',is_regex:false}
+{className:'MatchRule',rid:20239,pattern:'��0.{
+%�X��E�5n����G�!E�$Y��I�',is_regex:false}
+{className:'MatchRule',rid:18221,pattern:'position',is_regex:false}
+{className:'MatchRule',rid:16322,pattern:'/DCTDecode',is_regex:false}
+{className:'MatchRule',rid:15517,pattern:'stsd',is_regex:false}
+{className:'MatchRule',rid:19141,pattern:''#S+��@',is_regex:false}
+{className:'MatchRule',rid:20559,pattern:'CTMF',is_regex:false}
+{className:'MatchRule',rid:18398,pattern:'T',is_regex:false}
+{className:'MatchRule',rid:13455,pattern:'DXTransform.Microsoft.DXLUTBuilder',is_regex:false}
+{className:'MatchRule',rid:16169,pattern:'obj=document.getElementById("barID");',is_regex:false}
+{className:'MatchRule',rid:17467,pattern:'document.location.replace',is_regex:false}
+{className:'MatchRule',rid:13569,pattern:'����	',is_regex:false}
+{className:'MatchRule',rid:16412,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19074,pattern:'%u9090%u9090',is_regex:false}
+{className:'MatchRule',rid:20137,pattern:'%u0a0a%u0a0a',is_regex:false}
+{className:'MatchRule',rid:16301,pattern:'document.location.href',is_regex:false}
+{className:'MatchRule',rid:9434,pattern:'Ultravox-Max-Msg:',is_regex:false}
+{className:'MatchRule',rid:13820,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17601,pattern:'event.target.parentNode.removeChild',is_regex:false}
+{className:'MatchRule',rid:17316,pattern:'.{3050F4D8-98B5-11CF-BB82-00AA00BDCE0B}',is_regex:false}
+{className:'MatchRule',rid:19818,pattern:'XMLHttpRequest',is_regex:false}
+{className:'MatchRule',rid:17378,pattern:'IHDR',is_regex:false}
+{className:'MatchRule',rid:20000,pattern:'What a long strange trip it's been.  Welcome to sid 20000',is_regex:false}
+{className:'MatchRule',rid:17586,pattern:' -classpath',is_regex:false}
+{className:'MatchRule',rid:18265,pattern:'�����Oh��',is_regex:false}
+{className:'MatchRule',rid:19885,pattern:'((0x200c-4)/2)',is_regex:false}
+{className:'MatchRule',rid:17134,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17457,pattern:'FWS',is_regex:false}
+{className:'MatchRule',rid:6699,pattern:'iTXt',is_regex:false}
+{className:'MatchRule',rid:6696,pattern:'pHYs',is_regex:false}
+{className:'MatchRule',rid:6693,pattern:'bkGD',is_regex:false}
+{className:'MatchRule',rid:18396,pattern:')f:�XNO NAME    FAT12   j',is_regex:false}
+{className:'MatchRule',rid:16319,pattern:'MZ�',is_regex:false}
+{className:'MatchRule',rid:17548,pattern:'content=',is_regex:false}
+{className:'MatchRule',rid:13474,pattern:'<D:href>',is_regex:false}
+{className:'MatchRule',rid:18744,pattern:'[Script Info]',is_regex:false}
+{className:'MatchRule',rid:19436,pattern:'document.styleSheets',is_regex:false}
+{className:'MatchRule',rid:17292,pattern:'���/',is_regex:false}
+{className:'MatchRule',rid:19692,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19431,pattern:'MUS��',is_regex:false}
+{className:'MatchRule',rid:16324,pattern:'.export',is_regex:false}
+{className:'MatchRule',rid:18962,pattern:'HTTP 4
+',is_regex:false}
+{className:'MatchRule',rid:17315,pattern:'W',is_regex:false}
+{className:'MatchRule',rid:19669,pattern:'telnet://',is_regex:false}
+{className:'MatchRule',rid:17756,pattern:'\�',is_regex:false}
+{className:'MatchRule',rid:15704,pattern:'itmss://',is_regex:false}
+{className:'MatchRule',rid:19682,pattern:'
+\��B�b',is_regex:false}
+{className:'MatchRule',rid:18986,pattern:'/OpenType',is_regex:false}
+{className:'MatchRule',rid:19911,pattern:'P;',is_regex:false}
+{className:'MatchRule',rid:16153,pattern:'WMFC',is_regex:false}
+{className:'MatchRule',rid:19463,pattern:'J3��M�f�A3ҋE�f�P�M��Aj',is_regex:false}
+{className:'MatchRule',rid:17211,pattern:'_Marshaled_pUnk',is_regex:false}
+{className:'MatchRule',rid:18240,pattern:'@',is_regex:false}
+{className:'MatchRule',rid:16063,pattern:'<isindex>',is_regex:false}
+{className:'MatchRule',rid:16155,pattern:'SetQueryFromURL',is_regex:false}
+{className:'MatchRule',rid:19693,pattern:'	',is_regex:false}
+{className:'MatchRule',rid:3470,pattern:'VIDORV30',is_regex:false}
+{className:'MatchRule',rid:18299,pattern:'"shell:',is_regex:false}
+{className:'MatchRule',rid:3536,pattern:'!�NETSCAPE2.0',is_regex:false}
+{className:'MatchRule',rid:7022,pattern:'[InternetShortcut]',is_regex:false}
+{className:'MatchRule',rid:16634,pattern:'Shhh don't tell any one this is a secret key!The truth is out thereCOMPLETEremoveChild
+URLRequest0http',is_regex:false}
+{className:'MatchRule',rid:3148,pattern:'adb880a6-d8ff-11cf-9377-00aa003b7a11',is_regex:false}
+{className:'MatchRule',rid:13573,pattern:'mailto:',is_regex:false}
+{className:'MatchRule',rid:17633,pattern:'x',is_regex:false}
+{className:'MatchRule',rid:16633,pattern:'<</Filter/FlateDecode/First 99/Length 511/N 15/Type/ObjStm>>stream
+h�lR�n�0',is_regex:false}
+{className:'MatchRule',rid:17630,pattern:'<li></li>
+<li></li>
+<li></li>
+',is_regex:false}
+{className:'MatchRule',rid:19432,pattern:'����H',is_regex:false}
+{className:'MatchRule',rid:13516,pattern:'HTTP/1.1 404',is_regex:false}
+{className:'MatchRule',rid:15115,pattern:'file://\\',is_regex:false}
+{className:'MatchRule',rid:2485,pattern:'0534CF61-83C5-4765-B19B-45F7A4E135D0',is_regex:false}
+{className:'MatchRule',rid:15867,pattern:'/BaseFont',is_regex:false}
+{className:'MatchRule',rid:17645,pattern:'text-decoration',is_regex:false}
+{className:'MatchRule',rid:14656,pattern:'setcapture()',is_regex:false}
+{className:'MatchRule',rid:16584,pattern:'8AD9C840-044E-11D1-B3E9-00805F499D93',is_regex:false}
+{className:'MatchRule',rid:17355,pattern:'',is_regex:false}
+{className:'MatchRule',rid:19153,pattern:'',is_regex:false}
+{className:'MatchRule',rid:17256,pattern:'url(data:font/ttf;',is_regex:false}
+{className:'MatchRule',rid:16586,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:16593,pattern:'',is_regex:false}
+{className:'MatchRule',rid:20181,pattern:'����D�9���z8��qF;C��i0�wGG�ޙ�2�{�ڭ��v����?�f�;��.B�P��Ү3�',is_regex:false}
+{className:'MatchRule',rid:19447,pattern:' ܐռlC��������',is_regex:false}
+{className:'MatchRule',rid:5319,pattern:'',is_regex:false}
+{className:'MatchRule',rid:18309,pattern:'m',is_regex:false}
+{className:'MatchRule',rid:18231,pattern:',',is_regex:false}
+{className:'MatchRule',rid:19416,pattern:'x���\���?������A2"i�Ri��V�d��55',is_regex:false}
+{className:'MatchRule',rid:11257,pattern:'<colgroup',is_regex:false}
+{className:'MatchRule',rid:16732,pattern:'[HKEY_LOCAL_MACHINE\SOFTWARE\IRE\SafeNet/Soft-PK\ACL\GROUPDEFS\_SafeNet_Default_Group]',is_regex:false}
+{className:'MatchRule',rid:19680,pattern:'|������̋u3��ƅ�tV�@G��u���tJ9u9Vu
+9Vu9',is_regex:false}
+{className:'MatchRule',rid:17204,pattern:'mmap',is_regex:false}
+{className:'MatchRule',rid:7002,pattern:'���y�����',is_regex:false}
+{className:'MatchRule',rid:16220,pattern:'p',is_regex:false}
+{className:'MatchRule',rid:15529,pattern:'setInterval("try { myWindow.location.href = victimLnk;}',is_regex:false}
+{className:'MatchRule',rid:13665,pattern:'HATCH
+',is_regex:false}
+{className:'MatchRule',rid:5710,pattern:'<EMBED',is_regex:false}
+{className:'MatchRule',rid:17145,pattern:'Stylenum',is_regex:false}
+{className:'MatchRule',rid:17515,pattern:'onload',is_regex:false}
+{className:'MatchRule',rid:16550,pattern:'application/java-deployment-toolkit',is_regex:false}
+{className:'MatchRule',rid:20553,pattern:'#EXTINF:0,',is_regex:false}
+{className:'MatchRule',rid:16333,pattern:'this.media.newPlayer',is_regex:false}
+{className:'MatchRule',rid:17320,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:17709,pattern:'setInterval('open_win()', 1);',is_regex:false}
+{className:'MatchRule',rid:13821,pattern:'��',is_regex:false}
+{className:'MatchRule',rid:19932,pattern:',+*/.-R',is_regex:false}
+{className:'MatchRule',rid:19937,pattern:'+= String.fromCharCode(',is_regex:false}
+{className:'MatchRule',rid:15707,pattern:'itpc://',is_regex:false}
+{className:'MatchRule',rid:7020,pattern:'isComponentInstalled',is_regex:false}
+{className:'MatchRule',rid:17348,pattern:'gXYZ',is_regex:false}
+{className:'MatchRule',rid:16224,pattern:'tref',is_regex:false}
+{className:'MatchRule',rid:18419,pattern:'/Ff ',is_regex:false}
+{className:'MatchRule',rid:18300,pattern:'ftp://',is_regex:false}
+{className:'MatchRule',rid:19008,pattern:'debug(-parseFloat("NAN(ffffe',is_regex:false}
+{className:'MatchRule',rid:13571,pattern:'�',is_regex:false}
+{className:'MatchRule',rid:19868,pattern:'<div style="overflow:hidden;width:1px;height:1px;">',is_regex:false}
+{className:'MatchRule',rid:5711,pattern:'BM',is_regex:false}
+{className:'MatchRule',rid:18216,pattern:'behavior:url('#default#anim')',is_regex:false}
+{className:'MatchRule',rid:20431,pattern:'������',is_regex:false}
+{className:'MatchRule',rid:1840,pattern:'document.domain(',is_regex:false}
+{className:'MatchRule',rid:17434,pattern:';&#8204;&#8204',is_regex:false}
+{className:'MatchRule',rid:16543,pattern:'auds',is_regex:false}
+{className:'MatchRule',rid:16055,pattern:'mp4a',is_regex:false}
+{className:'MatchRule',rid:12643,pattern:'%00%00',is_regex:false}
+{className:'MatchRule',rid:1735,pattern:'new XMLHttpRequest(',is_regex:false}
+{className:'MatchRule',rid:9625,pattern:'<ref',is_regex:false}
+{className:'MatchRule',rid:18572,pattern:'��>Ж��o���t�:�',is_regex:false}
+{className:'MatchRule',rid:18573,pattern:'��_N��+-���8/�',is_regex:false}
+{className:'MatchRule',rid:16181,pattern:'U����������',is_regex:false}
+{className:'MatchRule',rid:18565,pattern:'~����_{О�6��',is_regex:false}
+{className:'MatchRule',rid:18567,pattern:'�U����[�(+pw)�',is_regex:false}
+{className:'MatchRule',rid:18576,pattern:'r!�W=��0N���',is_regex:false}
+{className:'MatchRule',rid:18566,pattern:'��j�ab�:d�Om�X|',is_regex:false}
+{className:'MatchRule',rid:18568,pattern:'9*CO����4��)',is_regex:false}
+{className:'MatchRule',rid:16291,pattern:'U',is_regex:false}
+{className:'MatchRule',rid:11947,pattern:'',is_regex:false}
+{className:'MatchRule',rid:18571,pattern:'�9�4�@�iZtTp��?C',is_regex:false}
+{className:'MatchRule',rid:18570,pattern:'���x��q
++�DG',is_regex:false}
+{className:'MatchRule',rid:18569,pattern:'>u��ki0!!�0���*q',is_regex:false}
+{className:'MatchRule',rid:18530,pattern:'i',is_regex:false}
+{className:'MatchRule',rid:18532,pattern:'i',is_regex:false}
+{className:'MatchRule',rid:9434,pattern:'Ultravox-Max-Msg:',is_regex:false}
+{className:'MatchRule',rid:16521,pattern:' http/',is_regex:false}
+{className:'MatchRule',rid:20616,pattern:'Authorization: Basic',is_regex:false}
+{className:'MatchRule',rid:17409,pattern:'xn--',is_regex:false}
+{className:'MatchRule',rid:15471,pattern:'.asp',is_regex:false}
+{className:'MatchRule',rid:16686,pattern:'/ibm/console/',is_regex:false}
+{className:'MatchRule',rid:20620,pattern:'GET',is_regex:false}
+{className:'MatchRule',rid:20608,pattern:'gwia.css',is_regex:false}
+{className:'MatchRule',rid:20607,pattern:'gwagents.css',is_regex:false}
+{className:'MatchRule',rid:19257,pattern:'_0day2_flaMainTimeline',is_regex:false}
