@@ -565,7 +565,7 @@ static inline void RegisterContentRulesToDPIController(SnortConfig *sc);
 static inline SFGHASH * CreateAcsmListMap(void);
 static inline void AcsmListMapFree(HashMap *ruleToMlist);
 static inline HashMap * CreateRuleToMlistMap(void);
-static inline void RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
+static inline bool RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist);
 static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, HashMap *ruleMlistMap);
 static inline void DPIServiceFree(SnortConfig *sc);
 static inline void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc);
@@ -5447,15 +5447,17 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 		     * rules will be sent for matching advance analysis. i.e. if the content of the state was found
 		     * all rules associated to that state will be alerted (or any other action).
 		     */
-			matchRule=cJSON_CreateObject();
-			cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
-			cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
-			cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
-			cJSON_AddNumberToObject(matchRule, RULE_ID, otn->sigInfo.id);
-			cJSON_AddItemToArray(ruleList, matchRule);
 
 			// Add Rule ID => mlist map to be used when processing packet content match.
-			RuleAdd(ruleMlistMap, otn->sigInfo.id, mlist);
+			bool added = RuleAdd(ruleMlistMap, otn->sigInfo.id, mlist);
+			if (added) {
+				matchRule=cJSON_CreateObject();
+				cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
+				cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
+				cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
+				cJSON_AddNumberToObject(matchRule, RULE_ID, otn->sigInfo.id);
+				cJSON_AddItemToArray(ruleList, matchRule);
+			}
 		}
 	}
 
@@ -5500,12 +5502,22 @@ static inline HashMap * CreateRuleToMlistMap(void) {
     return hashmap_create();
 }
 
-/* The function adds a rule to mlist entry Key: Rule ID => Value: mlist) to the DPI Rule to mlist Map). */
-static inline void RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
+/**
+ * The function adds a rule to the DPI Rule to mlist Map (entry Key: Rule ID => Value: mlist).
+ * returns: true if the rule was added to the map; otherwise false.
+ */
+static inline bool RuleAdd(HashMap *ruleMlistMap, rule_id_t rid, ACSM_PATTERN2 *mlist) {
 	if (ruleMlistMap == NULL)
-		return;
+		return false;
+
+	ACSM_PATTERN2 *ruleExist = (ACSM_PATTERN2 *)hashmap_get(ruleMlistMap, rid);
+	if (ruleExist) {
+		return false;
+	}
 
 	hashmap_put(ruleMlistMap, rid, mlist);
+
+	return true;
 }
 
 static inline void AcsmAdd(SFGHASH *matchListMap, ACSM_STRUCT2 *acsm, HashMap *ruleMlistMap) {
