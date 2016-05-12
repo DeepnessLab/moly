@@ -1,647 +1,647 @@
-{className:'MatchRule',rid:16032,pattern:'"charset=UTF-8"',is_regex:false}
-{className:'MatchRule',rid:18280,pattern:'".CacheSize"',is_regex:false}
-{className:'MatchRule',rid:2707,pattern:'"|FF|"',is_regex:false}
-{className:'MatchRule',rid:6503,pattern:'"!|FF 0B|ANIMEXTS1.0"',is_regex:false}
-{className:'MatchRule',rid:15869,pattern:'"|00|airappinstaller|00|ASnative|00|"',is_regex:false}
-{className:'MatchRule',rid:16502,pattern:'"wOFFOTTO"',is_regex:false}
-{className:'MatchRule',rid:19926,pattern:'"AppletX"',is_regex:false}
-{className:'MatchRule',rid:17284,pattern:'"|B9 00 9B 05 56 04 3F 05 00 00 41 41 41 41|"',is_regex:false}
-{className:'MatchRule',rid:13918,pattern:'"tmci"',is_regex:false}
-{className:'MatchRule',rid:20283,pattern:'"window.open"',is_regex:false}
-{className:'MatchRule',rid:13316,pattern:'"|A9|ART"',is_regex:false}
-{className:'MatchRule',rid:13807,pattern:'"|FF FF FF|"',is_regex:false}
-{className:'MatchRule',rid:16293,pattern:'"|FF FF FF FF 01 1F 02|H|00 00 00|6|00 00 FF FF 01 1F 1F EE|"',is_regex:false}
-{className:'MatchRule',rid:19141,pattern:'"|27 03 23 53 2B 17 D0 11 AD 40 00 A0 C9 0D C8 D9|"',is_regex:false}
-{className:'MatchRule',rid:5318,pattern:'"|09 00|"',is_regex:false}
-{className:'MatchRule',rid:19873,pattern:'"position"',is_regex:false}
-{className:'MatchRule',rid:19005,pattern:'"|3C|dialog|20|style|3D 27|position|3A|relative|27 3E|"',is_regex:false}
-{className:'MatchRule',rid:4133,pattern:'"083863F1-70DE-11d0-BD40-00A0C911CE86"',is_regex:false}
-{className:'MatchRule',rid:17804,pattern:'"var html = |22|<|22| + tags[i] + |22| |22| + atts[j]"',is_regex:false}
-{className:'MatchRule',rid:7022,pattern:'"[InternetShortcut]"',is_regex:false}
-{className:'MatchRule',rid:18331,pattern:'"HEADER"',is_regex:false}
-{className:'MatchRule',rid:16310,pattern:'"overflow"',is_regex:false}
-{className:'MatchRule',rid:19868,pattern:'"<div style=|22|overflow|3A|hidden|3B|width|3A|1px|3B|height|3A|1px|3B 22|>"',is_regex:false}
-{className:'MatchRule',rid:17236,pattern:'"-moz-column-"',is_regex:false}
-{className:'MatchRule',rid:13301,pattern:'"JFIF"',is_regex:false}
-{className:'MatchRule',rid:15695,pattern:'"|00 03 00|"',is_regex:false}
-{className:'MatchRule',rid:2705,pattern:'"|FF D8|"',is_regex:false}
-{className:'MatchRule',rid:15539,pattern:'"|06 00|"',is_regex:false}
-{className:'MatchRule',rid:6697,pattern:'"sPLT"',is_regex:false}
-{className:'MatchRule',rid:16037,pattern:'"<filter"',is_regex:false}
-{className:'MatchRule',rid:18987,pattern:'"/TrueType"',is_regex:false}
-{className:'MatchRule',rid:4136,pattern:'"|FF C0|"',is_regex:false}
-{className:'MatchRule',rid:19130,pattern:'"|FF C0 00 11 08 FF 37 55 99 03 01 22 00 02 11 01 03 11 01|"',is_regex:false}
-{className:'MatchRule',rid:5741,pattern:'"file"',is_regex:false}
-{className:'MatchRule',rid:16734,pattern:'!"|22|"',is_regex:false}
-{className:'MatchRule',rid:19147,pattern:'"obj|2E|outerHTML|2B 2B|"',is_regex:false}
-{className:'MatchRule',rid:15694,pattern:'"|00 01 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17182,pattern:'"tSAC|B7 00 00 00 00 00 00 01 00 00 00 8F|"',is_regex:false}
-{className:'MatchRule',rid:16730,pattern:'"Photodex|28|R|29| ProShow|28|TM|29| Show File Version"',is_regex:false}
-{className:'MatchRule',rid:9843,pattern:'"document."',is_regex:false}
-{className:'MatchRule',rid:17629,pattern:'"document|2E|write"',is_regex:false}
-{className:'MatchRule',rid:19174,pattern:'"expression|28|"',is_regex:false}
-{className:'MatchRule',rid:17144,pattern:'"AnglUntF"',is_regex:false}
-{className:'MatchRule',rid:15472,pattern:'"[playlist]"',is_regex:false}
-{className:'MatchRule',rid:18235,pattern:'"|49 43|"',is_regex:false}
-{className:'MatchRule',rid:17505,pattern:'"|D0 CF 11 E0 A1 B1 1A E1|"',is_regex:false}
-{className:'MatchRule',rid:19320,pattern:'"RIFF"',is_regex:false}
-{className:'MatchRule',rid:16634,pattern:'"|53 68 68 68 20 64 6F 6E 27 74 20 74 65 6C 6C 20 61 6E 79 20 6F 6E 65 20 74 68 69 73 20 69 73 20 61 20 73 65 63 72 65 74 20 6B 65 79 21 16 54 68 65 20 74 72 75 74 68 20 69 73 20 6F 75 74 20 74 68 65 72 65 08 43 4F 4D 50 4C 45 54 45 0B 72 65 6D 6F 76 65 43 68 69 6C 64 0A 55 52 4C 52 65 71 75 65 73 74 30 68 74 74 70|"',is_regex:false}
-{className:'MatchRule',rid:17200,pattern:'"LsCM"',is_regex:false}
-{className:'MatchRule',rid:17202,pattern:'"Shockwave 3D"',is_regex:false}
-{className:'MatchRule',rid:15871,pattern:'"strk|28 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:3134,pattern:'"|89|PNG|0D 0A 1A 0A|"',is_regex:false}
-{className:'MatchRule',rid:17467,pattern:'"document|2E|location|2E|replace"',is_regex:false}
-{className:'MatchRule',rid:19444,pattern:'"P|94 BD C6 7F 86 07|I|83 A3 C7|y!|B7|3|AD|"',is_regex:false}
-{className:'MatchRule',rid:4647,pattern:'"window"',is_regex:false}
-{className:'MatchRule',rid:20277,pattern:'"window.open"',is_regex:false}
-{className:'MatchRule',rid:17400,pattern:'"unescape"',is_regex:false}
-{className:'MatchRule',rid:15946,pattern:'"&lt|3B|"',is_regex:false}
-{className:'MatchRule',rid:16601,pattern:'"<bdo"',is_regex:false}
-{className:'MatchRule',rid:17355,pattern:'"|01 00 02 11 01|"',is_regex:false}
-{className:'MatchRule',rid:16506,pattern:'"innerHTML"',is_regex:false}
-{className:'MatchRule',rid:16507,pattern:'"onreadystatechange"',is_regex:false}
-{className:'MatchRule',rid:19419,pattern:'"|78 DA ED DD 07 3C 97 FB FF 3F 7E 23 0D 23 CA C8 28 69 90 64 13 21 44 85 B2 0A 91 68 C8 DE 5B 46|"',is_regex:false}
-{className:'MatchRule',rid:12707,pattern:'"LYRICSBEGIN"',is_regex:false}
-{className:'MatchRule',rid:3550,pattern:'"image/"',is_regex:false}
-{className:'MatchRule',rid:16739,pattern:'"http|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:3536,pattern:'"!|FF 0B|NETSCAPE2.0"',is_regex:false}
-{className:'MatchRule',rid:18986,pattern:'"/OpenType"',is_regex:false}
-{className:'MatchRule',rid:16414,pattern:'"|23 3A|//"',is_regex:false}
-{className:'MatchRule',rid:17154,pattern:'"|27 27|"',is_regex:false}
-{className:'MatchRule',rid:18507,pattern:'"|2F|CCITTFaxDecode"',is_regex:false}
-{className:'MatchRule',rid:9847,pattern:'"S|00|a|00|v|00|e|00|d|00|S|00|e|00|a|00|r|00|c|00|h|00|"',is_regex:false}
-{className:'MatchRule',rid:15873,pattern:'"window.open|28|"',is_regex:false}
-{className:'MatchRule',rid:17434,pattern:'"|3B 26 23|8204|3B 26 23|8204"',is_regex:false}
-{className:'MatchRule',rid:19682,pattern:'"|0A 5C 94 BF 42 D9 62 00 00 F3 45 3D D4 6E C2 7F 22 D1 11 DD B9 EC D8 84 72 2B DD 44 F2 BB 00 05 E6 8A 7B A8 DD 89 DE 4A 86 00 FF 09 10 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17301,pattern:'"|09 04 16 00 22 0C 00 00 80 57 00 00 80 57 00 00 02|"',is_regex:false}
-{className:'MatchRule',rid:16655,pattern:'"|18 00|"',is_regex:false}
-{className:'MatchRule',rid:15502,pattern:'"|0F 00 06|+"',is_regex:false}
-{className:'MatchRule',rid:17462,pattern:'"MARQUEE"',is_regex:false}
-{className:'MatchRule',rid:15461,pattern:'"<marquee "',is_regex:false}
-{className:'MatchRule',rid:4643,pattern:'"L|00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00|F"',is_regex:false}
-{className:'MatchRule',rid:16378,pattern:'"cells.item"',is_regex:false}
-{className:'MatchRule',rid:15541,pattern:'"|FC 00|"',is_regex:false}
-{className:'MatchRule',rid:13962,pattern:'"Content-Transfer-Encoding"',is_regex:false}
-{className:'MatchRule',rid:7204,pattern:'"|15 00 12 00|"',is_regex:false}
-{className:'MatchRule',rid:16641,pattern:'"|15 00 12 00 14 00|"',is_regex:false}
-{className:'MatchRule',rid:13569,pattern:'"|FF FF FF FF 09 08|"',is_regex:false}
-{className:'MatchRule',rid:17516,pattern:'"onmousedown"',is_regex:false}
-{className:'MatchRule',rid:6700,pattern:'"tEXt"',is_regex:false}
-{className:'MatchRule',rid:17365,pattern:'"Content-Type: text/plain"',is_regex:false}
-{className:'MatchRule',rid:16188,pattern:'"|9F 0F 04 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15562,pattern:'"jP  "',is_regex:false}
-{className:'MatchRule',rid:6698,pattern:'"tIME"',is_regex:false}
-{className:'MatchRule',rid:19237,pattern:'"#default#time2"',is_regex:false}
-{className:'MatchRule',rid:17362,pattern:'"|7F 00 54 01 09 00 01 00 00 00 00 00 0C 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:13919,pattern:'"text"',is_regex:false}
-{className:'MatchRule',rid:13960,pattern:'"createTextRange"',is_regex:false}
-{className:'MatchRule',rid:16035,pattern:'".createTextRange|28 29 3B|"',is_regex:false}
-{className:'MatchRule',rid:17408,pattern:'"|00 00 0A 00 00 00 00 00 00 00 00 00 00 80 00 80 20 20|"',is_regex:false}
-{className:'MatchRule',rid:3088,pattern:'".cda"',is_regex:false}
-{className:'MatchRule',rid:15535,pattern:'"setCapture"',is_regex:false}
-{className:'MatchRule',rid:18102,pattern:'"printSeps"',is_regex:false}
-{className:'MatchRule',rid:16300,pattern:'"document.location.href"',is_regex:false}
-{className:'MatchRule',rid:16224,pattern:'"tref"',is_regex:false}
-{className:'MatchRule',rid:15384,pattern:'"|00 11 02 FF 0C 00|"',is_regex:false}
-{className:'MatchRule',rid:16677,pattern:'"FlateDecode"',is_regex:false}
-{className:'MatchRule',rid:15703,pattern:'"itms|3A|//"',is_regex:false}
-{className:'MatchRule',rid:20211,pattern:'"|42 1B EB 68 C4 A9 39 96 95 4B 0E 39 71 A9 9E E8 72 CE 38 A4 3B C4 92 4B|"',is_regex:false}
-{className:'MatchRule',rid:17612,pattern:'"|00 00 00 00 00 00 00 01 EE 00 00 26 00 00 04 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19099,pattern:'"format("',is_regex:false}
-{className:'MatchRule',rid:15909,pattern:'"tkhd"',is_regex:false}
-{className:'MatchRule',rid:16654,pattern:'"|88 00 08 00|"',is_regex:false}
-{className:'MatchRule',rid:10062,pattern:'"GIF"',is_regex:false}
-{className:'MatchRule',rid:8414,pattern:'"GIF8"',is_regex:false}
-{className:'MatchRule',rid:18239,pattern:'"@import "',is_regex:false}
-{className:'MatchRule',rid:13964,pattern:'"span"',is_regex:false}
-{className:'MatchRule',rid:20149,pattern:'"Subtype|2F|image"',is_regex:false}
-{className:'MatchRule',rid:3634,pattern:'"BM"',is_regex:false}
-{className:'MatchRule',rid:17631,pattern:'"java|2D|vm|2D|args"',is_regex:false}
-{className:'MatchRule',rid:18304,pattern:'"white|2D|space|3A|normal|3B|"',is_regex:false}
-{className:'MatchRule',rid:16043,pattern:'"|09 09|pre {|0A 09 09 09|white-space|3A|normal|3B 0A|"',is_regex:false}
-{className:'MatchRule',rid:16470,pattern:'"|DC 00 0C 00|"',is_regex:false}
-{className:'MatchRule',rid:5710,pattern:'"<EMBED"',is_regex:false}
-{className:'MatchRule',rid:16155,pattern:'"RIFF"',is_regex:false}
-{className:'MatchRule',rid:17378,pattern:'"IHDR"',is_regex:false}
-{className:'MatchRule',rid:13820,pattern:'"|BF 15 0C 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:13824,pattern:'"strf"',is_regex:false}
-{className:'MatchRule',rid:17515,pattern:'"onload"',is_regex:false}
-{className:'MatchRule',rid:20237,pattern:'"http|3A|//"',is_regex:false}
-{className:'MatchRule',rid:13822,pattern:'"|BF 14 7F 01 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15872,pattern:'"__defineSetter__|28|"',is_regex:false}
-{className:'MatchRule',rid:18680,pattern:'"pFragments"',is_regex:false}
-{className:'MatchRule',rid:15106,pattern:'"|5C|dppolycount"',is_regex:false}
-{className:'MatchRule',rid:18167,pattern:'"<?xml"',is_regex:false}
-{className:'MatchRule',rid:15913,pattern:'"function arguments"',is_regex:false}
-{className:'MatchRule',rid:16508,pattern:'"meta http-equiv=|22|X-UA-Compatible|22| content=|22|IE=7|22|"',is_regex:false}
-{className:'MatchRule',rid:16520,pattern:'"4|3A|pathl"',is_regex:false}
-{className:'MatchRule',rid:17181,pattern:'"LsCM|3A 00 00 00 00 00 00 0C 00 00 00 01 00 04 00 00 40 05 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17517,pattern:'"|5D 00|"',is_regex:false}
-{className:'MatchRule',rid:16359,pattern:'"[Setnet32]"',is_regex:false}
-{className:'MatchRule',rid:13571,pattern:'"|B2 01|"',is_regex:false}
-{className:'MatchRule',rid:9842,pattern:'".pdf|23|"',is_regex:false}
-{className:'MatchRule',rid:16744,pattern:'"<dxstudio"',is_regex:false}
-{className:'MatchRule',rid:19685,pattern:'"|28 28 28 28 28 28 28 28 28 28 28 28 28 28 28 28 28|"',is_regex:false}
-{className:'MatchRule',rid:18221,pattern:'"position"',is_regex:false}
-{className:'MatchRule',rid:13453,pattern:'"1e54333b-2a00-11d1-8198-0000f87557db"',is_regex:false}
-{className:'MatchRule',rid:7197,pattern:'"|00 00 00 00 00 00 1D 00 0F 00 03 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17213,pattern:'"about|3A|config"',is_regex:false}
-{className:'MatchRule',rid:16223,pattern:'"|5C|stylesheet"',is_regex:false}
-{className:'MatchRule',rid:17111,pattern:'"String.fromCharCode|28|parseInt"',is_regex:false}
-{className:'MatchRule',rid:17366,pattern:'"HLP"',is_regex:false}
-{className:'MatchRule',rid:17398,pattern:'"a|5B|10|5D 20 3D 20 22|AAAAAAAAAA|22 3B|"',is_regex:false}
-{className:'MatchRule',rid:9823,pattern:'"rtsp|3A|//"',is_regex:false}
-{className:'MatchRule',rid:16000,pattern:'"|F9 04 01 00 00 10 00|,|00 00 00 00 00 00 90 01|"',is_regex:false}
-{className:'MatchRule',rid:17351,pattern:'"ID3"',is_regex:false}
-{className:'MatchRule',rid:3679,pattern:'"image/bmp"',is_regex:false}
-{className:'MatchRule',rid:13838,pattern:'"|BF 14 7F 01 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17633,pattern:'"|78 00 05 5F 00 00 0F A0 00 00 0C 01 00 43 02 FF FF FF BF 00 39|"',is_regex:false}
-{className:'MatchRule',rid:17368,pattern:'"|A8 00 00 00 00 00 00 00 41 41 41 41 10 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17129,pattern:'"|01|"',is_regex:false}
-{className:'MatchRule',rid:13516,pattern:'"HTTP/1.1 404"',is_regex:false}
-{className:'MatchRule',rid:16236,pattern:'"|B0 00|"',is_regex:false}
-{className:'MatchRule',rid:16452,pattern:'"vbscript"',is_regex:false}
-{className:'MatchRule',rid:13448,pattern:'"VBScript.Encode"',is_regex:false}
-{className:'MatchRule',rid:16696,pattern:'"|3C|DeepBurner_record"',is_regex:false}
-{className:'MatchRule',rid:17165,pattern:'"setInterval"',is_regex:false}
-{className:'MatchRule',rid:17709,pattern:'"setInterval|28 27|open|5F|win|28 29 27 2C 20|1|29 3B|"',is_regex:false}
-{className:'MatchRule',rid:10116,pattern:'"aim|3A|GoChat?"',is_regex:false}
-{className:'MatchRule',rid:15303,pattern:'"|00 00| |00| |FF 00 00 14 01 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15363,pattern:'"String.fromCharCode|28|"',is_regex:false}
-{className:'MatchRule',rid:18508,pattern:'".sheet.rules["',is_regex:false}
-{className:'MatchRule',rid:19449,pattern:'"N|B8 98|f|FA 0A|0C|AE B2 1C 0A 98 D7 A4|M"',is_regex:false}
-{className:'MatchRule',rid:16593,pattern:'"|01 00 C3 0F 18 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:7203,pattern:'"|E0 85 9F F2 F9|Oh|10 AB 91 08 00|+'|B3 D9|"',is_regex:false}
-{className:'MatchRule',rid:19885,pattern:'"|28 28|0x200c-4|29 2F|2|29|"',is_regex:false}
-{className:'MatchRule',rid:9433,pattern:'"|C2 AB CD AB|"',is_regex:false}
-{className:'MatchRule',rid:19463,pattern:'"|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|"',is_regex:false}
-{className:'MatchRule',rid:18297,pattern:'"transform"',is_regex:false}
-{className:'MatchRule',rid:12744,pattern:'"fLaC"',is_regex:false}
-{className:'MatchRule',rid:16596,pattern:'".prompt"',is_regex:false}
-{className:'MatchRule',rid:17203,pattern:'"rcsL"',is_regex:false}
-{className:'MatchRule',rid:19234,pattern:'"<!ENTITY"',is_regex:false}
-{className:'MatchRule',rid:3149,pattern:'"|89|PNG|0D 0A 1A 0A|"',is_regex:false}
-{className:'MatchRule',rid:18219,pattern:'"|01 00 04 04 00 01 01 01 03 49 57 00 01 02 80 01 00 40 F8 0F|"',is_regex:false}
-{className:'MatchRule',rid:14641,pattern:'"|51 08|"',is_regex:false}
-{className:'MatchRule',rid:17403,pattern:'"|5C|prtdata"',is_regex:false}
-{className:'MatchRule',rid:18809,pattern:'"<applet"',is_regex:false}
-{className:'MatchRule',rid:2438,pattern:'"file|3A|//"',is_regex:false}
-{className:'MatchRule',rid:16423,pattern:'"file|3A|//127.0.0.1"',is_regex:false}
-{className:'MatchRule',rid:15114,pattern:'"embed src"',is_regex:false}
-{className:'MatchRule',rid:18335,pattern:'"mhtml"',is_regex:false}
-{className:'MatchRule',rid:6510,pattern:'"mhtml|3A|//"',is_regex:false}
-{className:'MatchRule',rid:17388,pattern:'"|00 00 00 54|"',is_regex:false}
-{className:'MatchRule',rid:16319,pattern:'"MZ|90 00|"',is_regex:false}
-{className:'MatchRule',rid:17512,pattern:'"onmouseover"',is_regex:false}
-{className:'MatchRule',rid:17468,pattern:'"<"',is_regex:false}
-{className:'MatchRule',rid:16183,pattern:'"|00|CombineImpl|00|"',is_regex:false}
-{className:'MatchRule',rid:15501,pattern:'"|01 00 09|+|10 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19153,pattern:'"|02 00 60 00 0C 14 FF 00 04 61 D5 00 B0 00 08 00 53 00 75 00|"',is_regex:false}
-{className:'MatchRule',rid:4132,pattern:'"EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F"',is_regex:false}
-{className:'MatchRule',rid:6699,pattern:'"iTXt"',is_regex:false}
-{className:'MatchRule',rid:17316,pattern:'".|7B|3050F4D8-98B5-11CF-BB82-00AA00BDCE0B|7D|"',is_regex:false}
-{className:'MatchRule',rid:16153,pattern:'"WMFC|01 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:14656,pattern:'"setcapture|28 29|"',is_regex:false}
-{className:'MatchRule',rid:6691,pattern:'"sBIT"',is_regex:false}
-{className:'MatchRule',rid:20133,pattern:'"MIME-Version"',is_regex:false}
-{className:'MatchRule',rid:9429,pattern:'"<?quicktime type=|22|application/x-quicktime-media-link"',is_regex:false}
-{className:'MatchRule',rid:17348,pattern:'"gXYZ"',is_regex:false}
-{className:'MatchRule',rid:17482,pattern:'"news|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:16346,pattern:'"[Setnet32]"',is_regex:false}
-{className:'MatchRule',rid:16169,pattern:'"obj=document.getElementById|28 22|barID|22 29 3B|"',is_regex:false}
-{className:'MatchRule',rid:13821,pattern:'"|BF 15 84 03 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17379,pattern:'"IHDR"',is_regex:false}
-{className:'MatchRule',rid:17776,pattern:'"|01 00 2C 28|Ljava|2F|net|2F|URL|3B 29|Ljavax|2F|sound|2F|midi|2F|Soundbank"',is_regex:false}
-{className:'MatchRule',rid:9637,pattern:'"<?aom"',is_regex:false}
-{className:'MatchRule',rid:5713,pattern:'"|D7 CD C6 9A|"',is_regex:false}
-{className:'MatchRule',rid:20535,pattern:'"opera|3A|config"',is_regex:false}
-{className:'MatchRule',rid:17601,pattern:'"event.target.parentNode.removeChild"',is_regex:false}
-{className:'MatchRule',rid:4675,pattern:'"L|00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00|F"',is_regex:false}
-{className:'MatchRule',rid:16603,pattern:'"stream|0A|U3D"',is_regex:false}
-{className:'MatchRule',rid:6694,pattern:'"hIST"',is_regex:false}
-{className:'MatchRule',rid:17258,pattern:'"selection|2E|timedSelect|28|1|2C|8000|29 3B|"',is_regex:false}
-{className:'MatchRule',rid:20141,pattern:'"|00 00 00 00 1D 00 0F 00 03 00 00 00 00 00 FF FF FF FF FF FF FF 00 00 0D 00 02 00 01 00 0C 00 02 00 64 00 0F 00 02 00 01 00 11 00 02 00 00 00 10|"',is_regex:false}
-{className:'MatchRule',rid:16322,pattern:'"/DCTDecode"',is_regex:false}
-{className:'MatchRule',rid:14657,pattern:'"|2E|componentFromPoint|28|"',is_regex:false}
-{className:'MatchRule',rid:18196,pattern:'"@import "',is_regex:false}
-{className:'MatchRule',rid:19710,pattern:'"display: -webkit-inline-box"',is_regex:false}
-{className:'MatchRule',rid:16318,pattern:'"|00 02 0B|@|00 00 00 00 00 00 00 00 FE 00 FF 00 90 03 A7 00|"',is_regex:false}
-{className:'MatchRule',rid:20444,pattern:'"launchjnlp"',is_regex:false}
-{className:'MatchRule',rid:16411,pattern:'"|C3 0B|"',is_regex:false}
-{className:'MatchRule',rid:20590,pattern:'"|C3 0B 08|"',is_regex:false}
-{className:'MatchRule',rid:18066,pattern:'"setAttribute"',is_regex:false}
-{className:'MatchRule',rid:19240,pattern:'"stylesheet"',is_regex:false}
-{className:'MatchRule',rid:18633,pattern:'"|13 08|"',is_regex:false}
-{className:'MatchRule',rid:16720,pattern:'"|F5 46 7A BD 00 00 00 02 00 02 00 00|"',is_regex:false}
-{className:'MatchRule',rid:9434,pattern:'"Ultravox-Max-Msg|3A|"',is_regex:false}
-{className:'MatchRule',rid:13920,pattern:'"obji"',is_regex:false}
-{className:'MatchRule',rid:17146,pattern:'"|00|G|00|r|00|a|00|d|00|i|00|e|00|n|00|t"',is_regex:false}
-{className:'MatchRule',rid:3686,pattern:'"name"',is_regex:false}
-{className:'MatchRule',rid:18246,pattern:'"|87 00 00 00 4C 17 00 00 00 00 00 00 52 03 00 00|"',is_regex:false}
-{className:'MatchRule',rid:9641,pattern:'"|90 08 00|3|B1 E5 CF 11 89 F4 00 A0 C9 03|I|CB|"',is_regex:false}
-{className:'MatchRule',rid:17303,pattern:'"|2E|cloneNode()"',is_regex:false}
-{className:'MatchRule',rid:16492,pattern:'"<NOBR"',is_regex:false}
-{className:'MatchRule',rid:7202,pattern:'"|02 D5 CD D5 9C|.|1B 10 93 97 08 00|+,|F9 AE|"',is_regex:false}
-{className:'MatchRule',rid:14262,pattern:'"onenote|3A|"',is_regex:false}
-{className:'MatchRule',rid:9625,pattern:'"<ref"',is_regex:false}
-{className:'MatchRule',rid:17725,pattern:'"file|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:17756,pattern:'"|5C FE 00 01 02 5C FE 00 01 02 5C FE 00 01 02 5C FE 00 01 02 51 4A|"',is_regex:false}
-{className:'MatchRule',rid:15709,pattern:'"/DecodeParms"',is_regex:false}
-{className:'MatchRule',rid:16208,pattern:'"<object classid='clsid|3A|10020200-E260-11CF-AE68-00AA004A34D5' id='SQLServer'"',is_regex:false}
-{className:'MatchRule',rid:17645,pattern:'"text-decoration"',is_regex:false}
-{className:'MatchRule',rid:16412,pattern:'"|00 00 A8 0F|"',is_regex:false}
-{className:'MatchRule',rid:13572,pattern:'"|0A F0 08 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19243,pattern:'"layout-grid-char|3A|"',is_regex:false}
-{className:'MatchRule',rid:20288,pattern:'"QLCMfmt|20|"',is_regex:false}
-{className:'MatchRule',rid:15499,pattern:'"|CC 0F 00 00 FF FF 00 00|"',is_regex:false}
-{className:'MatchRule',rid:18299,pattern:'"|22|shell|3A|"',is_regex:false}
-{className:'MatchRule',rid:17692,pattern:'"ExecWB"',is_regex:false}
-{className:'MatchRule',rid:19431,pattern:'"|4D 55 53 1A C0 EB|"',is_regex:false}
-{className:'MatchRule',rid:13318,pattern:'"|A9|cmt"',is_regex:false}
-{className:'MatchRule',rid:13319,pattern:'"|A9|des"',is_regex:false}
-{className:'MatchRule',rid:17186,pattern:'"rcsL|0E 05 00 00 00 00 00 00 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17188,pattern:'"rcsL|0E 05 00 00 00 00 00 00 00 00 00 00 00 00 05 0E|"',is_regex:false}
-{className:'MatchRule',rid:16342,pattern:'"AVI LIST"',is_regex:false}
-{className:'MatchRule',rid:9801,pattern:'"MThd"',is_regex:false}
-{className:'MatchRule',rid:17586,pattern:'" -classpath"',is_regex:false}
-{className:'MatchRule',rid:16367,pattern:'"createEventObject"',is_regex:false}
-{className:'MatchRule',rid:16333,pattern:'"this.media.newPlayer"',is_regex:false}
-{className:'MatchRule',rid:20559,pattern:'"CTMF"',is_regex:false}
-{className:'MatchRule',rid:6696,pattern:'"pHYs"',is_regex:false}
-{className:'MatchRule',rid:6692,pattern:'"sRGB"',is_regex:false}
-{className:'MatchRule',rid:15517,pattern:'"stsd"',is_regex:false}
-{className:'MatchRule',rid:4195,pattern:'"Interactive Training]"',is_regex:false}
-{className:'MatchRule',rid:16339,pattern:'"clearAttributes"',is_regex:false}
-{className:'MatchRule',rid:6504,pattern:'"|02|"',is_regex:false}
-{className:'MatchRule',rid:7025,pattern:'"n|DB 7C D2|m|AE CF 11 96 B8|DEST|00 00|"',is_regex:false}
-{className:'MatchRule',rid:19680,pattern:'"|06 7C BD EB 05 BA CC CC CC CC 8B 75 08 33 FF 8B C6 85 F6 74 56 8B 40 04 47 85 C0 75 F8 85 F6 74 4A 39 16 75 0F 39 56 14 75 0A 39 56 18 75 05 39|"',is_regex:false}
-{className:'MatchRule',rid:17487,pattern:'"javascript"',is_regex:false}
-{className:'MatchRule',rid:19254,pattern:'"/F |28|javascript:"',is_regex:false}
-{className:'MatchRule',rid:15116,pattern:'"search-ms|3A|"',is_regex:false}
-{className:'MatchRule',rid:13570,pattern:'"|B1 01|"',is_regex:false}
-{className:'MatchRule',rid:8413,pattern:'"uplddrvinfo.htm?"',is_regex:false}
-{className:'MatchRule',rid:18231,pattern:'"|2C 01 04 00|"',is_regex:false}
-{className:'MatchRule',rid:17153,pattern:'"|22 22|"',is_regex:false}
-{className:'MatchRule',rid:18401,pattern:'"//|2A|*Start Encode**#@~^"',is_regex:false}
-{className:'MatchRule',rid:15698,pattern:'"%u0c0c%u0c0c"',is_regex:false}
-{className:'MatchRule',rid:17238,pattern:'"|23|define"',is_regex:false}
-{className:'MatchRule',rid:15536,pattern:'"callback"',is_regex:false}
-{className:'MatchRule',rid:17105,pattern:'"|3C 00|o|00|u|00|t|00|l|00|i|00|n|00|e|00|"',is_regex:false}
-{className:'MatchRule',rid:19246,pattern:'"document.selection.empty"',is_regex:false}
-{className:'MatchRule',rid:9840,pattern:'"> T<"',is_regex:false}
-{className:'MatchRule',rid:19666,pattern:'".document.open|28 29|"',is_regex:false}
-{className:'MatchRule',rid:12279,pattern:'"substringData"',is_regex:false}
-{className:'MatchRule',rid:17459,pattern:'"|3C 68 31 3E 20 69 64 3D 22 68 65 61 64 65 72 22 20 6F 6E 6D 6F 75 73 65 6D 6F 76 65 3D 22 61 6C 65 72 74 28 27 41 73 73 75 72 65 6E 74 20 53 65 63 75 72 65 20 54|"',is_regex:false}
-{className:'MatchRule',rid:19445,pattern:'"|EC 95 95|9g|86|-N|8F DB 98 81|L|E7|l|1E|"',is_regex:false}
-{className:'MatchRule',rid:12280,pattern:'"imagedata"',is_regex:false}
-{className:'MatchRule',rid:17180,pattern:'"LsCM|3A 00 00 00 00 00 00 0C 00 00 40 01|"',is_regex:false}
-{className:'MatchRule',rid:18744,pattern:'"[Script Info]"',is_regex:false}
-{className:'MatchRule',rid:15147,pattern:'"<IFRAME "',is_regex:false}
-{className:'MatchRule',rid:19448,pattern:'"T|E5 1E 1B EA F9 C8|K|82 1A|7kt|E4 C4 B8|"',is_regex:false}
-{className:'MatchRule',rid:20553,pattern:'"#EXTINF|3A|0|2C|"',is_regex:false}
-{className:'MatchRule',rid:17711,pattern:'"|30 26 B2 75 8E 66 CF 11 A6 D9 00 AA 00 62 CE 6C|"',is_regex:false}
-{className:'MatchRule',rid:17602,pattern:'"|11 FD 01 7C AA 7B D0 11 9E 0C 00 A0 C9 22 E6 EC|"',is_regex:false}
-{className:'MatchRule',rid:18398,pattern:'"T|00|h|00|u|00|m|00|b|00|n|00|a|00|i|00|l|00 00 00 41 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17134,pattern:'"|C6 00 1A 00 02 00 00 00 01 00 21 00 AA 0A 03 00 00 00 02 00|"',is_regex:false}
-{className:'MatchRule',rid:19203,pattern:'"|22 5C 5C|"',is_regex:false}
-{className:'MatchRule',rid:19910,pattern:'"urn:schemas-microsoft-com:vml"',is_regex:false}
-{className:'MatchRule',rid:19436,pattern:'"document.styleSheets"',is_regex:false}
-{className:'MatchRule',rid:17689,pattern:'"|23|default|23|userData"',is_regex:false}
-{className:'MatchRule',rid:11258,pattern:'"|95 00|"',is_regex:false}
-{className:'MatchRule',rid:17695,pattern:'"|1C 00 00 00 00 80 41 41 41 41 41 41 95 00 FF FF 64|"',is_regex:false}
-{className:'MatchRule',rid:18527,pattern:'"begin|20|"',is_regex:false}
-{className:'MatchRule',rid:17218,pattern:'"<li"',is_regex:false}
-{className:'MatchRule',rid:17630,pattern:'"|3C|li|3E 3C 2F|li|3E 0A 3C|li|3E 3C 2F|li|3E 0A 3C|li|3E 3C 2F|li|3E 0A|"',is_regex:false}
-{className:'MatchRule',rid:20565,pattern:'"AMF"',is_regex:false}
-{className:'MatchRule',rid:18928,pattern:'"<smil"',is_regex:false}
-{className:'MatchRule',rid:16726,pattern:'"Mjik"',is_regex:false}
-{className:'MatchRule',rid:16751,pattern:'"smb|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:13456,pattern:'"D|00|X|00|T|00|r|00|a|00|n|00|s|00|f|00|o|00|r|00|m|00|.|00|M|00|i|00|c|00|r|00|o|00|s|00|o|00|f|00|t|00|.|00|D|00|X|00|L|00|U|00|T|00|B|00|u|00|i|00|l|00|d|00|e|00|r|00|"',is_regex:false}
-{className:'MatchRule',rid:17211,pattern:'"_Marshaled_pUnk"',is_regex:false}
-{className:'MatchRule',rid:18332,pattern:'"postMessage"',is_regex:false}
-{className:'MatchRule',rid:20137,pattern:'"%u0a0a%u0a0a"',is_regex:false}
-{className:'MatchRule',rid:19956,pattern:'"P|00|r|00|o|00|d|00|u|00|c|00|e|00|r|00|.|00|d|00|a|00|t|00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:18973,pattern:'"display|3A 20|block"',is_regex:false}
-{className:'MatchRule',rid:16465,pattern:'"|87 08|"',is_regex:false}
-{className:'MatchRule',rid:16410,pattern:'"|00 00 E7|.|08 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:3148,pattern:'"adb880a6-d8ff-11cf-9377-00aa003b7a11"',is_regex:false}
-{className:'MatchRule',rid:15236,pattern:'"/* XPM */"',is_regex:false}
-{className:'MatchRule',rid:9642,pattern:'"@R|D1 86 1D|1|D0 11 A3 A4 00 A0 C9 03|H|F6|"',is_regex:false}
-{className:'MatchRule',rid:10115,pattern:'"|FC 02|"',is_regex:false}
-{className:'MatchRule',rid:12219,pattern:'"wallclock|28|"',is_regex:false}
-{className:'MatchRule',rid:17232,pattern:'"|01 02 00 03|"',is_regex:false}
-{className:'MatchRule',rid:15012,pattern:'"application/xml"',is_regex:false}
-{className:'MatchRule',rid:20593,pattern:'"xmlns:sx=|22|http://icl.com/saxon|22|"',is_regex:false}
-{className:'MatchRule',rid:10063,pattern:'"Components.interfaces.nsIClassInfo"',is_regex:false}
-{className:'MatchRule',rid:17399,pattern:'"a|2E|splice|28|6|2C 20|1|29 3B|"',is_regex:false}
-{className:'MatchRule',rid:16464,pattern:'"|13 00|"',is_regex:false}
-{className:'MatchRule',rid:17271,pattern:'"|1E 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:3552,pattern:'"R|00|o|00|o|00|t|00| |00|E|00|n|00|t|00|r|00|y|00|"',is_regex:false}
-{className:'MatchRule',rid:19417,pattern:'"|28 69 90 CC 10 42 88 0A D9 21 25 52 F6 DE 23 23|"',is_regex:false}
-{className:'MatchRule',rid:17148,pattern:'"|50 4B 03 04|"',is_regex:false}
-{className:'MatchRule',rid:12286,pattern:'"RegExp("',is_regex:false}
-{className:'MatchRule',rid:15867,pattern:'"/BaseFont"',is_regex:false}
-{className:'MatchRule',rid:17319,pattern:'"|FA 0F 04 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17133,pattern:'"HTTP 1|0A|"',is_regex:false}
-{className:'MatchRule',rid:13981,pattern:'"A|10 12 00|"',is_regex:false}
-{className:'MatchRule',rid:17212,pattern:'"|5F 5F|parent|5F 5F 2E|eval"',is_regex:false}
-{className:'MatchRule',rid:12618,pattern:'"Reference"',is_regex:false}
-{className:'MatchRule',rid:20431,pattern:'"|FF FF FF FF FF FF 00 00 00 00 00 00 23 23|"',is_regex:false}
-{className:'MatchRule',rid:16229,pattern:'"9A|00|A|00|"',is_regex:false}
-{className:'MatchRule',rid:15166,pattern:'"<time "',is_regex:false}
-{className:'MatchRule',rid:16157,pattern:'"@|9E|i|F8|M[|CF 11 A8 FD 00 80|_|5C|D+"',is_regex:false}
-{className:'MatchRule',rid:19148,pattern:'"stsc"',is_regex:false}
-{className:'MatchRule',rid:1290,pattern:'"window.open|28 22|readme.eml|22|"',is_regex:false}
-{className:'MatchRule',rid:15682,pattern:'"stbl"',is_regex:false}
-{className:'MatchRule',rid:20224,pattern:'"|3C|SAMI|3E|"',is_regex:false}
-{className:'MatchRule',rid:10126,pattern:'"|FF C4 02 11 00 FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:20263,pattern:'"25336920-03F9-11CF-8FD0-00AA00686F13"',is_regex:false}
-{className:'MatchRule',rid:19251,pattern:'"|2F|W|20 5B|0|20 5B|778|20|0|5D 20|2|20|3|20|250|20|4|20 5B|333|20|408|5D|"',is_regex:false}
-{className:'MatchRule',rid:16643,pattern:'"|54 08 0C 00 54 08 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19872,pattern:'"eval|28 22|r|3D|o|22|"',is_regex:false}
-{className:'MatchRule',rid:15305,pattern:'"<textarea"',is_regex:false}
-{className:'MatchRule',rid:17042,pattern:'"|20 20 EC 21 EA 3A 69 10 A2 DD 08 00 2B 30 30 9D|"',is_regex:false}
-{className:'MatchRule',rid:6506,pattern:'"udta"',is_regex:false}
-{className:'MatchRule',rid:13980,pattern:'"449"',is_regex:false}
-{className:'MatchRule',rid:13474,pattern:'"<D|3A|href>"',is_regex:false}
-{className:'MatchRule',rid:16373,pattern:'"U3D|00|"',is_regex:false}
-{className:'MatchRule',rid:13950,pattern:'"<j2se"',is_regex:false}
-{className:'MatchRule',rid:16330,pattern:'"createElement"',is_regex:false}
-{className:'MatchRule',rid:18308,pattern:'"mluc|00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:18510,pattern:'"|00 01 00 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19552,pattern:'"|1E 04|"',is_regex:false}
-{className:'MatchRule',rid:19871,pattern:'"0x400000"',is_regex:false}
-{className:'MatchRule',rid:6693,pattern:'"bkGD"',is_regex:false}
-{className:'MatchRule',rid:17285,pattern:'"|A4 37 7A 00 81 00 00 00 00 00 82 00 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17513,pattern:'"onclick"',is_regex:false}
-{className:'MatchRule',rid:3814,pattern:'"|89|PNG|0D 0A 1A 0A|"',is_regex:false}
-{className:'MatchRule',rid:9849,pattern:'"recolorinfo"',is_regex:false}
-{className:'MatchRule',rid:11180,pattern:'"|00 00 00 01|ftyp"',is_regex:false}
-{className:'MatchRule',rid:17458,pattern:'"|58 35 4F 21 50 25 40 41 50 5B 34 5C 50 5A 58 35|"',is_regex:false}
-{className:'MatchRule',rid:18961,pattern:'"HTTP 99|0A|"',is_regex:false}
-{className:'MatchRule',rid:17121,pattern:'"|5C|datafield |5C|pngblip"',is_regex:false}
-{className:'MatchRule',rid:19450,pattern:'"|06 AF E1 00 EC 7B D1 11 A5 82 00 C0 4F C2 9C FB|"',is_regex:false}
-{className:'MatchRule',rid:15115,pattern:'"|5C|stylesheet"',is_regex:false}
-{className:'MatchRule',rid:13573,pattern:'"mailto|3A|"',is_regex:false}
-{className:'MatchRule',rid:15705,pattern:'"pcast|3A|//"',is_regex:false}
-{className:'MatchRule',rid:19693,pattern:'"|16 03 16 05 16 07 18 09 16 0B 16 10 17 05 05 00 05 00 08 17 16 18 16 19 16 1A 16 1B 16 1C|"',is_regex:false}
-{className:'MatchRule',rid:15081,pattern:'"encoding"',is_regex:false}
-{className:'MatchRule',rid:19461,pattern:'"|74 02 EB 19 68 00 00 01 00 0F B7 45 EC 50 68 D0 F0 42 00 E8 DA F3 FF FF 83 C4 0C EB A1 0F B7 45|"',is_regex:false}
-{className:'MatchRule',rid:18671,pattern:'".onpropertychange"',is_regex:false}
-{className:'MatchRule',rid:18217,pattern:'"X-UA-Compatible"',is_regex:false}
-{className:'MatchRule',rid:17114,pattern:'"ImageSource"',is_regex:false}
-{className:'MatchRule',rid:18801,pattern:'"jp2c|FF 4F|"',is_regex:false}
-{className:'MatchRule',rid:19012,pattern:'"manL"',is_regex:false}
-{className:'MatchRule',rid:19169,pattern:'"strlstrh"',is_regex:false}
-{className:'MatchRule',rid:9643,pattern:'"|01 CD 87 F4|Q|A9 CF 11 8E E6 00 C0 0C| Se"',is_regex:false}
-{className:'MatchRule',rid:17179,pattern:'"pamm"',is_regex:false}
-{className:'MatchRule',rid:15506,pattern:'"|14 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17131,pattern:'"parentNode.style"',is_regex:false}
-{className:'MatchRule',rid:17104,pattern:'"|3C|outline"',is_regex:false}
-{className:'MatchRule',rid:20659,pattern:'"/U3D"',is_regex:false}
-{className:'MatchRule',rid:16518,pattern:'"8|3A|announce"',is_regex:false}
-{className:'MatchRule',rid:12256,pattern:'"`|10|"',is_regex:false}
-{className:'MatchRule',rid:19008,pattern:'"debug|28 2D|parseFloat|28 22|NAN|28|ffffe"',is_regex:false}
-{className:'MatchRule',rid:17204,pattern:'"mmap"',is_regex:false}
-{className:'MatchRule',rid:17347,pattern:'"rXYZ"',is_regex:false}
-{className:'MatchRule',rid:16517,pattern:'"7|3A|comment"',is_regex:false}
-{className:'MatchRule',rid:17124,pattern:'"|00 13 3A FF FF FF 8C 0F 00 00 F0 38 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17304,pattern:'"|22 07 00 00 00 22 22 22 22 00 22 06 00 00 00 02 00 46 00|"',is_regex:false}
-{className:'MatchRule',rid:5712,pattern:'"BM"',is_regex:false}
-{className:'MatchRule',rid:19231,pattern:'"|03 10 0C 00|"',is_regex:false}
-{className:'MatchRule',rid:16647,pattern:'"|13 08 00 00 00 00 00 00 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:19447,pattern:'" |DC 90 D5 BC 07|lC|9C F7 F3 BB FB F1 A4 DC|"',is_regex:false}
-{className:'MatchRule',rid:15583,pattern:'"|0A|`|EA|"',is_regex:false}
-{className:'MatchRule',rid:3820,pattern:'"ITSF"',is_regex:false}
-{className:'MatchRule',rid:19818,pattern:'"XMLHttpRequest"',is_regex:false}
-{className:'MatchRule',rid:1735,pattern:'"new XMLHttpRequest|28|"',is_regex:false}
-{className:'MatchRule',rid:17655,pattern:'"|07 C9 C0 00 00 06 03 00 00 18 00 FF 02 00 00 02 7C 7C 7C 7C|"',is_regex:false}
-{className:'MatchRule',rid:15559,pattern:'"crgn"',is_regex:false}
-{className:'MatchRule',rid:18419,pattern:'"/Ff "',is_regex:false}
-{className:'MatchRule',rid:13158,pattern:'"35907DE0-E415-11CF-A917-00805F5C442B"',is_regex:false}
-{className:'MatchRule',rid:16382,pattern:'"ANIMATEMOTION"',is_regex:false}
-{className:'MatchRule',rid:15428,pattern:'"createSVGPathSegMoveto"',is_regex:false}
-{className:'MatchRule',rid:15157,pattern:'"|3C|identifier|3E|"',is_regex:false}
-{className:'MatchRule',rid:17231,pattern:'"|02 01 03 00|"',is_regex:false}
-{className:'MatchRule',rid:1841,pattern:'"javascript|3A|//"',is_regex:false}
-{className:'MatchRule',rid:16055,pattern:'"mp4a"',is_regex:false}
-{className:'MatchRule',rid:7024,pattern:'"|E0 00|"',is_regex:false}
-{className:'MatchRule',rid:19462,pattern:'"|45 E0 00 80 00 00 C7 45 E4 0A 00 00 00 C7 45 E8 00 00 00 00 8B F4 8D 45 DC 50 FF 15 A8 81 41 00 3B F4 E8 3A FD FF FF 89 45 F4 8B F4 FF 15 A4 81|"',is_regex:false}
-{className:'MatchRule',rid:18265,pattern:'"|E0 85 9F F2 F9 4F 68 10 AB 91 08 00 2B 27 B3 D9 30 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17187,pattern:'"|8F 41 01 45 C2 AE 00 FF 45 B0 41 24 43 46 1F 42|"',is_regex:false}
-{className:'MatchRule',rid:1840,pattern:'"document.domain|28|"',is_regex:false}
-{className:'MatchRule',rid:17457,pattern:'"FWS|06|"',is_regex:false}
-{className:'MatchRule',rid:19432,pattern:'"|81 80 80 80 48|"',is_regex:false}
-{className:'MatchRule',rid:16733,pattern:'"[CloneCD]"',is_regex:false}
-{className:'MatchRule',rid:16331,pattern:'"JFIF|00|"',is_regex:false}
-{className:'MatchRule',rid:16324,pattern:'".export"',is_regex:false}
-{className:'MatchRule',rid:16543,pattern:'"auds"',is_regex:false}
-{className:'MatchRule',rid:16234,pattern:'"|DC A5|"',is_regex:false}
-{className:'MatchRule',rid:18484,pattern:'"|23|EXTM3U"',is_regex:false}
-{className:'MatchRule',rid:16050,pattern:'"BGCOLOR=|22|http|3A 22|-|9D 22 22| DP=-|B3| UNITS=|22 E2 E2 E2 E2|"',is_regex:false}
-{className:'MatchRule',rid:16545,pattern:'"/Subtype/RichMedia"',is_regex:false}
-{className:'MatchRule',rid:20072,pattern:'"|2E|invalidateSelection"',is_regex:false}
-{className:'MatchRule',rid:16652,pattern:'"|AE 01|"',is_regex:false}
-{className:'MatchRule',rid:12282,pattern:'"vmlframe"',is_regex:false}
-{className:'MatchRule',rid:19418,pattern:'"|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|"',is_regex:false}
-{className:'MatchRule',rid:19225,pattern:'"|4B 10|"',is_regex:false}
-{className:'MatchRule',rid:18233,pattern:'"|E0 98 FF FF FF E1 FF 5F FF E2 DF E0 DE 71 DE 9E DE 71 DC 83|"',is_regex:false}
-{className:'MatchRule',rid:17572,pattern:'".parseError"',is_regex:false}
-{className:'MatchRule',rid:12643,pattern:'"%00%00"',is_regex:false}
-{className:'MatchRule',rid:18634,pattern:'"|09 04 06 00 00 04 00 01|"',is_regex:false}
-{className:'MatchRule',rid:9432,pattern:'"|C4 AB CD AB|"',is_regex:false}
-{className:'MatchRule',rid:15430,pattern:'"F|00 00 00|,|00 00 00| |00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:16665,pattern:'"hcp|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:19100,pattern:'"snd|20 00 00|"',is_regex:false}
-{className:'MatchRule',rid:6690,pattern:'"iCCP"',is_regex:false}
-{className:'MatchRule',rid:17330,pattern:'"|00 09 00 00 03|"',is_regex:false}
-{className:'MatchRule',rid:20445,pattern:'"/Title"',is_regex:false}
-{className:'MatchRule',rid:17548,pattern:'"content|3D|"',is_regex:false}
-{className:'MatchRule',rid:19683,pattern:'"|E9 3F 00 00 00 00 00 00 D0 3F 33 33 33 33 33 33 E3 3F 7B 14 AE 47 E1 7A A4 3F 66 66 66 66 66 66 F6 3F 9A 99 99 99 99 99 B9 3F EB 09 00 07 42 6F 6F 6C 65 61 6E 04 76 6F 69 64 03 69 6E 74 0B 66|"',is_regex:false}
-{className:'MatchRule',rid:13834,pattern:'"setRequestHeader|28 22|"',is_regex:false}
-{className:'MatchRule',rid:17145,pattern:'"Stylenum"',is_regex:false}
-{className:'MatchRule',rid:16732,pattern:'"|5B|HKEY_LOCAL_MACHINE|5C|SOFTWARE|5C|IRE|5C|SafeNet|2F|Soft-PK|5C|ACL|5C|GROUPDEFS|5C|_SafeNet_Default_Group|5D|"',is_regex:false}
-{className:'MatchRule',rid:20181,pattern:'"|A9 FC EB C4 44 EA 39 DC C2 E6 7A 38 85 81 71 46 3B 43 B6 E8 69 30 D5 77 47 47 A1 DE 99 B6 32 A2 7B D4 DA AD 90 AF 76 EB F4 B0 8D 3F F2 66 C5 06 3B 18 ED 9C 13 2E 42 BB 18 50 C2 ED D2 AE 33 B2|"',is_regex:false}
-{className:'MatchRule',rid:20270,pattern:'"|8D 8D A0 FD FF FF 51 68 BB 20 01 00 8B 55 F8 52 FF 15 18|"',is_regex:false}
-{className:'MatchRule',rid:11290,pattern:'"|95 00|"',is_regex:false}
-{className:'MatchRule',rid:16633,pattern:'"|3C 3C 2F 46 69 6C 74 65 72 2F 46 6C 61 74 65 44 65 63 6F 64 65 2F 46 69 72 73 74 20 39 39 2F 4C 65 6E 67 74 68 20 35 31 31 2F 4E 20 31 35 2F 54 79 70 65 2F 4F 62 6A 53 74 6D 3E 3E 73 74 72 65 61 6D 0D 0A 68 DE 6C 52 DB 6E E2 30|"',is_regex:false}
-{className:'MatchRule',rid:8416,pattern:'"method"',is_regex:false}
-{className:'MatchRule',rid:16550,pattern:'"application/java-deployment-toolkit"',is_regex:false}
-{className:'MatchRule',rid:13454,pattern:'"1|00|e|00|5|00|4|00|3|00|3|00|3|00|b|00|-|00|2|00|a|00|0|00|0|00|-|00|1|00|1|00|d|00|1|00|-|00|8|00|1|00|9|00|8|00|-|00|0|00|0|00|0|00|0|00|f|00|8|00|7|00|5|00|5|00|7|00|d|00|b|00|"',is_regex:false}
-{className:'MatchRule',rid:18168,pattern:'"%u4141%u4141"',is_regex:false}
-{className:'MatchRule',rid:13466,pattern:'"STSH"',is_regex:false}
-{className:'MatchRule',rid:19937,pattern:'"+= String.fromCharCode("',is_regex:false}
-{className:'MatchRule',rid:18903,pattern:'"document.body.removeChild|28|"',is_regex:false}
-{className:'MatchRule',rid:17245,pattern:'"|2E|bat"',is_regex:false}
-{className:'MatchRule',rid:13317,pattern:'"|A9|nam"',is_regex:false}
-{className:'MatchRule',rid:20000,pattern:'"What a long strange trip it's been.  Welcome to sid 20000"',is_regex:false}
-{className:'MatchRule',rid:17189,pattern:'"|52 02 4C 00 61 46 43 01 57 C9 41 01 06 52 43 4C|"',is_regex:false}
-{className:'MatchRule',rid:14645,pattern:'"clearattributes"',is_regex:false}
-{className:'MatchRule',rid:13961,pattern:'"|2E|clearAttributes|28 29|"',is_regex:false}
-{className:'MatchRule',rid:19671,pattern:'"<xsl|3A|template match"',is_regex:false}
-{className:'MatchRule',rid:9619,pattern:'"%%DocumentMedia|3A|"',is_regex:false}
-{className:'MatchRule',rid:17349,pattern:'"bXYZ"',is_regex:false}
-{className:'MatchRule',rid:19239,pattern:'"toStaticHTML("',is_regex:false}
-{className:'MatchRule',rid:15933,pattern:'"%01@"',is_regex:false}
-{className:'MatchRule',rid:16554,pattern:'"Collab.getIcon"',is_regex:false}
-{className:'MatchRule',rid:18583,pattern:'"|D7 CD C6 9A 00 00|"',is_regex:false}
-{className:'MatchRule',rid:17573,pattern:'"6BF52A52-394A-11d3-B153-00C04F79FAA6"',is_regex:false}
-{className:'MatchRule',rid:16027,pattern:'"MThd|00 00 00 06 00 00 00 01 00|`MTrk"',is_regex:false}
-{className:'MatchRule',rid:19253,pattern:'"2="',is_regex:false}
-{className:'MatchRule',rid:17120,pattern:'"|5C|datafield |5C|emfblip"',is_regex:false}
-{className:'MatchRule',rid:13917,pattern:'"hdlr"',is_regex:false}
-{className:'MatchRule',rid:11257,pattern:'"<colgroup"',is_regex:false}
-{className:'MatchRule',rid:15707,pattern:'"itpc|3A|//"',is_regex:false}
-{className:'MatchRule',rid:19692,pattern:'"|00|loadVariables"',is_regex:false}
-{className:'MatchRule',rid:15126,pattern:'"datasrc"',is_regex:false}
-{className:'MatchRule',rid:2485,pattern:'"0534CF61-83C5-4765-B19B-45F7A4E135D0"',is_regex:false}
-{className:'MatchRule',rid:16231,pattern:'"hmtx"',is_regex:false}
-{className:'MatchRule',rid:18776,pattern:'"XFIR"',is_regex:false}
-{className:'MatchRule',rid:17514,pattern:'"onmouseup"',is_regex:false}
-{className:'MatchRule',rid:17256,pattern:'"addBehavior|28|"',is_regex:false}
-{className:'MatchRule',rid:3470,pattern:'"VIDORV30"',is_regex:false}
-{className:'MatchRule',rid:19894,pattern:'"|A0 0F|"',is_regex:false}
-{className:'MatchRule',rid:17166,pattern:'".replace|28|"',is_regex:false}
-{className:'MatchRule',rid:20156,pattern:'"|1E 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15538,pattern:'"doc.replaceChild|28|doc,doc|29|"',is_regex:false}
-{className:'MatchRule',rid:17720,pattern:'".text = |27|AAAAAAAAAAAAA"',is_regex:false}
-{className:'MatchRule',rid:16586,pattern:'"|EC A5|"',is_regex:false}
-{className:'MatchRule',rid:15893,pattern:'"fCreateShellLink|28|"',is_regex:false}
-{className:'MatchRule',rid:3473,pattern:'"system-screen-size=|22|"',is_regex:false}
-{className:'MatchRule',rid:15357,pattern:'"JBIG2Decode"',is_regex:false}
-{className:'MatchRule',rid:16585,pattern:'"-XXaltjvm"',is_regex:false}
-{className:'MatchRule',rid:13455,pattern:'"DXTransform.Microsoft.DXLUTBuilder"',is_regex:false}
-{className:'MatchRule',rid:3553,pattern:'"NULL"',is_regex:false}
-{className:'MatchRule',rid:15299,pattern:'"absolute"',is_regex:false}
-{className:'MatchRule',rid:18309,pattern:'"m|00|e|00|t|00|h|00|o|00|d|00|"',is_regex:false}
-{className:'MatchRule',rid:20182,pattern:'"navigateToURL"',is_regex:false}
-{className:'MatchRule',rid:16241,pattern:'"g|08|"',is_regex:false}
-{className:'MatchRule',rid:4917,pattern:'"setTimeout"',is_regex:false}
-{className:'MatchRule',rid:16549,pattern:'"application/npruntime-scriptable-plugin|3B|deploymenttoolkit"',is_regex:false}
-{className:'MatchRule',rid:16656,pattern:'"|DC 00 0C 00|"',is_regex:false}
-{className:'MatchRule',rid:17216,pattern:'"cellspacing"',is_regex:false}
-{className:'MatchRule',rid:17315,pattern:'"W|00|o|00|r|00|d|00|D|00|o|00|c|00|u|00|m|00|e|00|n|00|t|00|"',is_regex:false}
-{className:'MatchRule',rid:4134,pattern:'"3F8A6C33-E0FD-11D0-8A8C-00A0C90C2BC5"',is_regex:false}
-{className:'MatchRule',rid:19446,pattern:'"|0E EC|e|E1 ED 19 D7|E|B4 A7|%|CB D1 E2 8E 9B|"',is_regex:false}
-{className:'MatchRule',rid:6689,pattern:'"cHRM"',is_regex:false}
-{className:'MatchRule',rid:17603,pattern:'"getElement"',is_regex:false}
-{className:'MatchRule',rid:16311,pattern:'"document.getElementsByTagName|28|'STYLE'|29|[0].outerHTML"',is_regex:false}
-{className:'MatchRule',rid:17217,pattern:'"scrolling"',is_regex:false}
-{className:'MatchRule',rid:17511,pattern:'"|00 0D 10 38 00 00 00 18 01 61 00 61 00 61 00|"',is_regex:false}
-{className:'MatchRule',rid:17318,pattern:'"|F8 0F 04 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:8448,pattern:'"}|00 0C 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:16584,pattern:'"8AD9C840-044E-11D1-B3E9-00805F499D93"',is_regex:false}
-{className:'MatchRule',rid:16416,pattern:'"|EC 00|"',is_regex:false}
-{className:'MatchRule',rid:19679,pattern:'"|FF 25 A8 81 41 00 FF 25 C4 82 41 00 CC CC CC CC 75 01 C3 55 8B EC 83 EC 00 50 52 53 56 57 8B 45 04 6A 00 50 E8 D0 FC FF FF 83 C4 08 5F 5E 5B 5A|"',is_regex:false}
-{className:'MatchRule',rid:15529,pattern:'"setInterval|28 22|try { myWindow.location.href = victimLnk|3B|}"',is_regex:false}
-{className:'MatchRule',rid:8058,pattern:'"window.navigator"',is_regex:false}
-{className:'MatchRule',rid:15704,pattern:'"itmss|3A|//"',is_regex:false}
-{className:'MatchRule',rid:16360,pattern:'"rpza"',is_regex:false}
-{className:'MatchRule',rid:17642,pattern:'"parentNode.removeAttribute(|22|class|22|)"',is_regex:false}
-{className:'MatchRule',rid:5319,pattern:'"|01 00 09 00 00 03|R|1F 00 00 06 00|=|00 00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:14644,pattern:'"tabindex"',is_regex:false}
-{className:'MatchRule',rid:13665,pattern:'"HATCH|0D 0A|"',is_regex:false}
-{className:'MatchRule',rid:17122,pattern:'"|5C|datafield |5C|jpegblip"',is_regex:false}
-{className:'MatchRule',rid:13823,pattern:'"text/css"',is_regex:false}
-{className:'MatchRule',rid:18962,pattern:'"HTTP 4|0A|"',is_regex:false}
-{className:'MatchRule',rid:19932,pattern:'"|01 2C 01 2B 01 2A 01 2F 01 2E 01 2D 01 52 00 12 12 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:13970,pattern:'"|0A C5 D0 D3 C6|"',is_regex:false}
-{className:'MatchRule',rid:6701,pattern:'"zTXt"',is_regex:false}
-{className:'MatchRule',rid:7020,pattern:'"isComponentInstalled"',is_regex:false}
-{className:'MatchRule',rid:17363,pattern:'"|00 00 00 00 4C 41 42 4C|"',is_regex:false}
-{className:'MatchRule',rid:18300,pattern:'"ftp|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:18506,pattern:'"|2F|Columns"',is_regex:false}
-{className:'MatchRule',rid:20261,pattern:'"|68 A2 01 00 00 68 FF FF 00 00 FF 15 30|"',is_regex:false}
-{className:'MatchRule',rid:8445,pattern:'"{|5C|object|5C|objemb{|5C|*|5C|objclass Package}"',is_regex:false}
-{className:'MatchRule',rid:18535,pattern:'"|08 D6|"',is_regex:false}
-{className:'MatchRule',rid:17591,pattern:'"|01 49 66 01 00 00 00 08 D6 FD FF 05 D6 18 04 01 00 00 04 01|"',is_regex:false}
-{className:'MatchRule',rid:17308,pattern:'"|13 1F 14 FF 95 80 FF FF 01 00 00 00 00 00 28 2C|"',is_regex:false}
-{className:'MatchRule',rid:19669,pattern:'"telnet|3A 2F 2F|"',is_regex:false}
-{className:'MatchRule',rid:16316,pattern:'"strf"',is_regex:false}
-{className:'MatchRule',rid:8091,pattern:'"<imfl>"',is_regex:false}
-{className:'MatchRule',rid:12281,pattern:'"stroke"',is_regex:false}
-{className:'MatchRule',rid:18404,pattern:'"document.insertBefore(document"',is_regex:false}
-{className:'MatchRule',rid:19460,pattern:'"|50 92 40 00 E8 8E 04 00 00 83 C0 40 50 E8 F9 03 00 00 83 C4 0C 6A 01 E8 87 03 00 00 68 9C 92 40|"',is_regex:false}
-{className:'MatchRule',rid:17265,pattern:'"outputStream|2E|init|28|file|2C|0x04|7C|0x08|7C|0x20|2C|420"',is_regex:false}
-{className:'MatchRule',rid:19011,pattern:'"Lnam|00 00|"',is_regex:false}
-{className:'MatchRule',rid:16721,pattern:'"OrbitalFileV1.0|0D 0A|"',is_regex:false}
-{className:'MatchRule',rid:20162,pattern:'"|B6 84 05 8D 81 80 08 FF E3 A1 87 05 EA 88 A8 83 05 DE 8B B6 04 EA 80 80 08 D6 8B B6 04 99 D0 81 D0 06 EA 80 08 EA 80 A8 03 81 8A B6 04 D0 80 80|"',is_regex:false}
-{className:'MatchRule',rid:13159,pattern:'"49F1A440-4ECE-11d0-A3AC-00A0C90348F6"',is_regex:false}
-{className:'MatchRule',rid:13160,pattern:'"BFC3CD50-618F-11CF-8BB2-00AA00B4E220"',is_regex:false}
-{className:'MatchRule',rid:13320,pattern:'"|A9|cpy"',is_regex:false}
-{className:'MatchRule',rid:20239,pattern:'"|F3 E1 04 30 2E 7B 0A 25 A4 58 D1 E2 45 8C 19 35 6E E4 D8 D1 E3 47 90 21 45 8E 24 59 D2 E4 49 8F|"',is_regex:false}
-{className:'MatchRule',rid:15542,pattern:'"|06 08|"',is_regex:false}
-{className:'MatchRule',rid:17292,pattern:'"|AA AA AA 2F 00 C8 0F 0C 00 00 00 30 00 D2 0F 04 00|"',is_regex:false}
-{className:'MatchRule',rid:16727,pattern:'"|0D 0A|[Group,Export,Yes]|0D 0A|"',is_regex:false}
-{className:'MatchRule',rid:19687,pattern:'"|00 04 03 08 61 4E 12 12 9D 02 00 4D 02 96 06 00 04 03 08 61 05 01 4F 96 02 00 08 12 1C 96 02 00|"',is_regex:false}
-{className:'MatchRule',rid:18403,pattern:'"onCellChange"',is_regex:false}
-{className:'MatchRule',rid:18240,pattern:'"@|00|i|00|m|00|p|00|o|00|r|00|t|00| |00|"',is_regex:false}
-{className:'MatchRule',rid:17130,pattern:'"event.boundElements"',is_regex:false}
-{className:'MatchRule',rid:12688,pattern:'"|22|.cmd"',is_regex:false}
-{className:'MatchRule',rid:19911,pattern:'"P|3B|"',is_regex:false}
-{className:'MatchRule',rid:16736,pattern:'"|34 87 01 00 00 00 00 00 25 5C 1F 85|"',is_regex:false}
-{className:'MatchRule',rid:17646,pattern:'"|FF 03 00 00 00 60 16 8F 10 00 00 00 00 5F 07 90 08 28 00 00|"',is_regex:false}
-{className:'MatchRule',rid:13971,pattern:'"|00 B2 0F|"',is_regex:false}
-{className:'MatchRule',rid:17757,pattern:'"|09 08 08 00 00 05|"',is_regex:false}
-{className:'MatchRule',rid:18396,pattern:'"|29 66 3A E1 58 4E 4F 20 4E 41 4D 45 20 20 20 20 46 41 54 31 32 20 20 20 6A 00|"',is_regex:false}
-{className:'MatchRule',rid:16053,pattern:'"GNU.sparse.numblocks="',is_regex:false}
-{className:'MatchRule',rid:19294,pattern:'"|33 10 00 00 55 08 0C 00|"',is_regex:false}
-{className:'MatchRule',rid:16220,pattern:'"p|00 00 00 01 00 00 00 A8 FF FB|m|10|http|3A|//www."',is_regex:false}
-{className:'MatchRule',rid:18237,pattern:'"|00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00 00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B|"',is_regex:false}
-{className:'MatchRule',rid:17320,pattern:'"|F9 0F 04 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15540,pattern:'"CollectGarbage|28 29|"',is_regex:false}
-{className:'MatchRule',rid:7002,pattern:'"|E0 C9 EA|y|F9 BA CE 11 8C 82 00 AA 00|K|A9 0B|"',is_regex:false}
-{className:'MatchRule',rid:13972,pattern:'"|8C 00 04 00|"',is_regex:false}
-{className:'MatchRule',rid:17227,pattern:'"|8C 00 04 00 56 00 56 00 C1 01 08 00 C1 01 00 00 80 38 01 00|"',is_regex:false}
-{className:'MatchRule',rid:15505,pattern:'"|0F 00 F0 03|"',is_regex:false}
-{className:'MatchRule',rid:16044,pattern:'"style=|22|letter-spacing|3A| -2147483648"',is_regex:false}
-{className:'MatchRule',rid:16295,pattern:'"|02|"',is_regex:false}
-{className:'MatchRule',rid:13893,pattern:'"type=|22|notCondition|22|"',is_regex:false}
-{className:'MatchRule',rid:16353,pattern:'"|82|theora"',is_regex:false}
-{className:'MatchRule',rid:20140,pattern:'"|63 65 6C 00 40 00 00 00 80 4E 50 3F D6 30 C6 01 40 00 00 00 00 F3 0F 47 D6 30 C6 01 03 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:15706,pattern:'"daap|3A|//"',is_regex:false}
-{className:'MatchRule',rid:17360,pattern:'"static|20|char|20|gopher|5F|binary|5F|bits|5B 5D|"',is_regex:false}
-{className:'MatchRule',rid:18216,pattern:'"behavior:url('#default#anim')"',is_regex:false}
-{className:'MatchRule',rid:18632,pattern:'"|09 08 08 00 00 05 05 00|"',is_regex:false}
-{className:'MatchRule',rid:18637,pattern:'"P|00|o|00|w|00|e|00|r|00|P|00|o|00|i|00|n|00|t|00 20 00|D|00|o|00|c|00|u|00|m|00|e|00|n|00|t|00|"',is_regex:false}
-{className:'MatchRule',rid:19621,pattern:'"200 OK"',is_regex:false}
-{className:'MatchRule',rid:16335,pattern:'"Type/ObjStm"',is_regex:false}
-{className:'MatchRule',rid:19807,pattern:'"documentElement"',is_regex:false}
-{className:'MatchRule',rid:10131,pattern:'"InstallVersion"',is_regex:false}
-{className:'MatchRule',rid:14642,pattern:'"|00|_|00|_|00|S|00|R|00|P|00|_|00|"',is_regex:false}
-{className:'MatchRule',rid:20579,pattern:'"<ruby>"',is_regex:false}
-{className:'MatchRule',rid:15014,pattern:'"util.printf"',is_regex:false}
-{className:'MatchRule',rid:19808,pattern:'".body.innerHTML +="',is_regex:false}
-{className:'MatchRule',rid:19416,pattern:'"|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|"',is_regex:false}
-{className:'MatchRule',rid:16063,pattern:'"<isindex>"',is_regex:false}
-{className:'MatchRule',rid:14261,pattern:'"focussize"',is_regex:false}
-{className:'MatchRule',rid:7199,pattern:'"|02 04|"',is_regex:false}
-{className:'MatchRule',rid:6695,pattern:'"tRNS"',is_regex:false}
-{className:'MatchRule',rid:5711,pattern:'"BM|00 00 00 00|"',is_regex:false}
-{className:'MatchRule',rid:12284,pattern:'"8|00 04 00|"',is_regex:false}
-{className:'MatchRule',rid:9625,pattern:'"<ref"',is_regex:false}
-{className:'MatchRule',rid:18571,pattern:'"|92 39 D5 34 8F 40 D1 69 5A 74 54 70 E1 F2 3F 43|"',is_regex:false}
-{className:'MatchRule',rid:18573,pattern:'"|D8 F3 5F 4E B7 87 2B 2D AB 06 92 E3 15 38 2F B0|"',is_regex:false}
-{className:'MatchRule',rid:18572,pattern:'"|B0 B7 13 3E D0 96 F9 B5 6F AE 91 C8 74 BD 3A C0|"',is_regex:false}
-{className:'MatchRule',rid:11947,pattern:'"|16 03 00|"',is_regex:false}
-{className:'MatchRule',rid:18567,pattern:'"|D7 55 8F DA F5 F1 10 5B B2 13 28 2B 70 77 29 A3|"',is_regex:false}
-{className:'MatchRule',rid:18570,pattern:'"|E9 02 8B 95 78 E4 15 DC 1A 71 0A 2B 88 15 44 47|"',is_regex:false}
-{className:'MatchRule',rid:18568,pattern:'"|39 2A 43 4F 0E 07 DF 1F 8A A3 05 DE 34 E0 C2 29|"',is_regex:false}
-{className:'MatchRule',rid:16291,pattern:'"|06 03|U|04 03|"',is_regex:false}
-{className:'MatchRule',rid:18576,pattern:'"|72 03 21 05 C5 0C 08 57 3D 8E A5 30 4E FE E8 B0|"',is_regex:false}
-{className:'MatchRule',rid:16181,pattern:'"U|04 82 80 80 80 80 80 80 80 80 80 03|"',is_regex:false}
-{className:'MatchRule',rid:18569,pattern:'"|3E 75 CE D4 6B 69 30 21 21 88 30 AE 86 A8 2A 71|"',is_regex:false}
-{className:'MatchRule',rid:18565,pattern:'"|04 7E CB E9 FC A5 5F 7B D0 9E AE 36 E1 0C AE 1E|"',is_regex:false}
-{className:'MatchRule',rid:18566,pattern:'"|F5 C8 6A F3 61 62 F1 3A 64 F5 4F 6D C9 58 7C 06|"',is_regex:false}
-{className:'MatchRule',rid:18532,pattern:'"i|00|a|00|c|00|e|00|n|00|c|00|.|00|d|00|l|00|l|00|"',is_regex:false}
-{className:'MatchRule',rid:18530,pattern:'"i|00|b|00|f|00|s|00|3|00|2|00|.|00|d|00|l|00|l|00|"',is_regex:false}
-{className:'MatchRule',rid:9434,pattern:'"Ultravox-Max-Msg|3A|"',is_regex:false}
-{className:'MatchRule',rid:20616,pattern:'"Authorization|3A| Basic"',is_regex:false}
-{className:'MatchRule',rid:16521,pattern:'" http/"',is_regex:false}
-{className:'MatchRule',rid:17409,pattern:'"IHDR"',is_regex:false}
-{className:'MatchRule',rid:15471,pattern:'".asp"',is_regex:false}
-{className:'MatchRule',rid:16686,pattern:'"/ibm/console/"',is_regex:false}
-{className:'MatchRule',rid:20620,pattern:'"GET"',is_regex:false}
-{className:'MatchRule',rid:20607,pattern:'"gwagents|2E|css"',is_regex:false}
-{className:'MatchRule',rid:20608,pattern:'"gwia|2E|css"',is_regex:false}
-{className:'MatchRule',rid:19257,pattern:'"|5F 30 64 61 79 32 5F 66 6C 61 0C 4D 61 69 6E 54 69 6D 65 6C 69 6E 65|"',is_regex:false}
+{className:'MatchRule',rid:17236,pattern:'-moz-column-',is_regex:false}
+{className:'MatchRule',rid:2707,pattern:'|FF|',is_regex:false}
+{className:'MatchRule',rid:18535,pattern:'|08 D6|',is_regex:false}
+{className:'MatchRule',rid:20162,pattern:'|B6 84 05 8D 81 80 08 FF E3 A1 87 05 EA 88 A8 83 05 DE 8B B6 04 EA 80 80 08 D6 8B B6 04 99 D0 81 D0 06 EA 80 08 EA 80 A8 03 81 8A B6 04 D0 80 80|',is_regex:false}
+{className:'MatchRule',rid:3132,pattern:'|89|PNG|0D 0A 1A 0A|',is_regex:false}
+{className:'MatchRule',rid:17111,pattern:'String.fromCharCode|28|parseInt',is_regex:false}
+{className:'MatchRule',rid:5318,pattern:'|09 00|',is_regex:false}
+{className:'MatchRule',rid:19683,pattern:'|E9 3F 00 00 00 00 00 00 D0 3F 33 33 33 33 33 33 E3 3F 7B 14 AE 47 E1 7A A4 3F 66 66 66 66 66 66 F6 3F 9A 99 99 99 99 99 B9 3F EB 09 00 07 42 6F 6F 6C 65 61 6E 04 76 6F 69 64 03 69 6E 74 0B 66|',is_regex:false}
+{className:'MatchRule',rid:17203,pattern:'rcsL',is_regex:false}
+{className:'MatchRule',rid:18235,pattern:'|49 43|',is_regex:false}
+{className:'MatchRule',rid:17399,pattern:'a|2E|splice|28|6|2C 20|1|29 3B|',is_regex:false}
+{className:'MatchRule',rid:19552,pattern:'|1E 04|',is_regex:false}
+{className:'MatchRule',rid:20137,pattern:'%u0a0a%u0a0a',is_regex:false}
+{className:'MatchRule',rid:16543,pattern:'auds',is_regex:false}
+{className:'MatchRule',rid:3471,pattern:'[playlist]',is_regex:false}
+{className:'MatchRule',rid:9843,pattern:'document.',is_regex:false}
+{className:'MatchRule',rid:19246,pattern:'document.selection.empty',is_regex:false}
+{className:'MatchRule',rid:17166,pattern:'.replace|28|',is_regex:false}
+{className:'MatchRule',rid:20156,pattern:'|1E 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:16643,pattern:'|54 08 0C 00 54 08 00 00|',is_regex:false}
+{className:'MatchRule',rid:16554,pattern:'Collab.getIcon',is_regex:false}
+{className:'MatchRule',rid:16633,pattern:'|3C 3C 2F 46 69 6C 74 65 72 2F 46 6C 61 74 65 44 65 63 6F 64 65 2F 46 69 72 73 74 20 39 39 2F 4C 65 6E 67 74 68 20 35 31 31 2F 4E 20 31 35 2F 54 79 70 65 2F 4F 62 6A 53 74 6D 3E 3E 73 74 72 65 61 6D 0D 0A 68 DE 6C 52 DB 6E E2 30|',is_regex:false}
+{className:'MatchRule',rid:16655,pattern:'|18 00|',is_regex:false}
+{className:'MatchRule',rid:16593,pattern:'|01 00 C3 0F 18 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:10062,pattern:'GIF',is_regex:false}
+{className:'MatchRule',rid:12279,pattern:'substringData',is_regex:false}
+{className:'MatchRule',rid:18240,pattern:'@|00|i|00|m|00|p|00|o|00|r|00|t|00| |00|',is_regex:false}
+{className:'MatchRule',rid:13964,pattern:'span',is_regex:false}
+{className:'MatchRule',rid:19251,pattern:'|2F|W|20 5B|0|20 5B|778|20|0|5D 20|2|20|3|20|250|20|4|20 5B|333|20|408|5D|',is_regex:false}
+{className:'MatchRule',rid:12744,pattern:'fLaC',is_regex:false}
+{className:'MatchRule',rid:16322,pattern:'/DCTDecode',is_regex:false}
+{className:'MatchRule',rid:13665,pattern:'HATCH|0D 0A|',is_regex:false}
+{className:'MatchRule',rid:17602,pattern:'|11 FD 01 7C AA 7B D0 11 9E 0C 00 A0 C9 22 E6 EC|',is_regex:false}
+{className:'MatchRule',rid:17146,pattern:'|00|G|00|r|00|a|00|d|00|i|00|e|00|n|00|t',is_regex:false}
+{className:'MatchRule',rid:16650,pattern:'|AE 01|',is_regex:false}
+{className:'MatchRule',rid:19099,pattern:'format(',is_regex:false}
+{className:'MatchRule',rid:19956,pattern:'P|00|r|00|o|00|d|00|u|00|c|00|e|00|r|00|.|00|d|00|a|00|t|00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15695,pattern:'|00 03 00|',is_regex:false}
+{className:'MatchRule',rid:18297,pattern:'transform',is_regex:false}
+{className:'MatchRule',rid:13455,pattern:'DXTransform.Microsoft.DXLUTBuilder',is_regex:false}
+{className:'MatchRule',rid:18308,pattern:'mluc|00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:13456,pattern:'D|00|X|00|T|00|r|00|a|00|n|00|s|00|f|00|o|00|r|00|m|00|.|00|M|00|i|00|c|00|r|00|o|00|s|00|o|00|f|00|t|00|.|00|D|00|X|00|L|00|U|00|T|00|B|00|u|00|i|00|l|00|d|00|e|00|r|00|',is_regex:false}
+{className:'MatchRule',rid:20288,pattern:'QLCMfmt|20|',is_regex:false}
+{className:'MatchRule',rid:12618,pattern:'Reference',is_regex:false}
+{className:'MatchRule',rid:15697,pattern:'unescape',is_regex:false}
+{className:'MatchRule',rid:15363,pattern:'String.fromCharCode|28|',is_regex:false}
+{className:'MatchRule',rid:16295,pattern:'|02|',is_regex:false}
+{className:'MatchRule',rid:6700,pattern:'tEXt',is_regex:false}
+{className:'MatchRule',rid:17121,pattern:'|5C|datafield |5C|pngblip',is_regex:false}
+{className:'MatchRule',rid:18484,pattern:'|23|EXTM3U',is_regex:false}
+{className:'MatchRule',rid:19100,pattern:'snd|20 00 00|',is_regex:false}
+{className:'MatchRule',rid:16736,pattern:'|34 87 01 00 00 00 00 00 25 5C 1F 85|',is_regex:false}
+{className:'MatchRule',rid:20144,pattern:'Subtype|2F|image',is_regex:false}
+{className:'MatchRule',rid:13821,pattern:'|BF 15 84 03 00 00|',is_regex:false}
+{className:'MatchRule',rid:17573,pattern:'6BF52A52-394A-11d3-B153-00C04F79FAA6',is_regex:false}
+{className:'MatchRule',rid:18299,pattern:'|22|shell|3A|',is_regex:false}
+{className:'MatchRule',rid:15913,pattern:'function arguments',is_regex:false}
+{className:'MatchRule',rid:15469,pattern:'|DC A5|',is_regex:false}
+{className:'MatchRule',rid:19680,pattern:'|06 7C BD EB 05 BA CC CC CC CC 8B 75 08 33 FF 8B C6 85 F6 74 56 8B 40 04 47 85 C0 75 F8 85 F6 74 4A 39 16 75 0F 39 56 14 75 0A 39 56 18 75 05 39|',is_regex:false}
+{className:'MatchRule',rid:16342,pattern:'AVI LIST',is_regex:false}
+{className:'MatchRule',rid:16032,pattern:'charset=UTF-8',is_regex:false}
+{className:'MatchRule',rid:15104,pattern:'RIFF',is_regex:false}
+{className:'MatchRule',rid:19447,pattern:' |DC 90 D5 BC 07|lC|9C F7 F3 BB FB F1 A4 DC|',is_regex:false}
+{className:'MatchRule',rid:17378,pattern:'IHDR',is_regex:false}
+{className:'MatchRule',rid:17189,pattern:'|52 02 4C 00 61 46 43 01 57 C9 41 01 06 52 43 4C|',is_regex:false}
+{className:'MatchRule',rid:17629,pattern:'document|2E|write',is_regex:false}
+{className:'MatchRule',rid:6697,pattern:'sPLT',is_regex:false}
+{className:'MatchRule',rid:19431,pattern:'|4D 55 53 1A C0 EB|',is_regex:false}
+{className:'MatchRule',rid:17284,pattern:'|B9 00 9B 05 56 04 3F 05 00 00 41 41 41 41|',is_regex:false}
+{className:'MatchRule',rid:13572,pattern:'|0A F0 08 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:18527,pattern:'begin|20|',is_regex:false}
+{className:'MatchRule',rid:4134,pattern:'3F8A6C33-E0FD-11D0-8A8C-00A0C90C2BC5',is_regex:false}
+{className:'MatchRule',rid:19174,pattern:'expression|28|',is_regex:false}
+{className:'MatchRule',rid:16506,pattern:'innerHTML',is_regex:false}
+{className:'MatchRule',rid:16345,pattern:'[Setnet32]',is_regex:false}
+{className:'MatchRule',rid:20284,pattern:'window.open',is_regex:false}
+{className:'MatchRule',rid:6694,pattern:'hIST',is_regex:false}
+{className:'MatchRule',rid:4136,pattern:'|FF C0|',is_regex:false}
+{className:'MatchRule',rid:16301,pattern:'document.location.href',is_regex:false}
+{className:'MatchRule',rid:17511,pattern:'|00 0D 10 38 00 00 00 18 01 61 00 61 00 61 00|',is_regex:false}
+{className:'MatchRule',rid:17572,pattern:'.parseError',is_regex:false}
+{className:'MatchRule',rid:16319,pattern:'MZ|90 00|',is_regex:false}
+{className:'MatchRule',rid:16414,pattern:'|23 3A|//',is_regex:false}
+{className:'MatchRule',rid:18510,pattern:'|00 01 00 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15357,pattern:'JBIG2Decode',is_regex:false}
+{className:'MatchRule',rid:17301,pattern:'|09 04 16 00 22 0C 00 00 80 57 00 00 80 57 00 00 02|',is_regex:false}
+{className:'MatchRule',rid:7024,pattern:'|E0 00|',is_regex:false}
+{className:'MatchRule',rid:19462,pattern:'|45 E0 00 80 00 00 C7 45 E4 0A 00 00 00 C7 45 E8 00 00 00 00 8B F4 8D 45 DC 50 FF 15 A8 81 41 00 3B F4 E8 3A FD FF FF 89 45 F4 8B F4 FF 15 A4 81|',is_regex:false}
+{className:'MatchRule',rid:17134,pattern:'|C6 00 1A 00 02 00 00 00 01 00 21 00 AA 0A 03 00 00 00 02 00|',is_regex:false}
+{className:'MatchRule',rid:17272,pattern:'strf',is_regex:false}
+{className:'MatchRule',rid:13320,pattern:'|A9|cpy',is_regex:false}
+{className:'MatchRule',rid:15704,pattern:'itmss|3A|//',is_regex:false}
+{className:'MatchRule',rid:16382,pattern:'ANIMATEMOTION',is_regex:false}
+{className:'MatchRule',rid:16361,pattern:'BM',is_regex:false}
+{className:'MatchRule',rid:5741,pattern:'file',is_regex:false}
+{className:'MatchRule',rid:2438,pattern:'file|3A|//',is_regex:false}
+{className:'MatchRule',rid:19448,pattern:'T|E5 1E 1B EA F9 C8|K|82 1A|7kt|E4 C4 B8|',is_regex:false}
+{className:'MatchRule',rid:17149,pattern:'|50 4B 03 04|',is_regex:false}
+{className:'MatchRule',rid:15531,pattern:'clearAttributes',is_regex:false}
+{className:'MatchRule',rid:13917,pattern:'hdlr',is_regex:false}
+{className:'MatchRule',rid:13980,pattern:'449',is_regex:false}
+{className:'MatchRule',rid:2440,pattern:'rtsp|3A|//',is_regex:false}
+{className:'MatchRule',rid:17516,pattern:'onmousedown',is_regex:false}
+{className:'MatchRule',rid:16410,pattern:'|00 00 E7|.|08 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:16517,pattern:'7|3A|comment',is_regex:false}
+{className:'MatchRule',rid:1840,pattern:'document.domain|28|',is_regex:false}
+{className:'MatchRule',rid:19239,pattern:'toStaticHTML(',is_regex:false}
+{className:'MatchRule',rid:18537,pattern:'/* XPM */',is_regex:false}
+{className:'MatchRule',rid:17664,pattern:'GIF8',is_regex:false}
+{className:'MatchRule',rid:18507,pattern:'|2F|CCITTFaxDecode',is_regex:false}
+{className:'MatchRule',rid:17131,pattern:'parentNode.style',is_regex:false}
+{className:'MatchRule',rid:14644,pattern:'tabindex',is_regex:false}
+{className:'MatchRule',rid:6690,pattern:'iCCP',is_regex:false}
+{className:'MatchRule',rid:5713,pattern:'|D7 CD C6 9A|',is_regex:false}
+{className:'MatchRule',rid:18583,pattern:'|D7 CD C6 9A 00 00|',is_regex:false}
+{className:'MatchRule',rid:18331,pattern:'HEADER',is_regex:false}
+{className:'MatchRule',rid:17114,pattern:'ImageSource',is_regex:false}
+{className:'MatchRule',rid:17655,pattern:'|07 C9 C0 00 00 06 03 00 00 18 00 FF 02 00 00 02 7C 7C 7C 7C|',is_regex:false}
+{className:'MatchRule',rid:9619,pattern:'%%DocumentMedia|3A|',is_regex:false}
+{className:'MatchRule',rid:15014,pattern:'util.printf',is_regex:false}
+{className:'MatchRule',rid:3550,pattern:'image/',is_regex:false}
+{className:'MatchRule',rid:20237,pattern:'http|3A|//',is_regex:false}
+{className:'MatchRule',rid:17482,pattern:'news|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:16471,pattern:'|DC 00 0C 00|',is_regex:false}
+{className:'MatchRule',rid:15157,pattern:'|3C|identifier|3E|',is_regex:false}
+{className:'MatchRule',rid:13318,pattern:'|A9|cmt',is_regex:false}
+{className:'MatchRule',rid:17216,pattern:'cellspacing',is_regex:false}
+{className:'MatchRule',rid:17351,pattern:'ID3',is_regex:false}
+{className:'MatchRule',rid:17631,pattern:'java|2D|vm|2D|args',is_regex:false}
+{className:'MatchRule',rid:19621,pattern:'200 OK',is_regex:false}
+{className:'MatchRule',rid:3536,pattern:'!|FF 0B|NETSCAPE2.0',is_regex:false}
+{className:'MatchRule',rid:6698,pattern:'tIME',is_regex:false}
+{className:'MatchRule',rid:17258,pattern:'selection|2E|timedSelect|28|1|2C|8000|29 3B|',is_regex:false}
+{className:'MatchRule',rid:17603,pattern:'getElement',is_regex:false}
+{className:'MatchRule',rid:17318,pattern:'|F8 0F 04 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:20659,pattern:'/U3D',is_regex:false}
+{className:'MatchRule',rid:17757,pattern:'|09 08 08 00 00 05|',is_regex:false}
+{className:'MatchRule',rid:18632,pattern:'|09 08 08 00 00 05 05 00|',is_regex:false}
+{className:'MatchRule',rid:15946,pattern:'&lt|3B|',is_regex:false}
+{className:'MatchRule',rid:16153,pattern:'WMFC|01 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17292,pattern:'|AA AA AA 2F 00 C8 0F 0C 00 00 00 30 00 D2 0F 04 00|',is_regex:false}
+{className:'MatchRule',rid:17165,pattern:'setInterval',is_regex:false}
+{className:'MatchRule',rid:13807,pattern:'|FF FF FF|',is_regex:false}
+{className:'MatchRule',rid:17633,pattern:'|78 00 05 5F 00 00 0F A0 00 00 0C 01 00 43 02 FF FF FF BF 00 39|',is_regex:false}
+{className:'MatchRule',rid:16507,pattern:'onreadystatechange',is_regex:false}
+{className:'MatchRule',rid:15709,pattern:'/DecodeParms',is_regex:false}
+{className:'MatchRule',rid:16311,pattern:'document.getElementsByTagName|28|'STYLE'|29|[0].outerHTML',is_regex:false}
+{className:'MatchRule',rid:15012,pattern:'application/xml',is_regex:false}
+{className:'MatchRule',rid:17347,pattern:'rXYZ',is_regex:false}
+{className:'MatchRule',rid:11290,pattern:'|95 00|',is_regex:false}
+{className:'MatchRule',rid:17695,pattern:'|1C 00 00 00 00 80 41 41 41 41 41 41 95 00 FF FF 64|',is_regex:false}
+{className:'MatchRule',rid:15114,pattern:'embed src',is_regex:false}
+{className:'MatchRule',rid:7048,pattern:'|15 00 12 00|',is_regex:false}
+{className:'MatchRule',rid:16638,pattern:'|15 00 12 00 14 00|',is_regex:false}
+{className:'MatchRule',rid:17514,pattern:'onmouseup',is_regex:false}
+{className:'MatchRule',rid:18633,pattern:'|13 08|',is_regex:false}
+{className:'MatchRule',rid:18419,pattern:'/Ff ',is_regex:false}
+{className:'MatchRule',rid:9643,pattern:'|01 CD 87 F4|Q|A9 CF 11 8E E6 00 C0 0C| Se',is_regex:false}
+{className:'MatchRule',rid:9625,pattern:'<ref',is_regex:false}
+{className:'MatchRule',rid:17725,pattern:'file|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:15505,pattern:'|0F 00 F0 03|',is_regex:false}
+{className:'MatchRule',rid:12728,pattern:'wallclock|28|',is_regex:false}
+{className:'MatchRule',rid:18744,pattern:'[Script Info]',is_regex:false}
+{className:'MatchRule',rid:13970,pattern:'|0A C5 D0 D3 C6|',is_regex:false}
+{className:'MatchRule',rid:20263,pattern:'25336920-03F9-11CF-8FD0-00AA00686F13',is_regex:false}
+{className:'MatchRule',rid:15583,pattern:'|0A|`|EA|',is_regex:false}
+{className:'MatchRule',rid:8445,pattern:'{|5C|object|5C|objemb{|5C|*|5C|objclass Package}',is_regex:false}
+{className:'MatchRule',rid:17756,pattern:'|5C FE 00 01 02 5C FE 00 01 02 5C FE 00 01 02 5C FE 00 01 02 51 4A|',is_regex:false}
+{className:'MatchRule',rid:17692,pattern:'ExecWB',is_regex:false}
+{className:'MatchRule',rid:6695,pattern:'tRNS',is_regex:false}
+{className:'MatchRule',rid:13950,pattern:'<j2se',is_regex:false}
+{className:'MatchRule',rid:17153,pattern:'|22 22|',is_regex:false}
+{className:'MatchRule',rid:16050,pattern:'BGCOLOR=|22|http|3A 22|-|9D 22 22| DP=-|B3| UNITS=|22 E2 E2 E2 E2|',is_regex:false}
+{className:'MatchRule',rid:18335,pattern:'mhtml',is_regex:false}
+{className:'MatchRule',rid:18962,pattern:'HTTP 4|0A|',is_regex:false}
+{className:'MatchRule',rid:16231,pattern:'hmtx',is_regex:false}
+{className:'MatchRule',rid:6692,pattern:'sRGB',is_regex:false}
+{className:'MatchRule',rid:13919,pattern:'text',is_regex:false}
+{className:'MatchRule',rid:13960,pattern:'createTextRange',is_regex:false}
+{className:'MatchRule',rid:15081,pattern:'encoding',is_regex:false}
+{className:'MatchRule',rid:17238,pattern:'|23|define',is_regex:false}
+{className:'MatchRule',rid:18776,pattern:'XFIR',is_regex:false}
+{className:'MatchRule',rid:19141,pattern:'|27 03 23 53 2B 17 D0 11 AD 40 00 A0 C9 0D C8 D9|',is_regex:false}
+{className:'MatchRule',rid:15428,pattern:'createSVGPathSegMoveto',is_regex:false}
+{className:'MatchRule',rid:17688,pattern:'|23|default|23|userData',is_regex:false}
+{className:'MatchRule',rid:15694,pattern:'|00 01 00 00|',is_regex:false}
+{className:'MatchRule',rid:9801,pattern:'MThd',is_regex:false}
+{className:'MatchRule',rid:15539,pattern:'|06 00|',is_regex:false}
+{className:'MatchRule',rid:16027,pattern:'MThd|00 00 00 06 00 00 00 01 00|`MTrk',is_regex:false}
+{className:'MatchRule',rid:13570,pattern:'|B1 01|',is_regex:false}
+{className:'MatchRule',rid:16316,pattern:'strf',is_regex:false}
+{className:'MatchRule',rid:18233,pattern:'|E0 98 FF FF FF E1 FF 5F FF E2 DF E0 DE 71 DE 9E DE 71 DC 83|',is_regex:false}
+{className:'MatchRule',rid:16492,pattern:'<NOBR',is_regex:false}
+{className:'MatchRule',rid:17143,pattern:'AnglUntF',is_regex:false}
+{className:'MatchRule',rid:17319,pattern:'|FA 0F 04 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:13820,pattern:'|BF 15 0C 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15893,pattern:'fCreateShellLink|28|',is_regex:false}
+{className:'MatchRule',rid:17320,pattern:'|F9 0F 04 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:13301,pattern:'JFIF',is_regex:false}
+{className:'MatchRule',rid:16331,pattern:'JFIF|00|',is_regex:false}
+{className:'MatchRule',rid:9430,pattern:'<?quicktime type=|22|application/x-quicktime-media-link',is_regex:false}
+{className:'MatchRule',rid:15909,pattern:'tkhd',is_regex:false}
+{className:'MatchRule',rid:17105,pattern:'|3C 00|o|00|u|00|t|00|l|00|i|00|n|00|e|00|',is_regex:false}
+{className:'MatchRule',rid:9433,pattern:'|C2 AB CD AB|',is_regex:false}
+{className:'MatchRule',rid:20181,pattern:'|A9 FC EB C4 44 EA 39 DC C2 E6 7A 38 85 81 71 46 3B 43 B6 E8 69 30 D5 77 47 47 A1 DE 99 B6 32 A2 7B D4 DA AD 90 AF 76 EB F4 B0 8D 3F F2 66 C5 06 3B 18 ED 9C 13 2E 42 BB 18 50 C2 ED D2 AE 33 B2|',is_regex:false}
+{className:'MatchRule',rid:16634,pattern:'|53 68 68 68 20 64 6F 6E 27 74 20 74 65 6C 6C 20 61 6E 79 20 6F 6E 65 20 74 68 69 73 20 69 73 20 61 20 73 65 63 72 65 74 20 6B 65 79 21 16 54 68 65 20 74 72 75 74 68 20 69 73 20 6F 75 74 20 74 68 65 72 65 08 43 4F 4D 50 4C 45 54 45 0B 72 65 6D 6F 76 65 43 68 69 6C 64 0A 55 52 4C 52 65 71 75 65 73 74 30 68 74 74 70|',is_regex:false}
+{className:'MatchRule',rid:18304,pattern:'white|2D|space|3A|normal|3B|',is_regex:false}
+{className:'MatchRule',rid:16035,pattern:'.createTextRange|28 29 3B|',is_regex:false}
+{className:'MatchRule',rid:18404,pattern:'document.insertBefore(document',is_regex:false}
+{className:'MatchRule',rid:15871,pattern:'strk|28 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:13571,pattern:'|B2 01|',is_regex:false}
+{className:'MatchRule',rid:17804,pattern:'var html = |22|<|22| + tags[i] + |22| |22| + atts[j]',is_regex:false}
+{className:'MatchRule',rid:7203,pattern:'|E0 85 9F F2 F9|Oh|10 AB 91 08 00|+'|B3 D9|',is_regex:false}
+{className:'MatchRule',rid:18265,pattern:'|E0 85 9F F2 F9 4F 68 10 AB 91 08 00 2B 27 B3 D9 30 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:20579,pattern:'<ruby>',is_regex:false}
+{className:'MatchRule',rid:17186,pattern:'rcsL|0E 05 00 00 00 00 00 00 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17188,pattern:'rcsL|0E 05 00 00 00 00 00 00 00 00 00 00 00 00 05 0E|',is_regex:false}
+{className:'MatchRule',rid:16416,pattern:'|EC 00|',is_regex:false}
+{className:'MatchRule',rid:20261,pattern:'|68 A2 01 00 00 68 FF FF 00 00 FF 15 30|',is_regex:false}
+{className:'MatchRule',rid:4647,pattern:'window',is_regex:false}
+{className:'MatchRule',rid:20278,pattern:'window.open',is_regex:false}
+{className:'MatchRule',rid:6696,pattern:'pHYs',is_regex:false}
+{className:'MatchRule',rid:6509,pattern:'mhtml|3A|//',is_regex:false}
+{className:'MatchRule',rid:17459,pattern:'|3C 68 31 3E 20 69 64 3D 22 68 65 61 64 65 72 22 20 6F 6E 6D 6F 75 73 65 6D 6F 76 65 3D 22 61 6C 65 72 74 28 27 41 73 73 75 72 65 6E 74 20 53 65 63 75 72 65 20 54|',is_regex:false}
+{className:'MatchRule',rid:16339,pattern:'clearAttributes',is_regex:false}
+{className:'MatchRule',rid:13961,pattern:'|2E|clearAttributes|28 29|',is_regex:false}
+{className:'MatchRule',rid:15872,pattern:'__defineSetter__|28|',is_regex:false}
+{className:'MatchRule',rid:5710,pattern:'<EMBED',is_regex:false}
+{className:'MatchRule',rid:11257,pattern:'<colgroup',is_regex:false}
+{className:'MatchRule',rid:16465,pattern:'|87 08|',is_regex:false}
+{className:'MatchRule',rid:17720,pattern:'.text = |27|AAAAAAAAAAAAA',is_regex:false}
+{className:'MatchRule',rid:16229,pattern:'9A|00|A|00|',is_regex:false}
+{className:'MatchRule',rid:9642,pattern:'@R|D1 86 1D|1|D0 11 A3 A4 00 A0 C9 03|H|F6|',is_regex:false}
+{className:'MatchRule',rid:12707,pattern:'LYRICSBEGIN',is_regex:false}
+{className:'MatchRule',rid:15866,pattern:'<!ENTITY',is_regex:false}
+{className:'MatchRule',rid:2485,pattern:'0534CF61-83C5-4765-B19B-45F7A4E135D0',is_regex:false}
+{className:'MatchRule',rid:7199,pattern:'|02 04|',is_regex:false}
+{className:'MatchRule',rid:19808,pattern:'.body.innerHTML +=',is_regex:false}
+{className:'MatchRule',rid:19237,pattern:'#default#time2',is_regex:false}
+{className:'MatchRule',rid:20566,pattern:'AMF',is_regex:false}
+{className:'MatchRule',rid:17506,pattern:'|D0 CF 11 E0 A1 B1 1A E1|',is_regex:false}
+{className:'MatchRule',rid:19685,pattern:'|28 28 28 28 28 28 28 28 28 28 28 28 28 28 28 28 28|',is_regex:false}
+{className:'MatchRule',rid:15499,pattern:'|CC 0F 00 00 FF FF 00 00|',is_regex:false}
+{className:'MatchRule',rid:19243,pattern:'layout-grid-char|3A|',is_regex:false}
+{className:'MatchRule',rid:19240,pattern:'stylesheet',is_regex:false}
+{className:'MatchRule',rid:18216,pattern:'behavior:url('#default#anim')',is_regex:false}
+{className:'MatchRule',rid:20429,pattern:'U3D|00|',is_regex:false}
+{className:'MatchRule',rid:17330,pattern:'|00 09 00 00 03|',is_regex:false}
+{className:'MatchRule',rid:5319,pattern:'|01 00 09 00 00 03|R|1F 00 00 06 00|=|00 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:18637,pattern:'P|00|o|00|w|00|e|00|r|00|P|00|o|00|i|00|n|00|t|00 20 00|D|00|o|00|c|00|u|00|m|00|e|00|n|00|t|00|',is_regex:false}
+{className:'MatchRule',rid:12286,pattern:'RegExp(',is_regex:false}
+{className:'MatchRule',rid:17200,pattern:'LsCM',is_regex:false}
+{className:'MatchRule',rid:17180,pattern:'LsCM|3A 00 00 00 00 00 00 0C 00 00 40 01|',is_regex:false}
+{className:'MatchRule',rid:3470,pattern:'VIDORV30',is_regex:false}
+{className:'MatchRule',rid:9432,pattern:'|C4 AB CD AB|',is_regex:false}
+{className:'MatchRule',rid:17217,pattern:'scrolling',is_regex:false}
+{className:'MatchRule',rid:19910,pattern:'urn:schemas-microsoft-com:vml',is_regex:false}
+{className:'MatchRule',rid:16423,pattern:'file|3A|//127.0.0.1',is_regex:false}
+{className:'MatchRule',rid:16549,pattern:'application/npruntime-scriptable-plugin|3B|deploymenttoolkit',is_regex:false}
+{className:'MatchRule',rid:17315,pattern:'W|00|o|00|r|00|d|00|D|00|o|00|c|00|u|00|m|00|e|00|n|00|t|00|',is_regex:false}
+{className:'MatchRule',rid:16730,pattern:'Photodex|28|R|29| ProShow|28|TM|29| Show File Version',is_regex:false}
+{className:'MatchRule',rid:8091,pattern:'<imfl>',is_regex:false}
+{className:'MatchRule',rid:19416,pattern:'|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|',is_regex:false}
+{className:'MatchRule',rid:13453,pattern:'1e54333b-2a00-11d1-8198-0000f87557db',is_regex:false}
+{className:'MatchRule',rid:12256,pattern:'`|10|',is_regex:false}
+{className:'MatchRule',rid:20239,pattern:'|F3 E1 04 30 2E 7B 0A 25 A4 58 D1 E2 45 8C 19 35 6E E4 D8 D1 E3 47 90 21 45 8E 24 59 D2 E4 49 8F|',is_regex:false}
+{className:'MatchRule',rid:7202,pattern:'|02 D5 CD D5 9C|.|1B 10 93 97 08 00|+,|F9 AE|',is_regex:false}
+{className:'MatchRule',rid:14642,pattern:'|00|_|00|_|00|S|00|R|00|P|00|_|00|',is_regex:false}
+{className:'MatchRule',rid:16335,pattern:'Type/ObjStm',is_regex:false}
+{className:'MatchRule',rid:16726,pattern:'Mjik',is_regex:false}
+{className:'MatchRule',rid:19666,pattern:'.document.open|28 29|',is_regex:false}
+{className:'MatchRule',rid:6693,pattern:'bkGD',is_regex:false}
+{className:'MatchRule',rid:18300,pattern:'ftp|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:17467,pattern:'document|2E|location|2E|replace',is_regex:false}
+{className:'MatchRule',rid:16310,pattern:'overflow',is_regex:false}
+{className:'MatchRule',rid:19868,pattern:'<div style=|22|overflow|3A|hidden|3B|width|3A|1px|3B|height|3A|1px|3B 22|>',is_regex:false}
+{className:'MatchRule',rid:18231,pattern:'|2C 01 04 00|',is_regex:false}
+{className:'MatchRule',rid:16055,pattern:'mp4a',is_regex:false}
+{className:'MatchRule',rid:19461,pattern:'|74 02 EB 19 68 00 00 01 00 0F B7 45 EC 50 68 D0 F0 42 00 E8 DA F3 FF FF 83 C4 0C EB A1 0F B7 45|',is_regex:false}
+{className:'MatchRule',rid:11258,pattern:'|95 00|',is_regex:false}
+{className:'MatchRule',rid:18508,pattern:'.sheet.rules[',is_regex:false}
+{className:'MatchRule',rid:17776,pattern:'|01 00 2C 28|Ljava|2F|net|2F|URL|3B 29|Ljavax|2F|sound|2F|midi|2F|Soundbank',is_regex:false}
+{className:'MatchRule',rid:18801,pattern:'jp2c|FF 4F|',is_regex:false}
+{className:'MatchRule',rid:17517,pattern:'|5D 00|',is_regex:false}
+{className:'MatchRule',rid:15504,pattern:'R|00|o|00|o|00|t|00| |00|E|00|n|00|t|00|r|00|y|00|',is_regex:false}
+{className:'MatchRule',rid:20431,pattern:'|FF FF FF FF FF FF 00 00 00 00 00 00 23 23|',is_regex:false}
+{className:'MatchRule',rid:16452,pattern:'vbscript',is_regex:false}
+{className:'MatchRule',rid:13448,pattern:'VBScript.Encode',is_regex:false}
+{className:'MatchRule',rid:16596,pattern:'.prompt',is_regex:false}
+{className:'MatchRule',rid:17304,pattern:'|22 07 00 00 00 22 22 22 22 00 22 06 00 00 00 02 00 46 00|',is_regex:false}
+{className:'MatchRule',rid:15707,pattern:'itpc|3A|//',is_regex:false}
+{className:'MatchRule',rid:19450,pattern:'|06 AF E1 00 EC 7B D1 11 A5 82 00 C0 4F C2 9C FB|',is_regex:false}
+{className:'MatchRule',rid:15535,pattern:'setCapture',is_regex:false}
+{className:'MatchRule',rid:14656,pattern:'setcapture|28 29|',is_regex:false}
+{className:'MatchRule',rid:15559,pattern:'crgn',is_regex:false}
+{className:'MatchRule',rid:18403,pattern:'onCellChange',is_regex:false}
+{className:'MatchRule',rid:7022,pattern:'[InternetShortcut]',is_regex:false}
+{className:'MatchRule',rid:5711,pattern:'BM|00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:6506,pattern:'udta',is_regex:false}
+{className:'MatchRule',rid:15705,pattern:'pcast|3A|//',is_regex:false}
+{className:'MatchRule',rid:4132,pattern:'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F',is_regex:false}
+{className:'MatchRule',rid:9840,pattern:'> T<',is_regex:false}
+{className:'MatchRule',rid:19130,pattern:'|FF C0 00 11 08 FF 37 55 99 03 01 22 00 02 11 01 03 11 01|',is_regex:false}
+{className:'MatchRule',rid:16677,pattern:'FlateDecode',is_regex:false}
+{className:'MatchRule',rid:17468,pattern:'<',is_regex:false}
+{className:'MatchRule',rid:17586,pattern:' -classpath',is_regex:false}
+{className:'MatchRule',rid:17183,pattern:'tSAC|B7 00 00 00 00 00 00 01 00 00 00 8F|',is_regex:false}
+{className:'MatchRule',rid:16223,pattern:'|5C|stylesheet',is_regex:false}
+{className:'MatchRule',rid:4643,pattern:'L|00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00|F',is_regex:false}
+{className:'MatchRule',rid:16236,pattern:'|B0 00|',is_regex:false}
+{className:'MatchRule',rid:19153,pattern:'|02 00 60 00 0C 14 FF 00 04 61 D5 00 B0 00 08 00 53 00 75 00|',is_regex:false}
+{className:'MatchRule',rid:18671,pattern:'.onpropertychange',is_regex:false}
+{className:'MatchRule',rid:4195,pattern:'Interactive Training]',is_regex:false}
+{className:'MatchRule',rid:17612,pattern:'|00 00 00 00 00 00 00 01 EE 00 00 26 00 00 04 00 00|',is_regex:false}
+{className:'MatchRule',rid:19432,pattern:'|81 80 80 80 48|',is_regex:false}
+{className:'MatchRule',rid:16721,pattern:'OrbitalFileV1.0|0D 0A|',is_regex:false}
+{className:'MatchRule',rid:15529,pattern:'setInterval|28 22|try { myWindow.location.href = victimLnk|3B|}',is_regex:false}
+{className:'MatchRule',rid:18066,pattern:'|42 F1 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17365,pattern:'Content-Type: text/plain',is_regex:false}
+{className:'MatchRule',rid:15869,pattern:'|00|airappinstaller|00|ASnative|00|',is_regex:false}
+{className:'MatchRule',rid:20140,pattern:'|63 65 6C 00 40 00 00 00 80 4E 50 3F D6 30 C6 01 40 00 00 00 00 F3 0F 47 D6 30 C6 01 03 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:16220,pattern:'p|00 00 00 01 00 00 00 A8 FF FB|m|10|http|3A|//www.',is_regex:false}
+{className:'MatchRule',rid:17642,pattern:'parentNode.removeAttribute(|22|class|22|)',is_regex:false}
+{className:'MatchRule',rid:18102,pattern:'printSeps',is_regex:false}
+{className:'MatchRule',rid:17145,pattern:'Stylenum',is_regex:false}
+{className:'MatchRule',rid:19074,pattern:'%u9090%u9090',is_regex:false}
+{className:'MatchRule',rid:19446,pattern:'|0E EC|e|E1 ED 19 D7|E|B4 A7|%|CB D1 E2 8E 9B|',is_regex:false}
+{className:'MatchRule',rid:18221,pattern:'position',is_regex:false}
+{className:'MatchRule',rid:18219,pattern:'|01 00 04 04 00 01 01 01 03 49 57 00 01 02 80 01 00 40 F8 0F|',is_regex:false}
+{className:'MatchRule',rid:17709,pattern:'setInterval|28 27|open|5F|win|28 29 27 2C 20|1|29 3B|',is_regex:false}
+{className:'MatchRule',rid:15303,pattern:'|00 00| |00| |FF 00 00 14 01 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17130,pattern:'event.boundElements',is_regex:false}
+{className:'MatchRule',rid:16043,pattern:'|09 09|pre {|0A 09 09 09|white-space|3A|normal|3B 0A|',is_regex:false}
+{className:'MatchRule',rid:17256,pattern:'url|28|data|3A|font|2F|ttf|3B|',is_regex:false}
+{className:'MatchRule',rid:20553,pattern:'#EXTINF|3A|0|2C|',is_regex:false}
+{className:'MatchRule',rid:20262,pattern:'createElement',is_regex:false}
+{className:'MatchRule',rid:13319,pattern:'|A9|des',is_regex:false}
+{className:'MatchRule',rid:17362,pattern:'|7F 00 54 01 09 00 01 00 00 00 00 00 0C 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:13569,pattern:'|FF FF FF FF 09 08|',is_regex:false}
+{className:'MatchRule',rid:13893,pattern:'type=|22|notCondition|22|',is_regex:false}
+{className:'MatchRule',rid:13317,pattern:'|A9|nam',is_regex:false}
+{className:'MatchRule',rid:18168,pattern:'%u4141%u4141',is_regex:false}
+{className:'MatchRule',rid:17265,pattern:'outputStream|2E|init|28|file|2C|0x04|7C|0x08|7C|0x20|2C|420',is_regex:false}
+{className:'MatchRule',rid:18928,pattern:'<smil',is_regex:false}
+{className:'MatchRule',rid:17120,pattern:'|5C|datafield |5C|emfblip',is_regex:false}
+{className:'MatchRule',rid:17231,pattern:'|02 01 03 00|',is_regex:false}
+{className:'MatchRule',rid:17458,pattern:'|58 35 4F 21 50 25 40 41 50 5B 34 5C 50 5A 58 35|',is_regex:false}
+{className:'MatchRule',rid:2705,pattern:'|FF D8|',is_regex:false}
+{className:'MatchRule',rid:20211,pattern:'|42 1B EB 68 C4 A9 39 96 95 4B 0E 39 71 A9 9E E8 72 CE 38 A4 3B C4 92 4B|',is_regex:false}
+{className:'MatchRule',rid:15536,pattern:'callback',is_regex:false}
+{className:'MatchRule',rid:13972,pattern:'|8C 00 04 00|',is_regex:false}
+{className:'MatchRule',rid:17227,pattern:'|8C 00 04 00 56 00 56 00 C1 01 08 00 C1 01 00 00 80 38 01 00|',is_regex:false}
+{className:'MatchRule',rid:19807,pattern:'documentElement',is_regex:false}
+{className:'MatchRule',rid:16157,pattern:'@|9E|i|F8|M[|CF 11 A8 FD 00 80|_|5C|D+',is_regex:false}
+{className:'MatchRule',rid:19253,pattern:'2=',is_regex:false}
+{className:'MatchRule',rid:10126,pattern:'|FF C4 02 11 00 FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17513,pattern:'onclick',is_regex:false}
+{className:'MatchRule',rid:16324,pattern:'.export',is_regex:false}
+{className:'MatchRule',rid:3686,pattern:'name',is_regex:false}
+{className:'MatchRule',rid:16169,pattern:'obj=document.getElementById|28 22|barID|22 29 3B|',is_regex:false}
+{className:'MatchRule',rid:17245,pattern:'|2E|bat',is_regex:false}
+{className:'MatchRule',rid:18332,pattern:'postMessage',is_regex:false}
+{className:'MatchRule',rid:16412,pattern:'|00 00 A8 0F|',is_regex:false}
+{className:'MatchRule',rid:16411,pattern:'|C3 0B|',is_regex:false}
+{className:'MatchRule',rid:7002,pattern:'|E0 C9 EA|y|F9 BA CE 11 8C 82 00 AA 00|K|A9 0B|',is_regex:false}
+{className:'MatchRule',rid:8416,pattern:'method',is_regex:false}
+{className:'MatchRule',rid:4675,pattern:'L|00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00|F',is_regex:false}
+{className:'MatchRule',rid:20593,pattern:'xmlns:sx=|22|http://icl.com/saxon|22|',is_regex:false}
+{className:'MatchRule',rid:19926,pattern:'AppletX',is_regex:false}
+{className:'MatchRule',rid:19932,pattern:'|01 2C 01 2B 01 2A 01 2F 01 2E 01 2D 01 52 00 12 12 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:16155,pattern:'RIFF',is_regex:false}
+{className:'MatchRule',rid:9842,pattern:'.pdf|23|',is_regex:false}
+{className:'MatchRule',rid:16665,pattern:'hcp|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:17730,pattern:'setTimeout',is_regex:false}
+{className:'MatchRule',rid:19687,pattern:'|00 04 03 08 61 4E 12 12 9D 02 00 4D 02 96 06 00 04 03 08 61 05 01 4F 96 02 00 08 12 1C 96 02 00|',is_regex:false}
+{className:'MatchRule',rid:18196,pattern:'@import ',is_regex:false}
+{className:'MatchRule',rid:16739,pattern:'http|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:15703,pattern:'itms|3A|//',is_regex:false}
+{className:'MatchRule',rid:15933,pattern:'%01@',is_regex:false}
+{className:'MatchRule',rid:17462,pattern:'MARQUEE',is_regex:false}
+{className:'MatchRule',rid:16603,pattern:'stream|0A|U3D',is_regex:false}
+{className:'MatchRule',rid:17388,pattern:'|00 00 00 54|',is_regex:false}
+{className:'MatchRule',rid:15540,pattern:'CollectGarbage|28 29|',is_regex:false}
+{className:'MatchRule',rid:18280,pattern:'.CacheSize',is_regex:false}
+{className:'MatchRule',rid:19692,pattern:'|00|loadVariables',is_regex:false}
+{className:'MatchRule',rid:16333,pattern:'this.media.newPlayer',is_regex:false}
+{className:'MatchRule',rid:17515,pattern:'onload',is_regex:false}
+{className:'MatchRule',rid:17204,pattern:'mmap',is_regex:false}
+{className:'MatchRule',rid:14262,pattern:'onenote|3A|',is_regex:false}
+{className:'MatchRule',rid:17104,pattern:'|3C|outline',is_regex:false}
+{className:'MatchRule',rid:17379,pattern:'IHDR',is_regex:false}
+{className:'MatchRule',rid:14261,pattern:'focussize',is_regex:false}
+{className:'MatchRule',rid:18986,pattern:'/OpenType',is_regex:false}
+{className:'MatchRule',rid:16727,pattern:'|0D 0A|[Group,Export,Yes]|0D 0A|',is_regex:false}
+{className:'MatchRule',rid:16378,pattern:'cells.item',is_regex:false}
+{className:'MatchRule',rid:13159,pattern:'49F1A440-4ECE-11d0-A3AC-00A0C90348F6',is_regex:false}
+{className:'MatchRule',rid:20072,pattern:'|2E|invalidateSelection',is_regex:false}
+{className:'MatchRule',rid:3149,pattern:'|89|PNG|0D 0A 1A 0A|',is_regex:false}
+{className:'MatchRule',rid:16208,pattern:'<object classid='clsid|3A|10020200-E260-11CF-AE68-00AA004A34D5' id='SQLServer'',is_regex:false}
+{className:'MatchRule',rid:16585,pattern:'-XXaltjvm',is_regex:false}
+{className:'MatchRule',rid:9849,pattern:'recolorinfo',is_regex:false}
+{className:'MatchRule',rid:16751,pattern:'smb|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:19937,pattern:'+= String.fromCharCode(',is_regex:false}
+{className:'MatchRule',rid:20224,pattern:'|3C|SAMI|3E|',is_regex:false}
+{className:'MatchRule',rid:18237,pattern:'|00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00 00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B|',is_regex:false}
+{className:'MatchRule',rid:18309,pattern:'m|00|e|00|t|00|h|00|o|00|d|00|',is_regex:false}
+{className:'MatchRule',rid:20133,pattern:'MIME-Version',is_regex:false}
+{className:'MatchRule',rid:20000,pattern:'What a long strange trip it's been.  Welcome to sid 20000',is_regex:false}
+{className:'MatchRule',rid:16151,pattern:'createEventObject',is_regex:false}
+{className:'MatchRule',rid:15106,pattern:'|5C|dppolycount',is_regex:false}
+{className:'MatchRule',rid:17408,pattern:'|00 00 0A 00 00 00 00 00 00 00 00 00 00 80 00 80 20 20|',is_regex:false}
+{className:'MatchRule',rid:18961,pattern:'HTTP 99|0A|',is_regex:false}
+{className:'MatchRule',rid:6689,pattern:'cHRM',is_regex:false}
+{className:'MatchRule',rid:17271,pattern:'|1E 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:19679,pattern:'|FF 25 A8 81 41 00 FF 25 C4 82 41 00 CC CC CC CC 75 01 C3 55 8B EC 83 EC 00 50 52 53 56 57 8B 45 04 6A 00 50 E8 D0 FC FF FF 83 C4 08 5F 5E 5B 5A|',is_regex:false}
+{className:'MatchRule',rid:16545,pattern:'/Subtype/RichMedia',is_regex:false}
+{className:'MatchRule',rid:16520,pattern:'4|3A|pathl',is_regex:false}
+{className:'MatchRule',rid:16744,pattern:'<dxstudio',is_regex:false}
+{className:'MatchRule',rid:15541,pattern:'|FC 00|',is_regex:false}
+{className:'MatchRule',rid:9434,pattern:'Ultravox-Max-Msg|3A|',is_regex:false}
+{className:'MatchRule',rid:15698,pattern:'%u0c0c%u0c0c',is_regex:false}
+{className:'MatchRule',rid:3088,pattern:'.cda',is_regex:false}
+{className:'MatchRule',rid:17368,pattern:'|A8 00 00 00 00 00 00 00 41 41 41 41 10 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:18401,pattern:'//|2A|*Start Encode**#@~^',is_regex:false}
+{className:'MatchRule',rid:6701,pattern:'zTXt',is_regex:false}
+{className:'MatchRule',rid:18246,pattern:'|87 00 00 00 4C 17 00 00 00 00 00 00 52 03 00 00|',is_regex:false}
+{className:'MatchRule',rid:17355,pattern:'|01 00 02 11 01|',is_regex:false}
+{className:'MatchRule',rid:15873,pattern:'window.open|28|',is_regex:false}
+{className:'MatchRule',rid:8448,pattern:'}|00 0C 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15867,pattern:'/BaseFont',is_regex:false}
+{className:'MatchRule',rid:14657,pattern:'|2E|componentFromPoint|28|',is_regex:false}
+{className:'MatchRule',rid:15126,pattern:'datasrc',is_regex:false}
+{className:'MatchRule',rid:16183,pattern:'|00|CombineImpl|00|',is_regex:false}
+{className:'MatchRule',rid:18239,pattern:'@import ',is_regex:false}
+{className:'MatchRule',rid:13466,pattern:'STSH',is_regex:false}
+{className:'MatchRule',rid:11180,pattern:'|00 00 00 01|ftyp',is_regex:false}
+{className:'MatchRule',rid:16353,pattern:'|82|theora',is_regex:false}
+{className:'MatchRule',rid:17487,pattern:'javascript',is_regex:false}
+{className:'MatchRule',rid:19254,pattern:'/F |28|javascript:',is_regex:false}
+{className:'MatchRule',rid:16063,pattern:'<isindex>',is_regex:false}
+{className:'MatchRule',rid:15538,pattern:'doc.replaceChild|28|doc,doc|29|',is_regex:false}
+{className:'MatchRule',rid:10116,pattern:'aim|3A|GoChat?',is_regex:false}
+{className:'MatchRule',rid:17434,pattern:'|3B 26 23|8204|3B 26 23|8204',is_regex:false}
+{className:'MatchRule',rid:15517,pattern:'stsd',is_regex:false}
+{className:'MatchRule',rid:19436,pattern:'document.styleSheets',is_regex:false}
+{className:'MatchRule',rid:13454,pattern:'1|00|e|00|5|00|4|00|3|00|3|00|3|00|b|00|-|00|2|00|a|00|0|00|0|00|-|00|1|00|1|00|d|00|1|00|-|00|8|00|1|00|9|00|8|00|-|00|0|00|0|00|0|00|0|00|f|00|8|00|7|00|5|00|5|00|7|00|d|00|b|00|',is_regex:false}
+{className:'MatchRule',rid:16720,pattern:'|F5 46 7A BD 00 00 00 02 00 02 00 00|',is_regex:false}
+{className:'MatchRule',rid:3553,pattern:'NULL',is_regex:false}
+{className:'MatchRule',rid:17591,pattern:'|01 49 66 01 00 00 00 08 D6 FD FF 05 D6 18 04 01 00 00 04 01|',is_regex:false}
+{className:'MatchRule',rid:19203,pattern:'|22 5C 5C|',is_regex:false}
+{className:'MatchRule',rid:13158,pattern:'35907DE0-E415-11CF-A917-00805F5C442B',is_regex:false}
+{className:'MatchRule',rid:18067,pattern:'pFragments',is_regex:false}
+{className:'MatchRule',rid:17512,pattern:'onmouseover',is_regex:false}
+{className:'MatchRule',rid:15506,pattern:'|14 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:19418,pattern:'|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|',is_regex:false}
+{className:'MatchRule',rid:19463,pattern:'|CB A5 E6 14 72 C6 32 43 83 99 A9 69 52 06 5B 5A|',is_regex:false}
+{className:'MatchRule',rid:17187,pattern:'|8F 41 01 45 C2 AE 00 FF 45 B0 41 24 43 46 1F 42|',is_regex:false}
+{className:'MatchRule',rid:19008,pattern:'debug|28 2D|parseFloat|28 22|NAN|28|ffffe',is_regex:false}
+{className:'MatchRule',rid:5712,pattern:'BM',is_regex:false}
+{className:'MatchRule',rid:16036,pattern:'Components.interfaces.',is_regex:false}
+{className:'MatchRule',rid:19871,pattern:'0x400000',is_regex:false}
+{className:'MatchRule',rid:3679,pattern:'image/bmp',is_regex:false}
+{className:'MatchRule',rid:13838,pattern:'|BF 14 7F 01 00 00|',is_regex:false}
+{className:'MatchRule',rid:19417,pattern:'|28 69 90 CC 10 42 88 0A D9 21 25 52 F6 DE 23 23|',is_regex:false}
+{className:'MatchRule',rid:15299,pattern:'absolute',is_regex:false}
+{className:'MatchRule',rid:16586,pattern:'|EC A5|',is_regex:false}
+{className:'MatchRule',rid:19011,pattern:'Lnam|00 00|',is_regex:false}
+{className:'MatchRule',rid:15501,pattern:'|01 00 09|+|10 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:12282,pattern:'vmlframe',is_regex:false}
+{className:'MatchRule',rid:12643,pattern:'%00%00',is_regex:false}
+{className:'MatchRule',rid:19894,pattern:'|A0 0F|',is_regex:false}
+{className:'MatchRule',rid:15542,pattern:'|06 08|',is_regex:false}
+{className:'MatchRule',rid:15682,pattern:'stbl',is_regex:false}
+{className:'MatchRule',rid:13971,pattern:'|00 B2 0F|',is_regex:false}
+{className:'MatchRule',rid:13573,pattern:'mailto|3A|',is_regex:false}
+{className:'MatchRule',rid:19012,pattern:'manL',is_regex:false}
+{className:'MatchRule',rid:19911,pattern:'P|3B|',is_regex:false}
+{className:'MatchRule',rid:16224,pattern:'tref',is_regex:false}
+{className:'MatchRule',rid:13160,pattern:'BFC3CD50-618F-11CF-8BB2-00AA00B4E220',is_regex:false}
+{className:'MatchRule',rid:7198,pattern:'|00 00 00 00 00 00 1D 00 0F 00 03 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:19818,pattern:'XMLHttpRequest',is_regex:false}
+{className:'MatchRule',rid:6502,pattern:'!|FF 0B|ANIMEXTS1.0',is_regex:false}
+{className:'MatchRule',rid:1290,pattern:'window.open|28 22|readme.eml|22|',is_regex:false}
+{className:'MatchRule',rid:9847,pattern:'S|00|a|00|v|00|e|00|d|00|S|00|e|00|a|00|r|00|c|00|h|00|',is_regex:false}
+{className:'MatchRule',rid:16293,pattern:'|FF FF FF FF 01 1F 02|H|00 00 00|6|00 00 FF FF 01 1F 1F EE|',is_regex:false}
+{className:'MatchRule',rid:17122,pattern:'|5C|datafield |5C|jpegblip',is_regex:false}
+{className:'MatchRule',rid:13516,pattern:'HTTP/1.1 404',is_regex:false}
+{className:'MatchRule',rid:19460,pattern:'|50 92 40 00 E8 8E 04 00 00 83 C0 40 50 E8 F9 03 00 00 83 C4 0C 6A 01 E8 87 03 00 00 68 9C 92 40|',is_regex:false}
+{className:'MatchRule',rid:18217,pattern:'X-UA-Compatible',is_regex:false}
+{className:'MatchRule',rid:16508,pattern:'meta http-equiv=|22|X-UA-Compatible|22| content=|22|IE=7|22|',is_regex:false}
+{className:'MatchRule',rid:17042,pattern:'|20 20 EC 21 EA 3A 69 10 A2 DD 08 00 2B 30 30 9D|',is_regex:false}
+{className:'MatchRule',rid:19294,pattern:'|33 10 00 00 55 08 0C 00|',is_regex:false}
+{className:'MatchRule',rid:18809,pattern:'<applet',is_regex:false}
+{className:'MatchRule',rid:16464,pattern:'|13 00|',is_regex:false}
+{className:'MatchRule',rid:20270,pattern:'|8D 8D A0 FD FF FF 51 68 BB 20 01 00 8B 55 F8 52 FF 15 18|',is_regex:false}
+{className:'MatchRule',rid:18396,pattern:'|29 66 3A E1 58 4E 4F 20 4E 41 4D 45 20 20 20 20 46 41 54 31 32 20 20 20 6A 00|',is_regex:false}
+{className:'MatchRule',rid:17179,pattern:'pamm',is_regex:false}
+{className:'MatchRule',rid:17129,pattern:'|01|',is_regex:false}
+{className:'MatchRule',rid:20535,pattern:'opera|3A|config',is_regex:false}
+{className:'MatchRule',rid:13981,pattern:'A|10 12 00|',is_regex:false}
+{className:'MatchRule',rid:13918,pattern:'tmci',is_regex:false}
+{className:'MatchRule',rid:13920,pattern:'obji',is_regex:false}
+{className:'MatchRule',rid:19419,pattern:'|78 DA ED DD 07 3C 97 FB FF 3F 7E 23 0D 23 CA C8 28 69 90 64 13 21 44 85 B2 0A 91 68 C8 DE 5B 46|',is_regex:false}
+{className:'MatchRule',rid:17218,pattern:'<li',is_regex:false}
+{className:'MatchRule',rid:17548,pattern:'content|3D|',is_regex:false}
+{className:'MatchRule',rid:13822,pattern:'|BF 14 7F 01 00 00|',is_regex:false}
+{className:'MatchRule',rid:9637,pattern:'<?aom',is_regex:false}
+{className:'MatchRule',rid:3473,pattern:'system-screen-size=|22|',is_regex:false}
+{className:'MatchRule',rid:15147,pattern:'<IFRAME ',is_regex:false}
+{className:'MatchRule',rid:12284,pattern:'8|00 04 00|',is_regex:false}
+{className:'MatchRule',rid:6691,pattern:'sBIT',is_regex:false}
+{className:'MatchRule',rid:20445,pattern:'/Title',is_regex:false}
+{className:'MatchRule',rid:6699,pattern:'iTXt',is_regex:false}
+{className:'MatchRule',rid:19693,pattern:'|16 03 16 05 16 07 18 09 16 0B 16 10 17 05 05 00 05 00 08 17 16 18 16 19 16 1A 16 1B 16 1C|',is_regex:false}
+{className:'MatchRule',rid:17645,pattern:'text-decoration',is_regex:false}
+{className:'MatchRule',rid:8413,pattern:'uplddrvinfo.htm?',is_regex:false}
+{className:'MatchRule',rid:19873,pattern:'position',is_regex:false}
+{className:'MatchRule',rid:19005,pattern:'|3C|dialog|20|style|3D 27|position|3A|relative|27 3E|',is_regex:false}
+{className:'MatchRule',rid:17133,pattern:'HTTP 1|0A|',is_regex:false}
+{className:'MatchRule',rid:17646,pattern:'|FF 03 00 00 00 60 16 8F 10 00 00 00 00 5F 07 90 08 28 00 00|',is_regex:false}
+{className:'MatchRule',rid:17308,pattern:'|13 1F 14 FF 95 80 FF FF 01 00 00 00 00 00 28 2C|',is_regex:false}
+{className:'MatchRule',rid:13962,pattern:'Content-Transfer-Encoding',is_regex:false}
+{className:'MatchRule',rid:17202,pattern:'Shockwave 3D',is_regex:false}
+{className:'MatchRule',rid:17366,pattern:'HLP',is_regex:false}
+{className:'MatchRule',rid:19710,pattern:'display: -webkit-inline-box',is_regex:false}
+{className:'MatchRule',rid:16647,pattern:'|13 08 00 00 00 00 00 00 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:16044,pattern:'style=|22|letter-spacing|3A| -2147483648',is_regex:false}
+{className:'MatchRule',rid:17363,pattern:'|00 00 00 00 4C 41 42 4C|',is_regex:false}
+{className:'MatchRule',rid:19225,pattern:'|4B 10|',is_regex:false}
+{className:'MatchRule',rid:16318,pattern:'|00 02 0B|@|00 00 00 00 00 00 00 00 FE 00 FF 00 90 03 A7 00|',is_regex:false}
+{className:'MatchRule',rid:17154,pattern:'|27 27|',is_regex:false}
+{className:'MatchRule',rid:15116,pattern:'search-ms|3A|',is_regex:false}
+{className:'MatchRule',rid:16656,pattern:'|DC 00 0C 00|',is_regex:false}
+{className:'MatchRule',rid:17211,pattern:'_Marshaled_pUnk',is_regex:false}
+{className:'MatchRule',rid:8058,pattern:'window.navigator',is_regex:false}
+{className:'MatchRule',rid:18987,pattern:'/TrueType',is_regex:false}
+{className:'MatchRule',rid:15384,pattern:'|00 11 02 FF 0C 00|',is_regex:false}
+{className:'MatchRule',rid:1735,pattern:'new XMLHttpRequest|28|',is_regex:false}
+{className:'MatchRule',rid:3148,pattern:'adb880a6-d8ff-11cf-9377-00aa003b7a11',is_regex:false}
+{className:'MatchRule',rid:19669,pattern:'telnet|3A 2F 2F|',is_regex:false}
+{className:'MatchRule',rid:16584,pattern:'8AD9C840-044E-11D1-B3E9-00805F499D93',is_regex:false}
+{className:'MatchRule',rid:17303,pattern:'|2E|cloneNode()',is_regex:false}
+{className:'MatchRule',rid:13834,pattern:'setRequestHeader|28 22|',is_regex:false}
+{className:'MatchRule',rid:19148,pattern:'stsc',is_regex:false}
+{className:'MatchRule',rid:19444,pattern:'P|94 BD C6 7F 86 07|I|83 A3 C7|y!|B7|3|AD|',is_regex:false}
+{className:'MatchRule',rid:12281,pattern:'stroke',is_regex:false}
+{className:'MatchRule',rid:16734,pattern:'|22|',is_regex:false}
+{className:'MatchRule',rid:20559,pattern:'CTMF',is_regex:false}
+{className:'MatchRule',rid:12280,pattern:'imagedata',is_regex:false}
+{className:'MatchRule',rid:15502,pattern:'|0F 00 06|+',is_regex:false}
+{className:'MatchRule',rid:10115,pattern:'|FC 02|',is_regex:false}
+{className:'MatchRule',rid:19231,pattern:'|03 10 0C 00|',is_regex:false}
+{className:'MatchRule',rid:19303,pattern:'|C3 0B 08|',is_regex:false}
+{className:'MatchRule',rid:17316,pattern:'.|7B|3050F4D8-98B5-11CF-BB82-00AA00BDCE0B|7D|',is_regex:false}
+{className:'MatchRule',rid:17711,pattern:'|30 26 B2 75 8E 66 CF 11 A6 D9 00 AA 00 62 CE 6C|',is_regex:false}
+{className:'MatchRule',rid:17285,pattern:'|A4 37 7A 00 81 00 00 00 00 00 82 00 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15430,pattern:'F|00 00 00|,|00 00 00| |00 00 00|',is_regex:false}
+{className:'MatchRule',rid:15115,pattern:'|5C|stylesheet',is_regex:false}
+{className:'MatchRule',rid:18244,pattern:'launchjnlp',is_regex:false}
+{className:'MatchRule',rid:16733,pattern:'[CloneCD]',is_regex:false}
+{className:'MatchRule',rid:16360,pattern:'rpza',is_regex:false}
+{className:'MatchRule',rid:16241,pattern:'g|08|',is_regex:false}
+{className:'MatchRule',rid:15166,pattern:'<time ',is_regex:false}
+{className:'MatchRule',rid:16359,pattern:'[Setnet32]',is_regex:false}
+{className:'MatchRule',rid:17403,pattern:'|5C|prtdata',is_regex:false}
+{className:'MatchRule',rid:18634,pattern:'|09 04 06 00 00 04 00 01|',is_regex:false}
+{className:'MatchRule',rid:15706,pattern:'daap|3A|//',is_regex:false}
+{className:'MatchRule',rid:16037,pattern:'<filter',is_regex:false}
+{className:'MatchRule',rid:18973,pattern:'display|3A 20|block',is_regex:false}
+{className:'MatchRule',rid:16502,pattern:'wOFFOTTO',is_regex:false}
+{className:'MatchRule',rid:19449,pattern:'N|B8 98|f|FA 0A|0C|AE B2 1C 0A 98 D7 A4|M',is_regex:false}
+{className:'MatchRule',rid:16188,pattern:'|9F 0F 04 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:18903,pattern:'document.body.removeChild|28|',is_regex:false}
+{className:'MatchRule',rid:17348,pattern:'gXYZ',is_regex:false}
+{className:'MatchRule',rid:10131,pattern:'InstallVersion',is_regex:false}
+{className:'MatchRule',rid:16601,pattern:'<bdo',is_regex:false}
+{className:'MatchRule',rid:17213,pattern:'about|3A|config',is_regex:false}
+{className:'MatchRule',rid:17630,pattern:'|3C|li|3E 3C 2F|li|3E 0A 3C|li|3E 3C 2F|li|3E 0A 3C|li|3E 3C 2F|li|3E 0A|',is_regex:false}
+{className:'MatchRule',rid:19885,pattern:'|28 28|0x200c-4|29 2F|2|29|',is_regex:false}
+{className:'MatchRule',rid:3820,pattern:'ITSF',is_regex:false}
+{className:'MatchRule',rid:17349,pattern:'bXYZ',is_regex:false}
+{className:'MatchRule',rid:16518,pattern:'8|3A|announce',is_regex:false}
+{className:'MatchRule',rid:4133,pattern:'083863F1-70DE-11d0-BD40-00A0C911CE86',is_regex:false}
+{className:'MatchRule',rid:16719,pattern:'MSCF',is_regex:false}
+{className:'MatchRule',rid:17360,pattern:'static|20|char|20|gopher|5F|binary|5F|bits|5B 5D|',is_regex:false}
+{className:'MatchRule',rid:19147,pattern:'obj|2E|outerHTML|2B 2B|',is_regex:false}
+{className:'MatchRule',rid:7020,pattern:'isComponentInstalled',is_regex:false}
+{className:'MatchRule',rid:20141,pattern:'|00 00 00 00 1D 00 0F 00 03 00 00 00 00 00 FF FF FF FF FF FF FF 00 00 0D 00 02 00 01 00 0C 00 02 00 64 00 0F 00 02 00 01 00 11 00 02 00 00 00 10|',is_regex:false}
+{className:'MatchRule',rid:16053,pattern:'GNU.sparse.numblocks=',is_regex:false}
+{className:'MatchRule',rid:16654,pattern:'|88 00 08 00|',is_regex:false}
+{className:'MatchRule',rid:7025,pattern:'n|DB 7C D2|m|AE CF 11 96 B8|DEST|00 00|',is_regex:false}
+{className:'MatchRule',rid:13316,pattern:'|A9|ART',is_regex:false}
+{className:'MatchRule',rid:17124,pattern:'|00 13 3A FF FF FF 8C 0F 00 00 F0 38 00 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:18506,pattern:'|2F|Columns',is_regex:false}
+{className:'MatchRule',rid:1841,pattern:'javascript|3A|//',is_regex:false}
+{className:'MatchRule',rid:12688,pattern:'|22|.cmd',is_regex:false}
+{className:'MatchRule',rid:18398,pattern:'T|00|h|00|u|00|m|00|b|00|n|00|a|00|i|00|l|00 00 00 41 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17232,pattern:'|01 02 00 03|',is_regex:false}
+{className:'MatchRule',rid:17601,pattern:'event.target.parentNode.removeChild',is_regex:false}
+{className:'MatchRule',rid:20182,pattern:'navigateToURL',is_regex:false}
+{className:'MatchRule',rid:15562,pattern:'jP  ',is_regex:false}
+{className:'MatchRule',rid:16550,pattern:'application/java-deployment-toolkit',is_regex:false}
+{className:'MatchRule',rid:9641,pattern:'|90 08 00|3|B1 E5 CF 11 89 F4 00 A0 C9 03|I|CB|',is_regex:false}
+{className:'MatchRule',rid:19445,pattern:'|EC 95 95|9g|86|-N|8F DB 98 81|L|E7|l|1E|',is_regex:false}
+{className:'MatchRule',rid:16000,pattern:'|F9 04 01 00 00 10 00|,|00 00 00 00 00 00 90 01|',is_regex:false}
+{className:'MatchRule',rid:13823,pattern:'text/css',is_regex:false}
+{className:'MatchRule',rid:19169,pattern:'strlstrh',is_regex:false}
+{className:'MatchRule',rid:19682,pattern:'|0A 5C 94 BF 42 D9 62 00 00 F3 45 3D D4 6E C2 7F 22 D1 11 DD B9 EC D8 84 72 2B DD 44 F2 BB 00 05 E6 8A 7B A8 DD 89 DE 4A 86 00 FF 09 10 00 00 00|',is_regex:false}
+{className:'MatchRule',rid:17398,pattern:'a|5B|10|5D 20 3D 20 22|AAAAAAAAAA|22 3B|',is_regex:false}
+{className:'MatchRule',rid:17212,pattern:'|5F 5F|parent|5F 5F 2E|eval',is_regex:false}
+{className:'MatchRule',rid:16696,pattern:'|3C|DeepBurner_record',is_regex:false}
+{className:'MatchRule',rid:16732,pattern:'|5B|HKEY_LOCAL_MACHINE|5C|SOFTWARE|5C|IRE|5C|SafeNet|2F|Soft-PK|5C|ACL|5C|GROUPDEFS|5C|_SafeNet_Default_Group|5D|',is_regex:false}
+{className:'MatchRule',rid:14641,pattern:'|51 08|',is_regex:false}
+{className:'MatchRule',rid:17181,pattern:'LsCM|3A 00 00 00 00 00 00 0C 00 00 00 01 00 04 00 00 40 05 00 00|',is_regex:false}
+{className:'MatchRule',rid:15461,pattern:'<marquee ',is_regex:false}
+{className:'MatchRule',rid:3814,pattern:'|89|PNG|0D 0A 1A 0A|',is_regex:false}
+{className:'MatchRule',rid:19872,pattern:'eval|28 22|r|3D|o|22|',is_regex:false}
+{className:'MatchRule',rid:17457,pattern:'FWS|06|',is_regex:false}
+{className:'MatchRule',rid:13474,pattern:'<D|3A|href>',is_regex:false}
+{className:'MatchRule',rid:19671,pattern:'<xsl|3A|template match',is_regex:false}
+{className:'MatchRule',rid:15305,pattern:'<textarea',is_regex:false}
+{className:'MatchRule',rid:9625,pattern:'<ref',is_regex:false}
+{className:'MatchRule',rid:18571,pattern:'|92 39 D5 34 8F 40 D1 69 5A 74 54 70 E1 F2 3F 43|',is_regex:false}
+{className:'MatchRule',rid:18572,pattern:'|B0 B7 13 3E D0 96 F9 B5 6F AE 91 C8 74 BD 3A C0|',is_regex:false}
+{className:'MatchRule',rid:18576,pattern:'|72 03 21 05 C5 0C 08 57 3D 8E A5 30 4E FE E8 B0|',is_regex:false}
+{className:'MatchRule',rid:18569,pattern:'|3E 75 CE D4 6B 69 30 21 21 88 30 AE 86 A8 2A 71|',is_regex:false}
+{className:'MatchRule',rid:18567,pattern:'|D7 55 8F DA F5 F1 10 5B B2 13 28 2B 70 77 29 A3|',is_regex:false}
+{className:'MatchRule',rid:18573,pattern:'|D8 F3 5F 4E B7 87 2B 2D AB 06 92 E3 15 38 2F B0|',is_regex:false}
+{className:'MatchRule',rid:18568,pattern:'|39 2A 43 4F 0E 07 DF 1F 8A A3 05 DE 34 E0 C2 29|',is_regex:false}
+{className:'MatchRule',rid:16181,pattern:'U|04 82 80 80 80 80 80 80 80 80 80 03|',is_regex:false}
+{className:'MatchRule',rid:16291,pattern:'|06 03|U|04 03|',is_regex:false}
+{className:'MatchRule',rid:11947,pattern:'|16 03 00|',is_regex:false}
+{className:'MatchRule',rid:18570,pattern:'|E9 02 8B 95 78 E4 15 DC 1A 71 0A 2B 88 15 44 47|',is_regex:false}
+{className:'MatchRule',rid:18566,pattern:'|F5 C8 6A F3 61 62 F1 3A 64 F5 4F 6D C9 58 7C 06|',is_regex:false}
+{className:'MatchRule',rid:18565,pattern:'|04 7E CB E9 FC A5 5F 7B D0 9E AE 36 E1 0C AE 1E|',is_regex:false}
+{className:'MatchRule',rid:18532,pattern:'i|00|a|00|c|00|e|00|n|00|c|00|.|00|d|00|l|00|l|00|',is_regex:false}
+{className:'MatchRule',rid:18530,pattern:'i|00|b|00|f|00|s|00|3|00|2|00|.|00|d|00|l|00|l|00|',is_regex:false}
+{className:'MatchRule',rid:9434,pattern:'Ultravox-Max-Msg|3A|',is_regex:false}
+{className:'MatchRule',rid:16686,pattern:'/ibm/console/',is_regex:false}
+{className:'MatchRule',rid:17409,pattern:'|01|',is_regex:false}
+{className:'MatchRule',rid:16521,pattern:' http/',is_regex:false}
+{className:'MatchRule',rid:20616,pattern:'Authorization|3A| Basic',is_regex:false}
+{className:'MatchRule',rid:15471,pattern:'.asp',is_regex:false}
+{className:'MatchRule',rid:20620,pattern:'GET',is_regex:false}
+{className:'MatchRule',rid:20608,pattern:'gwia|2E|css',is_regex:false}
+{className:'MatchRule',rid:20607,pattern:'gwagents|2E|css',is_regex:false}
+{className:'MatchRule',rid:19257,pattern:'|5F 30 64 61 79 32 5F 66 6C 61 0C 4D 61 69 6E 54 69 6D 65 6C 69 6E 65|',is_regex:false}
