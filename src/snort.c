@@ -5453,7 +5453,9 @@ static void ProcessPortGroup(PORT_GROUP *portGroup, SFGHASH *acsmMap, cJSON *rul
 			if (added) {
 				matchRule=cJSON_CreateObject();
 				cJSON_AddStringToObject(matchRule, CLASS_NAME, CLASS_NAME_VALUE);
-				cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pmd->pattern_buf));
+
+				char *pattern = (char *)hashmapptr_get(sc->dpi_pmd_pattern_map, &pmd);
+				cJSON_AddItemToObject(matchRule, PATTERN, cJSON_CreateString(pattern));
 				cJSON_AddBoolToObject(matchRule, IS_REGEX, false);
 				cJSON_AddNumberToObject(matchRule, RULE_ID, otn->sigInfo.id);
 				cJSON_AddItemToArray(ruleList, matchRule);
@@ -5558,6 +5560,9 @@ static void DPIServiceFree(SnortConfig *sc) {
 
 	if (sc->dpi_acsm_map != NULL)
 		sfghash_delete(sc->dpi_acsm_map);
+
+	if (sc->dpi_pmd_pattern_map != NULL)
+		hashmapptr_destroy(sc->dpi_pmd_pattern_map);
 
 }
 

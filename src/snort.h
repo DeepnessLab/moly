@@ -62,6 +62,7 @@
 #include "generators.h"
 #include "preprocids.h"
 #include <signal.h>
+#include "HashMap.h"
 #if defined(INLINE_FAILOPEN) || \
     defined(TARGET_BASED) || defined(SNORT_RELOAD)
 # include <pthread.h>
@@ -986,6 +987,7 @@ typedef struct _SnortConfig
     int dpi_controller_port;
     char *dpi_rule_export_dir;
     SFGHASH *dpi_acsm_map; // Map from ACSM to a map of rule ID => mlist (MatchList => Map (Rule ID => mlist)).
+    HashMapPtr *dpi_pmd_pattern_map; // Map from PatternMatchData to a pattern evaluated by the key (PatternMatchData => pattern).
 
 } SnortConfig;
 

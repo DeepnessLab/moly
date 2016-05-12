@@ -113,3 +113,98 @@ void hashmap_print(HashMap *map, PrintElement printFunc) {
 	}
 	printf(" ]");
 }
+
+/* Hash Map with pointer key support. */
+
+HashMapPtr *hashmapptr_create() {
+	HashMapPtr *map = (HashMapPtr*)malloc(sizeof(HashMapPtr));
+	map->map = NULL;
+	map->hh = NULL;
+	return map;
+}
+
+void hashmapptr_destroy(HashMapPtr *map) {
+	// if needed - free all data in hash
+	HashPtrObject *obj, *tmp;
+	HashPtrObject *hm = map->map;
+
+	HASH_ITER(hh, hm, obj, tmp) {
+		HASH_DEL(hm, obj);
+		free(obj);
+	}
+
+	free(map);
+}
+
+void *hashmapptr_get(HashMapPtr *map, void *key) {
+	HashPtrObject *obj = NULL;
+	HASH_FIND_PTR(map->map, key, obj);
+	if (obj != NULL) {
+		return obj->data;
+	}
+	return NULL;
+}
+
+void hashmapptr_put(HashMapPtr *map, void *key, void *value) {
+	HashPtrObject *obj = (HashPtrObject*)malloc(sizeof(HashPtrObject));
+	obj->key = key;
+	obj->data = value;
+	HASH_ADD_PTR(map->map, key, obj);
+}
+
+int hashmapptr_remove(HashMapPtr *map, void *key) {
+	HashPtrObject *hm = map->map;
+	HashPtrObject *obj = NULL;
+	HASH_FIND_PTR(hm, key, obj);
+	if (obj != NULL) {
+		HASH_DEL(hm, obj);
+		free(obj);
+		return 1;
+	}
+	return 0;
+}
+
+int hashmaptr_size(HashMapPtr *map) {
+	HashPtrObject *hm = map->map;
+	int size;
+	size = HASH_COUNT(hm);
+	return size;
+}
+
+void hashmapptr_iterator_reset(HashMapPtr *map) {
+	map->iter = map->map;
+}
+
+void *hashmapptr_iterator_next(HashMapPtr *map) {
+	HashPtrObject *obj;
+
+	obj = map->iter;
+	if (obj != NULL) {
+		map->iter = obj->hh.next;
+		return obj->data;
+	}
+	return NULL;
+}
+
+HashPtrObject *hashmapptr_iterator_next_entry(HashMapPtr *map) {
+	HashPtrObject *obj;
+
+	obj = map->iter;
+	if (obj != NULL) {
+		map->iter = obj->hh.next;
+		return obj;
+	}
+	return NULL;
+}
+
+void hashmapptr_print(HashMapPtr *map, PrintElement printFunc) {
+	HashPtrObject *iter;
+
+	printf("[ ");
+	for (iter = map->map; iter != NULL; iter = iter->hh.next) {
+		printFunc(iter->data);
+		if (iter->hh.next != NULL)
+			printf(",");
+	}
+	printf(" ]");
+}

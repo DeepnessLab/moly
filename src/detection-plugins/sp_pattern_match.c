@@ -61,6 +61,7 @@
 #include "sp_byte_extract.h"
 #include "detection_util.h"
 #include "sf_sechash.h"
+#include "HashMap.h"
 
 /********************************************************************
  * Macros
@@ -194,6 +195,36 @@ void SetupPatternMatch(void)
                 "Plugin: PatternMatch Initialized!\n"););
 }
 
+static inline HashMapPtr * CreatePmdToPatternMap(void) {
+    return hashmapptr_create();
+}
+
+/**
+ * The function adds a rule to the DPI Rule to mlist Map (entry Key: Rule ID => Value: mlist).
+ * returns: true if the rule was added to the map; otherwise false.
+ */
+static inline bool PmdAdd(HashMapPtr *pmdToPatternMap, PatternMatchData *pmd, char *pattern) {
+	if (pmdToPatternMap == NULL)
+		return false;
+
+	char *pmdExist = (char *)hashmapptr_get(pmdToPatternMap, &pmd);
+	if (pmdExist) {
+		return false;
+	}
+
+	// Put the pattern in the map in the form it appeared in the original rule file.
+    char *start_ptr = strchr(pattern, '"'); /* find the start of the data */
+    start_ptr++; /* move the start up from the beginning quotes */
+    char *end_ptr = strrchr(start_ptr, '"'); /* find the end of the data */
+    int patternLen = end_ptr - start_ptr;
+    char *patternCopy = (char *)SnortAlloc(patternLen + 1);
+    memcpy(patternCopy, start_ptr, patternLen);
+
+	hashmapptr_put(pmdToPatternMap, pmd, patternCopy);
+
+	return true;
+}
+
 static void PayloadSearchInit(struct _SnortConfig *sc, char *data, OptTreeNode * otn, int protocol)
 {
     OptFpList *fpl;
@@ -215,6 +246,14 @@ static void PayloadSearchInit(struct _SnortConfig *sc, char *data, OptTreeNode *
 
     data_dup = SnortStrdup(data);
     data_end = data_dup + strlen(data_dup);
+
+    if (sc->dpi_service_active) {
+		if (sc->dpi_pmd_pattern_map == NULL) {
+			sc->dpi_pmd_pattern_map = CreatePmdToPatternMap();
+		}
+
+		PmdAdd(sc->dpi_pmd_pattern_map, pmd, data);
+    }
 
     opt_data = PayloadExtractParameter(data_dup, &opt_len);
 
