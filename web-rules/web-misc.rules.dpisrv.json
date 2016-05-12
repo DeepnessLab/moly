@@ -121,7 +121,6 @@
 {className:'MatchRule',rid:2657,pattern:'|01|',is_regex:false}
 {className:'MatchRule',rid:1132,pattern:'|EB|_|9A FF FF FF FF 07 FF C3|^1|C0 89|F|9D|',is_regex:false}
 {className:'MatchRule',rid:2411,pattern:'DESCRIBE',is_regex:false}
-{className:'MatchRule',rid:16207,pattern:'|90|D|FA A0 B1|^C|07|m'|1C|m|08 02 D0 C7 C0|q|EE|q|E3|R|B3 1C|}K|DE D2 C1 F8 5C|{',is_regex:false}
 {className:'MatchRule',rid:6511,pattern:'/WebAdmin.dll?',is_regex:false}
 {className:'MatchRule',rid:11680,pattern:'|05 01|',is_regex:false}
 {className:'MatchRule',rid:13951,pattern:'DBMS_AQELM',is_regex:false}
