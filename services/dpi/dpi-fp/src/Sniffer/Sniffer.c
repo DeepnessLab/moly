@@ -265,6 +265,7 @@ static inline int find_detection_results(ProcessorData *processor, ContentMatchR
 	MatchRule *state_rules;
 
 	num_mr = 0;
+	num_mr_range = 0;
 	for (i = 0; i < num_reports; i++) {
 		state_rules = processor->machine->matchRules[reports[i].state];
 		num_rules = processor->machine->numRules[reports[i].state];
