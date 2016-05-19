@@ -5388,6 +5388,10 @@ static inline void ExportSnortRules(SnortConfig *sc, cJSON *root) {
 static inline void ProcessPortRuleMap(PORT_RULE_MAP *portRuleMap, SFGHASH *acsmMap, cJSON *ruleList, SnortConfig *sc) {
 	ProcessPortGroups(portRuleMap->prmSrcPort, acsmMap, ruleList, sc);
 	ProcessPortGroups(portRuleMap->prmDstPort, acsmMap, ruleList, sc);
+#ifdef TARGET_BASED
+	ProcessPortGroups(portRuleMap->prmNoServiceSrcPort, acsmMap, ruleList, sc);
+	ProcessPortGroups(portRuleMap->prmNoServiceDstPort, acsmMap, ruleList, sc);
+#endif
 	ProcessPortGroup(portRuleMap->prmGeneric, acsmMap, ruleList, sc);
 }
 
