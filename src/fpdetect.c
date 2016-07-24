@@ -1264,17 +1264,19 @@ static inline int fpEvalHeaderSW(PORT_GROUP *port_group, Packet *p,
                 }
 
                 /* Adding this extra search on file data since we no more use DecodeBuffer to decode now*/
-                if(file_data_ptr.len)
+                /* Remove the check of the file_data_ptr.len from the comparison between Snort and DPI Snort, so we will not get unnecessary noise.
+ 				if(file_data_ptr.len)
                 {
                     start_state = 0;
                     mpseSearch(so, file_data_ptr.data, file_data_ptr.len,
                         rule_tree_match, omd, &start_state);
 #ifdef PPM_MGR
-                    /* Bail if we spent too much time already */
+                     Bail if we spent too much time already
                     if (PPM_PACKET_ABORT_FLAG())
                         goto fp_eval_header_sw_reset_ip;
 #endif
                 }
+                */
 
                  /*
                  **  Content-Match - If no Uri-Content matches, than do a Content search
