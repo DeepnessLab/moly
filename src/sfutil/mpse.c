@@ -651,6 +651,8 @@ int mpseSearchDpiSrv(Packet *p, void *pvoid, const unsigned char * T, int n,
 		}
 	}
 
+	p->dpi_service_match_reports = NULL;
+
 	return 0;
 }
 
