@@ -565,11 +565,14 @@ static inline InPacket *buffer_packet(Packet *packet, const struct pcap_pkthdr *
 	res->seqnum = seqnum_key;
 	res->timestamp = time(0);
 	res->packet = *packet;
+	res->packet.payload = (unsigned char *)malloc(sizeof(unsigned char) * packet->payload_len);
+	memcpy(res->packet.payload, packet->payload, packet->payload_len);
 	return res;
 }
 
 static inline void free_buffered_packet(InPacket *pkt) {
 	free(pkt->pktdata);
+	free(pkt->packet.payload);
 	free(pkt);
 }
 
