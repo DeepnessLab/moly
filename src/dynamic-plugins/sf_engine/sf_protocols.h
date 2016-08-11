@@ -58,9 +58,9 @@ typedef enum {
                       /* DecodeEthOverMPLS - basically same as straight eth */
     PROTO_ARP,        /* DecodeARP */
     PROTO_GTP,        /* DecodeGTP */
-	PROTO_VXLAN,      /* DecodeVXLAN */
-	PROTO_NSH,        /* DecodeNSH */
     PROTO_AH,         /* DecodeAH - Authentication Header (IPSec stuff) */
+   	PROTO_VXLAN,      /* DecodeVXLAN */
+	PROTO_NSH,        /* DecodeNSH */
 
 #ifndef NO_NON_ETHER_DECODER
     PROTO_TR,         /* DecodeTRPkt */

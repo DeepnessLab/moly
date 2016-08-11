@@ -1736,6 +1736,8 @@ static EncoderFunctions encoders[PROTO_MAX] = {
 #endif
     { XXX_Encode,  XXX_Update,   XXX_Format,  },  // ARP
     { GTP_Encode,  GTP_Update,   XXX_Format,  },  // GTP
-    { XXX_Encode,  XXX_Update,   XXX_Format,  }   // Auth Header
+    { XXX_Encode,  XXX_Update,   XXX_Format,  },  // Auth Header
+	{ XXX_Encode,  XXX_Update,   XXX_Format,  },  // PROTO_VXLAN
+	{ XXX_Encode,  XXX_Update,   XXX_Format,  }   // PROTO_NSH
 };
 
