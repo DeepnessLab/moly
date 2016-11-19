@@ -80,7 +80,7 @@
 {className:'MatchRule',rid:17511,pattern:'|00 0D 10 38 00 00 00 18 01 61 00 61 00 61 00|',is_regex:false}
 {className:'MatchRule',rid:17572,pattern:'.parseError',is_regex:false}
 {className:'MatchRule',rid:16319,pattern:'MZ|90 00|',is_regex:false}
-{className:'MatchRule',rid:16414,pattern:'|23 3A|//',is_regex:false}
+{className:'MatchRule',rid:16414,pattern:'|23 3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:18510,pattern:'|00 01 00 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:15357,pattern:'JBIG2Decode',is_regex:false}
 {className:'MatchRule',rid:17301,pattern:'|09 04 16 00 22 0C 00 00 80 57 00 00 80 57 00 00 02|',is_regex:false}
@@ -89,23 +89,22 @@
 {className:'MatchRule',rid:17134,pattern:'|C6 00 1A 00 02 00 00 00 01 00 21 00 AA 0A 03 00 00 00 02 00|',is_regex:false}
 {className:'MatchRule',rid:17272,pattern:'strf',is_regex:false}
 {className:'MatchRule',rid:13320,pattern:'|A9|cpy',is_regex:false}
-{className:'MatchRule',rid:15704,pattern:'itmss|3A|//',is_regex:false}
+{className:'MatchRule',rid:15704,pattern:'itmss|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:16382,pattern:'ANIMATEMOTION',is_regex:false}
 {className:'MatchRule',rid:16361,pattern:'BM',is_regex:false}
 {className:'MatchRule',rid:5741,pattern:'file',is_regex:false}
-{className:'MatchRule',rid:2438,pattern:'file|3A|//',is_regex:false}
+{className:'MatchRule',rid:2438,pattern:'file|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:19448,pattern:'T|E5 1E 1B EA F9 C8|K|82 1A|7kt|E4 C4 B8|',is_regex:false}
 {className:'MatchRule',rid:17149,pattern:'|50 4B 03 04|',is_regex:false}
 {className:'MatchRule',rid:15531,pattern:'clearAttributes',is_regex:false}
 {className:'MatchRule',rid:13917,pattern:'hdlr',is_regex:false}
 {className:'MatchRule',rid:13980,pattern:'449',is_regex:false}
-{className:'MatchRule',rid:2440,pattern:'rtsp|3A|//',is_regex:false}
+{className:'MatchRule',rid:2440,pattern:'rtsp|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:17516,pattern:'onmousedown',is_regex:false}
 {className:'MatchRule',rid:16410,pattern:'|00 00 E7|.|08 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:16517,pattern:'7|3A|comment',is_regex:false}
 {className:'MatchRule',rid:1840,pattern:'document.domain|28|',is_regex:false}
 {className:'MatchRule',rid:19239,pattern:'toStaticHTML(',is_regex:false}
-{className:'MatchRule',rid:18537,pattern:'/* XPM */',is_regex:false}
 {className:'MatchRule',rid:17664,pattern:'GIF8',is_regex:false}
 {className:'MatchRule',rid:18507,pattern:'|2F|CCITTFaxDecode',is_regex:false}
 {className:'MatchRule',rid:17131,pattern:'parentNode.style',is_regex:false}
@@ -119,7 +118,7 @@
 {className:'MatchRule',rid:9619,pattern:'%%DocumentMedia|3A|',is_regex:false}
 {className:'MatchRule',rid:15014,pattern:'util.printf',is_regex:false}
 {className:'MatchRule',rid:3550,pattern:'image/',is_regex:false}
-{className:'MatchRule',rid:20237,pattern:'http|3A|//',is_regex:false}
+{className:'MatchRule',rid:20237,pattern:'http|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:17482,pattern:'news|3A 2F 2F|',is_regex:false}
 {className:'MatchRule',rid:16471,pattern:'|DC 00 0C 00|',is_regex:false}
 {className:'MatchRule',rid:15157,pattern:'|3C|identifier|3E|',is_regex:false}
@@ -210,7 +209,7 @@
 {className:'MatchRule',rid:15871,pattern:'strk|28 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:13571,pattern:'|B2 01|',is_regex:false}
 {className:'MatchRule',rid:17804,pattern:'var html = |22|<|22| + tags[i] + |22| |22| + atts[j]',is_regex:false}
-{className:'MatchRule',rid:7203,pattern:'|E0 85 9F F2 F9|Oh|10 AB 91 08 00|+'|B3 D9|',is_regex:false}
+{className:'MatchRule',rid:7203,pattern:'|E0 85 9F F2 F9|Oh|10 AB 91 08 00|+|27||B3 D9|',is_regex:false}
 {className:'MatchRule',rid:18265,pattern:'|E0 85 9F F2 F9 4F 68 10 AB 91 08 00 2B 27 B3 D9 30 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:20579,pattern:'<ruby>',is_regex:false}
 {className:'MatchRule',rid:17186,pattern:'rcsL|0E 05 00 00 00 00 00 00 00 00 00 00|',is_regex:false}
@@ -220,7 +219,7 @@
 {className:'MatchRule',rid:4647,pattern:'window',is_regex:false}
 {className:'MatchRule',rid:20278,pattern:'window.open',is_regex:false}
 {className:'MatchRule',rid:6696,pattern:'pHYs',is_regex:false}
-{className:'MatchRule',rid:6509,pattern:'mhtml|3A|//',is_regex:false}
+{className:'MatchRule',rid:6509,pattern:'mhtml|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:17459,pattern:'|3C 68 31 3E 20 69 64 3D 22 68 65 61 64 65 72 22 20 6F 6E 6D 6F 75 73 65 6D 6F 76 65 3D 22 61 6C 65 72 74 28 27 41 73 73 75 72 65 6E 74 20 53 65 63 75 72 65 20 54|',is_regex:false}
 {className:'MatchRule',rid:16339,pattern:'clearAttributes',is_regex:false}
 {className:'MatchRule',rid:13961,pattern:'|2E|clearAttributes|28 29|',is_regex:false}
@@ -255,7 +254,7 @@
 {className:'MatchRule',rid:9432,pattern:'|C4 AB CD AB|',is_regex:false}
 {className:'MatchRule',rid:17217,pattern:'scrolling',is_regex:false}
 {className:'MatchRule',rid:19910,pattern:'urn:schemas-microsoft-com:vml',is_regex:false}
-{className:'MatchRule',rid:16423,pattern:'file|3A|//127.0.0.1',is_regex:false}
+{className:'MatchRule',rid:16423,pattern:'file|3A||2F 2F|127.0.0.1',is_regex:false}
 {className:'MatchRule',rid:16549,pattern:'application/npruntime-scriptable-plugin|3B|deploymenttoolkit',is_regex:false}
 {className:'MatchRule',rid:17315,pattern:'W|00|o|00|r|00|d|00|D|00|o|00|c|00|u|00|m|00|e|00|n|00|t|00|',is_regex:false}
 {className:'MatchRule',rid:16730,pattern:'Photodex|28|R|29| ProShow|28|TM|29| Show File Version',is_regex:false}
@@ -288,7 +287,7 @@
 {className:'MatchRule',rid:13448,pattern:'VBScript.Encode',is_regex:false}
 {className:'MatchRule',rid:16596,pattern:'.prompt',is_regex:false}
 {className:'MatchRule',rid:17304,pattern:'|22 07 00 00 00 22 22 22 22 00 22 06 00 00 00 02 00 46 00|',is_regex:false}
-{className:'MatchRule',rid:15707,pattern:'itpc|3A|//',is_regex:false}
+{className:'MatchRule',rid:15707,pattern:'itpc|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:19450,pattern:'|06 AF E1 00 EC 7B D1 11 A5 82 00 C0 4F C2 9C FB|',is_regex:false}
 {className:'MatchRule',rid:15535,pattern:'setCapture',is_regex:false}
 {className:'MatchRule',rid:14656,pattern:'setcapture|28 29|',is_regex:false}
@@ -297,7 +296,7 @@
 {className:'MatchRule',rid:7022,pattern:'[InternetShortcut]',is_regex:false}
 {className:'MatchRule',rid:5711,pattern:'BM|00 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:6506,pattern:'udta',is_regex:false}
-{className:'MatchRule',rid:15705,pattern:'pcast|3A|//',is_regex:false}
+{className:'MatchRule',rid:15705,pattern:'pcast|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:4132,pattern:'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F',is_regex:false}
 {className:'MatchRule',rid:9840,pattern:'> T<',is_regex:false}
 {className:'MatchRule',rid:19130,pattern:'|FF C0 00 11 08 FF 37 55 99 03 01 22 00 02 11 01 03 11 01|',is_regex:false}
@@ -319,7 +318,7 @@
 {className:'MatchRule',rid:17365,pattern:'Content-Type: text/plain',is_regex:false}
 {className:'MatchRule',rid:15869,pattern:'|00|airappinstaller|00|ASnative|00|',is_regex:false}
 {className:'MatchRule',rid:20140,pattern:'|63 65 6C 00 40 00 00 00 80 4E 50 3F D6 30 C6 01 40 00 00 00 00 F3 0F 47 D6 30 C6 01 03 00 00 00|',is_regex:false}
-{className:'MatchRule',rid:16220,pattern:'p|00 00 00 01 00 00 00 A8 FF FB|m|10|http|3A|//www.',is_regex:false}
+{className:'MatchRule',rid:16220,pattern:'p|00 00 00 01 00 00 00 A8 FF FB|m|10|http|3A||2F 2F|www.',is_regex:false}
 {className:'MatchRule',rid:17642,pattern:'parentNode.removeAttribute(|22|class|22|)',is_regex:false}
 {className:'MatchRule',rid:18102,pattern:'printSeps',is_regex:false}
 {className:'MatchRule',rid:17145,pattern:'Stylenum',is_regex:false}
@@ -365,7 +364,7 @@
 {className:'MatchRule',rid:7002,pattern:'|E0 C9 EA|y|F9 BA CE 11 8C 82 00 AA 00|K|A9 0B|',is_regex:false}
 {className:'MatchRule',rid:8416,pattern:'method',is_regex:false}
 {className:'MatchRule',rid:4675,pattern:'L|00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00|F',is_regex:false}
-{className:'MatchRule',rid:20593,pattern:'xmlns:sx=|22|http://icl.com/saxon|22|',is_regex:false}
+{className:'MatchRule',rid:20593,pattern:'xmlns:sx=|22|http:|2F 2F|icl.com/saxon|22|',is_regex:false}
 {className:'MatchRule',rid:19926,pattern:'AppletX',is_regex:false}
 {className:'MatchRule',rid:19932,pattern:'|01 2C 01 2B 01 2A 01 2F 01 2E 01 2D 01 52 00 12 12 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:16155,pattern:'RIFF',is_regex:false}
@@ -375,7 +374,7 @@
 {className:'MatchRule',rid:19687,pattern:'|00 04 03 08 61 4E 12 12 9D 02 00 4D 02 96 06 00 04 03 08 61 05 01 4F 96 02 00 08 12 1C 96 02 00|',is_regex:false}
 {className:'MatchRule',rid:18196,pattern:'@import ',is_regex:false}
 {className:'MatchRule',rid:16739,pattern:'http|3A 2F 2F|',is_regex:false}
-{className:'MatchRule',rid:15703,pattern:'itms|3A|//',is_regex:false}
+{className:'MatchRule',rid:15703,pattern:'itms|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:15933,pattern:'%01@',is_regex:false}
 {className:'MatchRule',rid:17462,pattern:'MARQUEE',is_regex:false}
 {className:'MatchRule',rid:16603,pattern:'stream|0A|U3D',is_regex:false}
@@ -405,7 +404,7 @@
 {className:'MatchRule',rid:18237,pattern:'|00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B 01 00 00 00 00 64 61 56 54 C1 CE 11 85 53 00 AA 00 A1 F9 5B|',is_regex:false}
 {className:'MatchRule',rid:18309,pattern:'m|00|e|00|t|00|h|00|o|00|d|00|',is_regex:false}
 {className:'MatchRule',rid:20133,pattern:'MIME-Version',is_regex:false}
-{className:'MatchRule',rid:20000,pattern:'What a long strange trip it's been.  Welcome to sid 20000',is_regex:false}
+{className:'MatchRule',rid:20000,pattern:'What a long strange trip it|27|s been.  Welcome to sid 20000',is_regex:false}
 {className:'MatchRule',rid:16151,pattern:'createEventObject',is_regex:false}
 {className:'MatchRule',rid:15106,pattern:'|5C|dppolycount',is_regex:false}
 {className:'MatchRule',rid:17408,pattern:'|00 00 0A 00 00 00 00 00 00 00 00 00 00 80 00 80 20 20|',is_regex:false}
@@ -421,7 +420,7 @@
 {className:'MatchRule',rid:15698,pattern:'%u0c0c%u0c0c',is_regex:false}
 {className:'MatchRule',rid:3088,pattern:'.cda',is_regex:false}
 {className:'MatchRule',rid:17368,pattern:'|A8 00 00 00 00 00 00 00 41 41 41 41 10 00 00 00|',is_regex:false}
-{className:'MatchRule',rid:18401,pattern:'//|2A|*Start Encode**#@~^',is_regex:false}
+{className:'MatchRule',rid:18401,pattern:'|2F 2F||2A|*Start Encode**#@~^',is_regex:false}
 {className:'MatchRule',rid:6701,pattern:'zTXt',is_regex:false}
 {className:'MatchRule',rid:18246,pattern:'|87 00 00 00 4C 17 00 00 00 00 00 00 52 03 00 00|',is_regex:false}
 {className:'MatchRule',rid:17355,pattern:'|01 00 02 11 01|',is_regex:false}
@@ -564,7 +563,7 @@
 {className:'MatchRule',rid:16359,pattern:'[Setnet32]',is_regex:false}
 {className:'MatchRule',rid:17403,pattern:'|5C|prtdata',is_regex:false}
 {className:'MatchRule',rid:18634,pattern:'|09 04 06 00 00 04 00 01|',is_regex:false}
-{className:'MatchRule',rid:15706,pattern:'daap|3A|//',is_regex:false}
+{className:'MatchRule',rid:15706,pattern:'daap|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:16037,pattern:'<filter',is_regex:false}
 {className:'MatchRule',rid:18973,pattern:'display|3A 20|block',is_regex:false}
 {className:'MatchRule',rid:16502,pattern:'wOFFOTTO',is_regex:false}
@@ -592,7 +591,7 @@
 {className:'MatchRule',rid:13316,pattern:'|A9|ART',is_regex:false}
 {className:'MatchRule',rid:17124,pattern:'|00 13 3A FF FF FF 8C 0F 00 00 F0 38 00 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:18506,pattern:'|2F|Columns',is_regex:false}
-{className:'MatchRule',rid:1841,pattern:'javascript|3A|//',is_regex:false}
+{className:'MatchRule',rid:1841,pattern:'javascript|3A||2F 2F|',is_regex:false}
 {className:'MatchRule',rid:12688,pattern:'|22|.cmd',is_regex:false}
 {className:'MatchRule',rid:18398,pattern:'T|00|h|00|u|00|m|00|b|00|n|00|a|00|i|00|l|00 00 00 41 00 00 00|',is_regex:false}
 {className:'MatchRule',rid:17232,pattern:'|01 02 00 03|',is_regex:false}
