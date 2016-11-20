@@ -52,7 +52,8 @@ function writeDpiServiceRules(dpiServiceRules, outputFolderPath) {
     file.once('open', function(fd) {
         // Write the rules in the format the DPI Service accepts (i.e. fileds without qutation marks and string with a Single quotation mark).
         dpiServiceRules.forEach(function(rule) {
-            file.write("{" + "className:\'MatchRule\'" + "," + "rid:" + rule.rid + "," + "pattern:" + "\'" + rule.pattern + "\'" + "," + "is_regex:" + rule.is_regex + "}" + "\n");
+			var pattern = rule.pattern.replace(/'/g , "|27|"); // Conver ' to hexadecimal representaiton, due to limitations in the DPI Service JSON parser.
+            file.write("{" + "className:\'MatchRule\'" + "," + "rid:" + rule.rid + "," + "pattern:" + "\'" + pattern + "\'" + "," + "is_regex:" + rule.is_regex + "}" + "\n");
         });
 
         file.end();
