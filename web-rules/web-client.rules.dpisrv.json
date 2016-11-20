@@ -105,7 +105,7 @@
 {className:'MatchRule',rid:16517,pattern:'7|3A|comment',is_regex:false}
 {className:'MatchRule',rid:1840,pattern:'document.domain|28|',is_regex:false}
 {className:'MatchRule',rid:19239,pattern:'toStaticHTML(',is_regex:false}
-{className:'MatchRule',rid:18537,pattern:'/* XPM */',is_regex:false}
+{className:'MatchRule',rid:18537,pattern:'|2F|* XPM *|2F|',is_regex:false}
 {className:'MatchRule',rid:17664,pattern:'GIF8',is_regex:false}
 {className:'MatchRule',rid:18507,pattern:'|2F|CCITTFaxDecode',is_regex:false}
 {className:'MatchRule',rid:17131,pattern:'parentNode.style',is_regex:false}
