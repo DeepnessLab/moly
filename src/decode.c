@@ -5183,11 +5183,11 @@ inline void DecodeNSH(const uint8_t *pkt, uint32_t len, Packet *p) {
     } else if (md_type == 2) {
     	/**
     	 * Variable Length. When the base header specifies MD Type 2, NSH defines variable length
-    	   only context headers. There may be zero or more of these headers as per the length field.
+    	   only context headers. There may be zero or more of these headers as per the length field (for new we will be supporting one).
     	 */
     	dpi_service_match_reports = sflist_new();
     	int varLenCtx = (length * 4) - nsh_len; // converting the length to bytes.
-    	while (varLenCtx > 0) {
+    	if (varLenCtx > 0) {
     		// We have an Optional Variable Length Context Headers to parse.
     		varLenMd = (NSHVarLenMDHdr *) (pkt + nsh_len);
     		uint16_t tlv_class = varLenMd->tlv_class;
