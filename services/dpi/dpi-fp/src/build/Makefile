@@ -1,5 +1,5 @@
 ifndef NO_OPTIMIZE
-	O_SYM := -g
+    O_SYM := -O3
 else 
 	O_SYM := -g
 endif
