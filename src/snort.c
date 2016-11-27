@@ -3399,6 +3399,7 @@ void PacketLoop (void)
         }
 #endif
     }
+    
     gettimeofday(&end, NULL);
     printf("End packet loop...\n");
     long micros = (end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec);
