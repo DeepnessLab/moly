@@ -3315,6 +3315,9 @@ void PacketLoop (void)
     last_time = curr_time;
     TimeStart();
 
+    printf("Start packet loop...\n");
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
     while ( !exit_logged )
     {
         error = DAQ_Acquire(pkts_to_read, PacketCallback, NULL);
@@ -3396,6 +3399,12 @@ void PacketLoop (void)
         }
 #endif
     }
+    gettimeofday(&end, NULL);
+    printf("End packet loop...\n");
+    long micros = (end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec);
+    double millis = micros / 1000.0;
+    double seconds = micros / 1000000.0;
+    printf("micros (usec) used: %d | milliseconds used: %.3f | seconds used: %.6f \n", micros, millis, seconds);
 #ifdef CONTROL_SOCKET
     PacketDumpClose();
 #endif
