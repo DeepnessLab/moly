@@ -1,18 +1,12 @@
-/*
- * MatchReport.h
- *
- *  Created on: May 22, 2014
- *      Author: yotamhc
- */
+#ifndef SNIFFER_MATCHREPORT_H_
+#define SNIFFER_MATCHREPORT_H_
 
-#ifndef MATCHREPORT_H_
-#define MATCHREPORT_H_
-
+#include "RuleId.h"
 
 typedef struct {
-	int position;
-	int state;
+	rule_id_t rid;
+	uint8_t is_range;
+	uint16_t position : 15;
 } MatchReport;
 
-
-#endif /* MATCHREPORT_H_ */
+#endif /* SNIFFER_MATCHREPORT_H_ */
