@@ -9,8 +9,8 @@
 #define TABLESTATEMACHINE_H_
 #include "../Common/Types.h"
 #include "../Common/BitArray/BitArray.h"
-#include "../Sniffer/MatchReport.h"
 #include "../Common/MatchRule.h"
+#include "../Sniffer/ContentMatchReport.h"
 
 #define MAX_REPORTS 1024
 

@@ -1,5 +1,5 @@
 ifndef NO_OPTIMIZE
-	O_SYM := -O3
+    O_SYM := -O3
 else 
 	O_SYM := -g
 endif
@@ -16,8 +16,8 @@ clean:
 	rm *.o main
 
 # EXECUTABLES
-main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o
-	gcc -Wall $(O_SYM) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o $(LIBS) && rm *.o
+main: ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o checksum.o
+	gcc -Wall $(O_SYM) -o main ACBuilder.o NodeQueue.o BitArray.o HashMap.o PatternTable.o StateTable.o TableStateMachine.o TableStateMachineGenerator.o Sniffer.o json.o PacketBuffer.o checksum.o $(LIBS) && rm *.o
 
 # OBJECTS
 
@@ -35,6 +35,9 @@ HashMap.o: ../Common/HashMap/HashMap.c ../Common/HashMap/HashMap.h
 
 json.o: ../Common/json.c ../Common/json.h
 	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/json.c -I../
+	
+checksum.o: ../Sniffer/checksum.c ../Sniffer/checksum.h
+	gcc -Wall $(O_SYM) $(V_SYM) -c ../Sniffer/checksum.c -I../
 
 PatternTable.o: ../Common/PatternTable.c ../Common/PatternTable.h
 	gcc -Wall $(O_SYM) $(V_SYM) -c ../Common/PatternTable.c -I../
