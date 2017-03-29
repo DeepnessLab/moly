@@ -1,0 +1,51 @@
+2015-11-17 - Snort 2.9.8.0
+[*] New additions
+ *  SMBv2/SMBv3 support for file inspection.
+
+ *  Port override for metadata service in IPS rules.
+
+ *  AppID Lua detector performance profiling.
+
+ *  Perfmon dumps stats at fixed intervals from absolute time.
+
+ *  New preprocessor alert (120:18) to detect SSH tunneling over HTTP
+
+ *  New config option |disable_replace| to disable replace rule option.
+
+ *  New Stream configuration |log_asymmetric_traffic| to control logging to syslog.
+
+ *  New shell script in tools to create simple Lua detectors for AppID.
+
+[*] Improvements
+ *  sfip_t refactored to use struct in6_addr for all ip addresses.
+
+ *  Post-detection callback for preprocessors.
+
+ *  AppID support for multiple server/client detectors evaluating on same flow.
+
+ *  AppID API for DNS packets.
+
+ *  Memory optimizations throughout.
+
+ *  Support sending UDP active responses.
+
+ *  Fix perfmon tracking of pruned packets.
+ 
+ *  Stability improvements for AppID.
+
+ *  Stability improvements for Stream6 preprocessor.
+
+ *  Added improved support to block malware in FTP preprocessor.
+
+ *  Added support to differentiate between active and passive FTP connections.
+
+ *  Improvements done in Stream6 preprocessor to avoid having duplicate packets 
+    in the DAQ retry queue.
+ 
+ *  Resolved an issue where reputation config incorrectly displayed 'blacklist' in
+    priority field even though 'whitelist' option was configured.
+
+ *  Added support for multiple expected sessions created per packet
+
+ *  Active response now supports MPLS
+
