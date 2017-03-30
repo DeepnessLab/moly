@@ -1,0 +1,19 @@
+{className:'MatchRule',rid:1045,pattern:'Forbidden|3A|',is_regex:false}
+{className:'MatchRule',rid:978,pattern:'&CiHiliteType=Full',is_regex:false}
+{className:'MatchRule',rid:12064,pattern:'/_vti_bin/.dll/',is_regex:false}
+{className:'MatchRule',rid:17564,pattern:'/%c0%af/',is_regex:false}
+{className:'MatchRule',rid:8349,pattern:'ciRestriction',is_regex:false}
+{className:'MatchRule',rid:2091,pattern:'SEARCH / HTTP/1.1|0D 0A|Host|3A|',is_regex:false}
+{className:'MatchRule',rid:17648,pattern:'Translate|3A| ',is_regex:false}
+{className:'MatchRule',rid:1042,pattern:'Translate|3A| F',is_regex:false}
+{className:'MatchRule',rid:8700,pattern:'__LASTFOCUS=',is_regex:false}
+{className:'MatchRule',rid:1010,pattern:'%1u',is_regex:false}
+{className:'MatchRule',rid:969,pattern:'LOCK ',is_regex:false}
+{className:'MatchRule',rid:1003,pattern:'.cmd?&',is_regex:false}
+{className:'MatchRule',rid:1011,pattern:'|23|filename=*.exe',is_regex:false}
+{className:'MatchRule',rid:1008,pattern:'&del+/s+c|3A 5C|*.*',is_regex:false}
+{className:'MatchRule',rid:974,pattern:'..|5C|..',is_regex:false}
+{className:'MatchRule',rid:1029,pattern:'/scripts/ ',is_regex:false}
+{className:'MatchRule',rid:12595,pattern:'<!--|23|include',is_regex:false}
+{className:'MatchRule',rid:1756,pattern:'Transfer-Encoding|3A|',is_regex:false}
+{className:'MatchRule',rid:1017,pattern:'|23|filename=*.idc',is_regex:false}

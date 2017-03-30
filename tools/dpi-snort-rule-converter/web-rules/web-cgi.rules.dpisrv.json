@@ -1,0 +1,22 @@
+{className:'MatchRule',rid:1306,pattern:'../..',is_regex:false}
+{className:'MatchRule',rid:1305,pattern:'/../../../../',is_regex:false}
+{className:'MatchRule',rid:811,pattern:' /HTTP/1.',is_regex:false}
+{className:'MatchRule',rid:1569,pattern:'file=../',is_regex:false}
+{className:'MatchRule',rid:1730,pattern:'file=../../',is_regex:false}
+{className:'MatchRule',rid:2434,pattern:'/form2raw.cgi',is_regex:false}
+{className:'MatchRule',rid:1704,pattern:'p0=../../',is_regex:false}
+{className:'MatchRule',rid:820,pattern:'template=../',is_regex:false}
+{className:'MatchRule',rid:2086,pattern:'/parse_xml.cgi',is_regex:false}
+{className:'MatchRule',rid:1865,pattern:'distloc=|3B|',is_regex:false}
+{className:'MatchRule',rid:1598,pattern:'letter=../',is_regex:false}
+{className:'MatchRule',rid:2115,pattern:'/album.pl',is_regex:false}
+{className:'MatchRule',rid:1669,pattern:'/cgi-dos/ HTTP',is_regex:false}
+{className:'MatchRule',rid:1628,pattern:'reply_message_attach=',is_regex:false}
+{className:'MatchRule',rid:1657,pattern:'name=../',is_regex:false}
+{className:'MatchRule',rid:1719,pattern:'article=../../',is_regex:false}
+{className:'MatchRule',rid:1479,pattern:'pg=../',is_regex:false}
+{className:'MatchRule',rid:1668,pattern:'/cgi-bin/ HTTP',is_regex:false}
+{className:'MatchRule',rid:2433,pattern:'/form2raw.cgi',is_regex:false}
+{className:'MatchRule',rid:18960,pattern:'Host|3A|',is_regex:false}
+{className:'MatchRule',rid:17605,pattern:'/cgiablogon.exe',is_regex:false}
+{className:'MatchRule',rid:15264,pattern:'evtdump?',is_regex:false}

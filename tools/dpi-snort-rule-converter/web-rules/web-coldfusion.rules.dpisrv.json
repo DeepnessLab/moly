@@ -1,0 +1,16 @@
+{className:'MatchRule',rid:923,pattern:'CFUSION_GETODBCINI|28 29|',is_regex:false}
+{className:'MatchRule',rid:927,pattern:'CFUSION_SETTINGS_REFRESH|28 29|',is_regex:false}
+{className:'MatchRule',rid:916,pattern:'CFUSION_GETODBCDSN|28 29|',is_regex:false}
+{className:'MatchRule',rid:926,pattern:'CFUSION_SETODBCINI|28 29|',is_regex:false}
+{className:'MatchRule',rid:917,pattern:'CFUSION_DBCONNECTIONS_FLUSH|28 29|',is_regex:false}
+{className:'MatchRule',rid:921,pattern:'CFUSION_ENCRYPT|28 29|',is_regex:false}
+{className:'MatchRule',rid:929,pattern:'CFUSION_VERIFYMAIL|28 29|',is_regex:false}
+{className:'MatchRule',rid:924,pattern:'CFUSION_DECRYPT|28 29|',is_regex:false}
+{className:'MatchRule',rid:8486,pattern:'CFNEWINTERNALREGISTRY|28 29|',is_regex:false}
+{className:'MatchRule',rid:8489,pattern:'CFADMIN_REGISTRY_DELETE|28 29|',is_regex:false}
+{className:'MatchRule',rid:8485,pattern:'CFNEWINTERNALADMINSECURITY|28 29|',is_regex:false}
+{className:'MatchRule',rid:919,pattern:'CF_SETDATASOURCEPASSWORD|28 29|',is_regex:false}
+{className:'MatchRule',rid:909,pattern:'CF_SETDATASOURCEUSERNAME|28 29|',is_regex:false}
+{className:'MatchRule',rid:920,pattern:'CF_ISCOLDFUSIONDATASOURCE|28 29|',is_regex:false}
+{className:'MatchRule',rid:8487,pattern:'CFADMIN_REGISTRY_SET|28 29|',is_regex:false}
+{className:'MatchRule',rid:8488,pattern:'CFADMIN_REGISTRY_GET|28 29|',is_regex:false}
