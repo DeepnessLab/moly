@@ -1,0 +1,16 @@
+{
+  "name": "dpi-snort-rule-converter",
+  "version": "1.0.0",
+  "description": "Tool for converting the exported DPI Snort rules to the DPI Service rule format",
+  "main": "rule-converter",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Asher Gruber",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "moment": "^2.12.0",
+    "path": "^0.12.7"
+  }
+}

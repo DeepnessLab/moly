@@ -1,0 +1,1 @@
+{"snort_id":"master_snort","rules":[{"className":"MatchRule","pattern":"/_vti_bin/","is_regex":false,"rid":1288}]}
